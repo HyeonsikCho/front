@@ -1,0 +1,202 @@
+        <form id="frm" action="/order/add_cart.html" method="post">
+            <!-- 선택 -->
+            <section class="selection">
+                <dl>
+                    <dt><label for="printTitle">인쇄물제목</label></dt>
+                    <dd class="full"><div class="inputWrap"><input type="text" id="title" name="title" maxlength="15"></div></dd>
+                    <dt><label for="productName">상품명</label></dt>
+                    <dd>
+                        <select onchange="moveProduct(this.value);" class="_relatedSummary _productName" id="etc_lot_cate_sortcode" name="etc_lot_cate_sortcode">
+                            [TPH_Vcate_bot]
+                        </select>
+                    </dd>
+                    <dt><label for="paper">종이</label></dt>
+                    <dd>
+                        <select id="paper" name="etc_lot_paper" onchange="loadPaperDscr.exec('etc_lot', this.value);">
+                            [TPH_Vetc_lot_paper]
+                        </select>
+                    </dd>
+                    <dt><label for="color">인쇄도수</label></dt>
+                    <dd class="colorDetails">
+                        <select class="withBtn _relatedSummary _color" onchange="changeTmpt('etc_lot', this.value);" id="print_tmpt" name="etc_lot_bef_tmpt">
+                            [TPH_Vetc_lot_print_tmpt]
+                        </select>
+                        <!--
+                        <button type="button">별색템플릿</button>
+                        -->
+                    </dd>
+                    <dt><label for="size">사이즈</label></dt>
+                    <dd class="_relatedSummary size">
+                        <select class="withBtn _size" id="size_dvs" name="etc_lot_size_dvs" onchange="changeSizeDvs(this.value);">
+                            <option value="stan" class="_preset">규격사이즈</option>
+                            <option value="manu" class="_custom">비규격사이즈</option>
+                        </select>
+                        <select class="_preset" id="etc_lot_size" name="etc_lot_size" def_cut_wid="[TPH_Vetc_lot_def_cut_wid]" def_cut_vert="[TPH_Vetc_lot_def_cut_vert]" def_val=[TPH_Vetc_lot_def_stan_mpcode] onchange="changeData();">
+                            [TPH_Vetc_lot_size]
+                        </select>
+                        <div class="_roomNumber"> &nbsp;&nbsp;<label> <input type="text" id="etc_lot_manu_pos_num" name="etc_lot_manu_pos_num" value="1" disabled="disabled">자리 </label></div>
+                        <dl>
+                            <dt>재단사이즈</dt>
+                            <dd class="_cuttingSize">
+                                <label>가로 <input id="etc_lot_cut_wid_size" name="etc_lot_cut_wid_size" type="text" maxlength="3">mm</label>,
+                                <label>세로 <input id="etc_lot_cut_vert_size" name="etc_lot_cut_vert_size" type="text" maxlength="3">mm</label>
+                            </dd>
+                            <dt>작업사이즈</dt>
+                            <dd class="_workingSize[TPH_Vetc_lot_size_gap]" id="size_gap">
+                                <label>가로 <input id="work_wid_size" name="etc_lot_work_wid_size" type="text" readonly>mm</label>,
+                                <label>세로 <input id="work_vert_size" name="etc_lot_work_vert_size" type="text" readonly>mm</label>
+                            </dd>
+                        </dl>
+                    </dd>
+                    <dt class="amount"><label for="amount">수량</label></dt>
+                    <dd class="_relatedSummary amount">
+                    <!-- 옵션가격 수량따라 변할 경우 changeData -> getOptPrice 구현 필요 -->
+                        <select class="_amount" id="amt" name="etc_lot_amt" onchange="changeAmt();" amt_unit="[TPH_Vetc_lot_amt_unit]">
+                            [TPH_Vetc_lot_amt]
+                        </select>
+                        <span>x</span>
+                        <label>
+                            <select class="_set" id="count" name="etc_lot_count" onchange="calcPrice();">
+                            </select>
+                            건
+                        </label>
+                        <div class="range">
+                            <div class="bar">
+                                <div class="hr bg"></div>
+                                <div class="_anchor"><img src="[TPH_Vdesign_dir]/images/product/range_anchor.png" alt="▲"></div>
+                                <hr class="hr on">
+                            </div>
+                            <ul class="mark">
+                            </ul>
+                        </div>
+                    </dd>
+                </dl>
+                <div class="option _folding">
+                    <button type="button" class="_closed" title="열기"><img src="[TPH_Vdesign_dir]/images/common/btn_semicircle_right.png" alt="▶"></button>
+                    <button type="button" class="_opened" title="닫기"><img src="[TPH_Vdesign_dir]/images/common/btn_semicircle_left.png" alt="◀"></button>
+                    <div class="_folder">
+                        <dl>
+                            <dt>인쇄유형</dt>
+                            <dd>
+                                <select id="etc_lot_mono_yn" name="etc_lot_mono_yn" onchange="changeData();">
+                                    [TPH_Vetc_lot_mono_dvs]
+                                </select>
+                            </dd>
+                            <dt>재질느낌</dt>
+                            <dd id="etc_lot_paper_sense" class="select">[TPH_Vetc_lot_paper_sense]</dd>
+                            <dt>인쇄방식</dt>
+                            <dd>
+                                <select id="etc_lot_print_purp" name="etc_lot_print_purp" onchange="loadPrintTmpt('etc_lot');">
+                                    [TPH_Vetc_lot_print_purp]
+                                </select>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+                <dl>
+                    <dt>상세수량</dt>
+                    <dd class="full">
+                        <span style="padding-left:5%;">선택매수</span>
+                        <span style="padding-left:40%;">내용</span>
+                        <span style="padding-left:32%;">
+                            <img src="[TPH_Vdesign_dir]/images/common/btn_circle_writing.png" alt="+" onclick="addDetailAmt();" style="cursor:pointer;" />
+                            <img src="[TPH_Vdesign_dir]/images/common/btn_circle_x_red.png" alt="X" onclick="removeDetailAmt();" style="cursor:pointer;" />
+                        </span>
+                    </dd>
+                    <dt></dt>
+                    <dd id="detail_amt_dd" class="full">
+                        <div id="detail_amt_div">
+                            <select class="_amount" name="detail_amt" style="width:20%;">
+                                [TPH_Vetc_lot_amt]
+                            </select>
+                            <input type="text" name="detail_con" style="width:76%;" />
+                        </div>
+                    </dd>
+                </dl>
+            </section><!-- 선택 -->
+            <!-- 요청 -->
+            <section class="after _folding">
+                <dl>
+                    <dt id="opt_default_price" price="0">옵션</dt>
+                    <dd class="list" style="padding-left: 0px;" id="opt">
+                        [TPH_Vetc_lot_opt]
+                        [TPH_Vetc_lot_add_opt]
+                    </dd>
+                </dl>
+            </section><!-- 요청 -->
+            <!-- 후공정 -->
+            <section class="after aft_sec _folding">
+                <button type="button" title="열기" class="_closed foldingbtn"><img src="[TPH_Vdesign_dir]/images/common/btn_circle_bottom.png" alt="▼"></button>
+                <button type="button" title="닫기" class="_opened foldingbtn"><img src="[TPH_Vdesign_dir]/images/common/btn_circle_top.png" alt="▲"></button>
+                <dl>
+                    <dt id="after_default_price" price="0">후공정</dt>
+                    <dd class="overview">
+                        <ul>
+                        </ul>
+                    </dd>
+                    <dd class="_folder list" id="after">
+                        [TPH_Vetc_lot_after]
+                        [TPH_Vetc_lot_add_after]
+                    </dd>
+                </dl>
+            </section><!-- 후공정 -->
+            <section class="summary">
+                <dl>
+                    <dt>주문내역</dt>
+                    <dd>
+                        <ul>
+                        </ul>
+                    </dd>
+                </dl>
+            </section>
+            <!-- 가격 -->
+            <section class="price _folding">
+                <button type="button" title="열기" class="_closed foldingBtn"><img src="[TPH_Vdesign_dir]/images/common/btn_circle_bottom.png" alt="▼"></button>
+                <button type="button" title="닫기" class="_opened foldingBtn"><img src="[TPH_Vdesign_dir]/images/common/btn_circle_top.png" alt="▲"></button>
+                <dl class="ordinary">
+                    <dt>정상판매가</dt>
+                    <dd class="description" style="text-decoration: none;">부가세 10% 포함</dd>
+                    <dd id="sell_price" val="[TPH_Vetc_lot_sell_price]" class="price">[TPH_Vetc_lot_sell_price]원</dd>
+                </dl>
+
+                <dl class="_folder">
+                    <dd class="detail" id="sale">
+                        [TPH_Vetc_lot_grade_sale]
+                        [TPH_Vetc_lot_event_sale]
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>기본할인가</dt>
+                    <dd class="description">회원등급 할인과 이벤트 할인을 적용한 가격</dd>
+                    <dd id="sale_price" val="[TPH_Vetc_lot_sale_price]" class="price">[TPH_Vetc_lot_sale_price]원</dd>
+                </dl>
+                <!-- 2016/01/04 최대 혜택가 삭제함 -->
+
+            </section><!-- 가격 -->
+
+            <!-- 공통 -->
+            <input type="hidden" name="flag" value="Y" /><!-- 낱장형여부 -->
+            <input type="hidden" id="prdt_dvs" name="prdt_dvs" value="etc_lot" /><!-- 상품 페이지에 들어가있는 제품구분값 -->
+            <input type="hidden" id="order_detail" name="order_detail" value="" /><!-- 제품상세값 -->
+            <input type="hidden" name="etc_lot_cate_name" value="" /><!-- 카테고리명-->
+            <input type="hidden" name="etc_lot_amt_unit" value="" /><!-- 수량단위 -->
+            <input type="hidden" id="etc_lot_tmpt_dvs" value="[TPH_Vetc_lot_tmpt_dvs]" /><!-- 도수구분 -->
+            <input type="hidden" id="etc_lot_typ" name="etc_lot_typ" value="[TPH_Vetc_lot_page_dvs]" /><!-- 상품 페이지에 들어가있는 제품구분값 -->
+            <!-- 후공정, 주문요약 표시용 -->
+            <input type="hidden" id="after_basic" value="[TPH_Vetc_lot_basic_after]" /><!-- 요약정보 표시용 변수 -->
+            <!-- 표시용 -->
+            <input type="hidden" name="cart_flag" id="cart_flag" value="Y" /><!-- 장바구니 이동여부 -->
+            <!-- 종이 -->
+            <input type="hidden" name="etc_lot_paper_name" value="" /><!-- 종이명 -->
+            <!-- 인쇄 -->
+            <input type="hidden" name="etc_lot_page" value="[TPH_Vetc_lot_page]" /><!-- 페이지수 -->
+            <!-- 가격정보 -->
+            <input type="hidden" name="etc_lot_prdt_price" value="" /><!-- 상품가격 -->
+            <input type="hidden" name="etc_lot_basic_price" value="" /><!-- 상품가격 -->
+            <input type="hidden" name="etc_lot_grade_sale_rate" value="" /><!-- 등급할인금액 -->
+            <input type="hidden" name="etc_lot_after_price" value="" /><!-- 후공정금액 -->
+            <input type="hidden" name="etc_lot_opt_price" value="" /><!-- 옵션금액 -->
+            <!-- 옵션 -->
+            <input type="hidden" name="opt_add" value="" /><!-- 추가후공정 맵핑코드 -->
+            <input type="hidden" name="opt_add_price" value="" /><!-- 추가옵션 가격 -->
+        </form>

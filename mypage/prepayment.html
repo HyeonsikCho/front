@@ -1,0 +1,44 @@
+<?
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/sess_common.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common_define/common_info.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/Template.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/ConnectionPool.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/FrontCommonUtil.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/job/mypage/MemberInfoDAO.php");
+
+if ($is_login === false) {
+    header("Location: /main/main.html");
+    exit;
+}
+
+$connectionPool = new ConnectionPool();
+$conn = $connectionPool->getPooledConnection();
+
+$template = new Template();
+$frontUtil = new FrontCommonUtil();
+$dao = new MemberInfoDAO();
+
+// 로그인 상태인지 체크하는부분 include
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/login_check.php");
+
+//회원 구분 체크
+include_once($_SERVER["DOCUMENT_ROOT"] . "/mypage/member_dvs_check.php");
+
+//기본사용 자바스크립트, css 파일 불러오는 용
+$template->reg("dir", "mypage"); 
+$template->reg("page", "prepayment");
+
+//선입금
+$prepay_price = number_format(doubleval($session["prepay_price"]));
+$template->reg("prepay_price", $prepay_price);
+
+//주문부족금액
+$order_lack_price = number_format(doubleval($session["order_lack_price"]));
+$template->reg("order_lack_price", $order_lack_price);
+
+//design_dir 경로
+$template->reg("design_dir", "/design_template"); 
+$template->htmlPrint($_SERVER["PHP_SELF"]); 
+
+$conn->Close();
+?>

@@ -1,0 +1,13 @@
+        <ul class="util" id="util_btns">
+            <li class="templete"><button type="button" onclick="showTemplatePop();">템플릿 다운로드</button></li>
+            <li class="date"><button type="button" onclick="showDeliveryPop();">출고일 확인</button></li>
+            <li class="guide"><button type="button" onclick="layerPopup('l_guide l_full', '/product/common/l_guide.html?cs=[TPH_Vcs]');">작업 가이드</button></li>
+            <li class="mat" id="mat_btn"><button type="button" onclick="matPreview();">재질보기</button></li>
+            <li class="detail" id="pro_btn" style="display:none;"><button type="button" onclick="productPreview();">제품보기</button></li>
+            <li class="detail_mov" id="mov_btn" style="display:none;"><button type="button" onclick="movPreview();">동영상 보기</button></li>
+        </ul>
+        <ul class="util" id="mov_btns" style="display:none;">
+            <li class="detail_white zoom" id="mov_zoom_in"><button type="button" onclick="movZoomIn();">동영상 확대</button></li>
+            <li class="detail_blue zoom" id="mov_zoom_out" style="display:none; margin-left:0px;"><button type="button" onclick="movZoomOut();">동영상 축소</button></li>
+            <li class="detail_white close" id="mov_close"><button type="button" onclick="closeMovPreview();">동영상 닫기</button></li>
+        </ul>

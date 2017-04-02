@@ -1,0 +1,70 @@
+<?
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/sess_common.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/Template.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/ConnectionPool.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/FrontCommonUtil.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/job/cscenter/NoticeDAO.php");
+
+$connectionPool = new ConnectionPool();
+$conn = $connectionPool->getPooledConnection();
+
+$fb = new FormBean();
+$template = new Template();
+$frontUtil = new FrontCommonUtil();
+$dao = new NoticeDAO();
+
+/* 관리자에서 등록/수정/삭제 파일로 떨궈줌
+//공지리스트
+$param = array();
+$param["dvs"] = "SEQ";
+$param["s_num"] = "0";
+$param["list_num"] = "5";
+
+$rs = $dao->selectNoticeList($conn, $param);
+$noti = makeNoticeSummary($rs);
+
+$template->reg("noti", $noti); 
+*/
+
+$param = array();
+$param["table"] = "main_banner_set";
+$param["col"] = "slide_timer";
+
+$slide_timer = $dao->selectData($conn, $param)->fields["slide_timer"] . "000";
+
+$template->reg("slide_timer", $slide_timer); 
+
+$param = array();
+$param["table"] = "main_banner";
+$param["col"] = "save_file_name, file_path, url_addr";
+$param["where"]["use_yn"] = "Y";
+$param["order"] = "seq";
+
+$rs = $dao->selectData($conn, $param);
+
+$save_file_name = $rs->fields["save_file_name"];
+$file_path = $rs->fields["file_path"];
+
+$html = "<li><a href=\"%s\"><img src=\"%s\" alt=\"\" width=\"1000\" height=\"510\"></a></li>";
+$rs_html = "";
+while ($rs && !$rs->EOF) {
+
+    $rs_html .= sprintf($html, $rs->fields["url_addr"],
+            $rs->fields["file_path"] . $rs->fields["save_file_name"]);
+    $rs->moveNext();
+}
+
+$template->reg("img_list", $rs_html); 
+
+// 로그인 상태인지 체크하는부분 include
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/login_check.php");
+
+// 기본사용 자바스크립트, css 파일 불러오는 용
+$template->reg("dir", "main"); 
+$template->reg("page", "main"); 
+$template->reg("is_ba", $is_ba); 
+
+//design_dir 경로
+$template->reg("design_dir" , "/design_template"); 
+$template->htmlPrint($_SERVER["PHP_SELF"]);
+?>

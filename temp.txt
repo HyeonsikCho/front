@@ -1,0 +1,366 @@
+        "001001001" : function(dvs, cateSortcode) {
+        },
+        "001001002" : function(dvs, cateSortcode) {
+        },
+        "001004004" : function(dvs, cateSortcode) {
+        },
+        "001001004" : function(dvs, cateSortcode) {
+        },
+        "001001005" : function(dvs, cateSortcode) {
+        },
+        "001004006" : function(dvs, cateSortcode) {
+        },
+        "001002001" : function(dvs, cateSortcode) {
+        },
+        "001002002" : function(dvs, cateSortcode) {
+        },
+        "001002003" : function(dvs, cateSortcode) {
+        },
+        "001002004" : function(dvs, cateSortcode) {
+        },
+        "001002005" : function(dvs, cateSortcode) {
+        },
+        "001002006" : function(dvs, cateSortcode) {
+        },
+        "001002007" : function(dvs, cateSortcode) {
+        },
+        "001002008" : function(dvs, cateSortcode) {
+        },
+        "001002009" : function(dvs, cateSortcode) {
+        },
+        "001002010" : function(dvs, cateSortcode) {
+        },
+        "001002011" : function(dvs, cateSortcode) {
+        },
+        "001002012" : function(dvs, cateSortcode) {
+        },
+        "001002013" : function(dvs, cateSortcode) {
+        },
+        "001002014" : function(dvs, cateSortcode) {
+        },
+        "001002015" : function(dvs, cateSortcode) {
+        },
+        "001002016" : function(dvs, cateSortcode) {
+        },
+        "001002017" : function(dvs, cateSortcode) {
+        },
+        "001002018" : function(dvs, cateSortcode) {
+        },
+        "001003001" : function(dvs, cateSortcode) {
+        },
+        "001003002" : function(dvs, cateSortcode) {
+        },
+        "001003003" : function(dvs, cateSortcode) {
+        },
+        "001003004" : function(dvs, cateSortcode) {
+        },
+        "001003005" : function(dvs, cateSortcode) {
+        },
+        "001003006" : function(dvs, cateSortcode) {
+        },
+        "001003007" : function(dvs, cateSortcode) {
+        },
+        "001003008" : function(dvs, cateSortcode) {
+        },
+        "001003009" : function(dvs, cateSortcode) {
+        },
+        "001003010" : function(dvs, cateSortcode) {
+        },
+        "001003011" : function(dvs, cateSortcode) {
+        },
+        "001003012" : function(dvs, cateSortcode) {
+        },
+        "001003013" : function(dvs, cateSortcode) {
+        },
+        "001003014" : function(dvs, cateSortcode) {
+        },
+        "001003015" : function(dvs, cateSortcode) {
+        },
+        "001003016" : function(dvs, cateSortcode) {
+        },
+        "001003017" : function(dvs, cateSortcode) {
+        },
+        "001003018" : function(dvs, cateSortcode) {
+        },
+        "001003019" : function(dvs, cateSortcode) {
+        },
+        "001003020" : function(dvs, cateSortcode) {
+        },
+        "001003021" : function(dvs, cateSortcode) {
+        },
+        "001003022" : function(dvs, cateSortcode) {
+        },
+        "001005001" : function(dvs, cateSortcode) {
+        },
+        "001005002" : function(dvs, cateSortcode) {
+        },
+        "001005003" : function(dvs, cateSortcode) {
+        },
+        "001005004" : function(dvs, cateSortcode) {
+        },
+        "001005005" : function(dvs, cateSortcode) {
+        },
+        "001005006" : function(dvs, cateSortcode) {
+        },
+        "002001001" : function(dvs, cateSortcode) {
+        },
+        "002001002" : function(dvs, cateSortcode) {
+        },
+        "002001003" : function(dvs, cateSortcode) {
+        },
+        "002001004" : function(dvs, cateSortcode) {
+        },
+        "002001005" : function(dvs, cateSortcode) {
+        },
+        "002001006" : function(dvs, cateSortcode) {
+        },
+        "002001007" : function(dvs, cateSortcode) {
+        },
+        "002001008" : function(dvs, cateSortcode) {
+        },
+        "002001009" : function(dvs, cateSortcode) {
+        },
+        "002001010" : function(dvs, cateSortcode) {
+        },
+        "002002001" : function(dvs, cateSortcode) {
+        },
+        "002002002" : function(dvs, cateSortcode) {
+        },
+        "002002003" : function(dvs, cateSortcode) {
+        },
+        "002002004" : function(dvs, cateSortcode) {
+        },
+        "002002005" : function(dvs, cateSortcode) {
+        },
+        "002002006" : function(dvs, cateSortcode) {
+        },
+        "002002007" : function(dvs, cateSortcode) {
+        },
+        "002002009" : function(dvs, cateSortcode) {
+        },
+        "003001001" : function(dvs, cateSortcode) {
+        },
+        "003001002" : function(dvs, cateSortcode) {
+        },
+        "003001003" : function(dvs, cateSortcode) {
+        },
+        "003002001" : function(dvs, cateSortcode) {
+        },
+        "003002002" : function(dvs, cateSortcode) {
+        },
+        "003003001" : function(dvs, cateSortcode) {
+        },
+        "003003002" : function(dvs, cateSortcode) {
+        },
+        "003003003" : function(dvs, cateSortcode) {
+        },
+        "004001001" : function(dvs, cateSortcode) {
+        },
+        "004001002" : function(dvs, cateSortcode) {
+        },
+        "004001003" : function(dvs, cateSortcode) {
+        },
+        "004001004" : function(dvs, cateSortcode) {
+        },
+        "004002001" : function(dvs, cateSortcode) {
+        },
+        "004002002" : function(dvs, cateSortcode) {
+        },
+        "004002003" : function(dvs, cateSortcode) {
+        },
+        "004002004" : function(dvs, cateSortcode) {
+        },
+        "004003001" : function(dvs, cateSortcode) {
+        },
+        "004003002" : function(dvs, cateSortcode) {
+        },
+        "004003003" : function(dvs, cateSortcode) {
+        },
+        "004003004" : function(dvs, cateSortcode) {
+        },
+        "004003005" : function(dvs, cateSortcode) {
+        },
+        "004003006" : function(dvs, cateSortcode) {
+        },
+        "004003007" : function(dvs, cateSortcode) {
+        },
+        "004003008" : function(dvs, cateSortcode) {
+        },
+        "004003009" : function(dvs, cateSortcode) {
+        },
+        "004003010" : function(dvs, cateSortcode) {
+        },
+        "005001001" : function(dvs, cateSortcode) {
+        },
+        "005001002" : function(dvs, cateSortcode) {
+        },
+        "005001003" : function(dvs, cateSortcode) {
+        },
+        "005001004" : function(dvs, cateSortcode) {
+        },
+        "005001005" : function(dvs, cateSortcode) {
+        },
+        "005001006" : function(dvs, cateSortcode) {
+        },
+        "005002001" : function(dvs, cateSortcode) {
+        },
+        "005002002" : function(dvs, cateSortcode) {
+        },
+        "005002003" : function(dvs, cateSortcode) {
+        },
+        "005002004" : function(dvs, cateSortcode) {
+        },
+        "005002005" : function(dvs, cateSortcode) {
+        },
+        "005002006" : function(dvs, cateSortcode) {
+        },
+        "005003001" : function(dvs, cateSortcode) {
+        },
+        "005003002" : function(dvs, cateSortcode) {
+        },
+        "005003003" : function(dvs, cateSortcode) {
+        },
+        "005003004" : function(dvs, cateSortcode) {
+        },
+        "005003005" : function(dvs, cateSortcode) {
+        },
+        "005003006" : function(dvs, cateSortcode) {
+        },
+        "005003007" : function(dvs, cateSortcode) {
+        },
+        "005003008" : function(dvs, cateSortcode) {
+        },
+        "005003009" : function(dvs, cateSortcode) {
+        },
+        "006001001" : function(dvs, cateSortcode) {
+        },
+        "006001002" : function(dvs, cateSortcode) {
+        },
+        "006001003" : function(dvs, cateSortcode) {
+        },
+        "006002001" : function(dvs, cateSortcode) {
+        },
+        "007001001" : function(dvs, cateSortcode) {
+        },
+        "007001002" : function(dvs, cateSortcode) {
+        },
+        "007001003" : function(dvs, cateSortcode) {
+        },
+        "007001004" : function(dvs, cateSortcode) {
+        },
+        "008001001" : function(dvs, cateSortcode) {
+        },
+        "008001002" : function(dvs, cateSortcode) {
+        },
+        "009001001" : function(dvs, cateSortcode) {
+        },
+        "009001002" : function(dvs, cateSortcode) {
+        },
+        "009001003" : function(dvs, cateSortcode) {
+        },
+        "009001004" : function(dvs, cateSortcode) {
+        },
+        "009001005" : function(dvs, cateSortcode) {
+        },
+        "009001006" : function(dvs, cateSortcode) {
+        },
+        "009001007" : function(dvs, cateSortcode) {
+        },
+        "009001008" : function(dvs, cateSortcode) {
+        },
+        "009001009" : function(dvs, cateSortcode) {
+        },
+        "009001010" : function(dvs, cateSortcode) {
+        },
+        "009001011" : function(dvs, cateSortcode) {
+        },
+        "009001012" : function(dvs, cateSortcode) {
+        },
+        "009001013" : function(dvs, cateSortcode) {
+        },
+        "009001014" : function(dvs, cateSortcode) {
+        },
+        "009001015" : function(dvs, cateSortcode) {
+        },
+        "009001016" : function(dvs, cateSortcode) {
+        },
+        "009001017" : function(dvs, cateSortcode) {
+        },
+        "009001018" : function(dvs, cateSortcode) {
+        },
+        "009001019" : function(dvs, cateSortcode) {
+        },
+        "009001020" : function(dvs, cateSortcode) {
+        },
+        "009001021" : function(dvs, cateSortcode) {
+        },
+        "009001022" : function(dvs, cateSortcode) {
+        },
+        "009001023" : function(dvs, cateSortcode) {
+        },
+        "009001024" : function(dvs, cateSortcode) {
+        },
+        "009001025" : function(dvs, cateSortcode) {
+        },
+        "009001026" : function(dvs, cateSortcode) {
+        },
+        "009001027" : function(dvs, cateSortcode) {
+        },
+        "009001028" : function(dvs, cateSortcode) {
+        },
+        "009001029" : function(dvs, cateSortcode) {
+        },
+        "009001030" : function(dvs, cateSortcode) {
+        },
+        "009001031" : function(dvs, cateSortcode) {
+        },
+        "009001032" : function(dvs, cateSortcode) {
+        },
+        "009001033" : function(dvs, cateSortcode) {
+        },
+        "009001034" : function(dvs, cateSortcode) {
+        },
+        "009001035" : function(dvs, cateSortcode) {
+        },
+        "009001036" : function(dvs, cateSortcode) {
+        },
+        "009001037" : function(dvs, cateSortcode) {
+        },
+        "009001038" : function(dvs, cateSortcode) {
+        },
+        "009001039" : function(dvs, cateSortcode) {
+        },
+        "009001040" : function(dvs, cateSortcode) {
+        },
+        "009001041" : function(dvs, cateSortcode) {
+        },
+        "009001042" : function(dvs, cateSortcode) {
+        },
+        "009001043" : function(dvs, cateSortcode) {
+        },
+        "009001044" : function(dvs, cateSortcode) {
+        },
+        "009001045" : function(dvs, cateSortcode) {
+        },
+        "009001046" : function(dvs, cateSortcode) {
+        },
+        "009001047" : function(dvs, cateSortcode) {
+        },
+        "009001048" : function(dvs, cateSortcode) {
+        },
+        "009001049" : function(dvs, cateSortcode) {
+        },
+        "009001050" : function(dvs, cateSortcode) {
+        },
+        "002002008" : function(dvs, cateSortcode) {
+        },
+        "002002010" : function(dvs, cateSortcode) {
+        },
+        "003003004" : function(dvs, cateSortcode) {
+        },
+        "001004001" : function(dvs, cateSortcode) {
+        },
+        "001004002" : function(dvs, cateSortcode) {
+        },
+        "001004003" : function(dvs, cateSortcode) {
+        }

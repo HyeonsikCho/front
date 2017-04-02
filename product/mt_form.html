@@ -1,0 +1,84 @@
+<?
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/sess_common.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/Template.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/ConnectionPool.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/job/common/ProductCommonDAO.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/product/info/SheetCutInfo.php");
+
+$connectionPool = new ConnectionPool();
+$conn = $connectionPool->getPooledConnection();
+
+$template = new Template();
+$dao = new ProductCommonDAO();
+
+// 사진, 배너, 카테고리 셀렉트박스
+include_once($_SERVER["DOCUMENT_ROOT"] . "/product/info/common_info.php");
+
+// 로그인 상태인지 체크하는부분 include
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/login_check.php");
+
+$prefix = "mt_frm";
+
+$flag_arr = array(
+    "affil_yn"      => true,
+    "pos_yn"        => true,
+    "mix_yn"        => false,
+    "paper_name_yn" => false,
+    "size_typ_yn"   => false
+);
+$info = new SheetCutInfo($conn,
+                         $template,
+                         $sortcode_b,
+                         $prefix,
+                         $fb->session("sell_site"),
+                         $flag_arr);
+// 제본 인쇄가격
+$price_info_arr = $info->getPriceInfoArr();
+
+$binding_html = '';
+
+$param["cate_sortcode"] = $sortcode_b;
+$param["after_name"]    = "제본";
+$param["depth1"]        = "떡제본";
+$param["size"]          = $price_info_arr["size_name"];
+$binding_rs = $dao->selectCateAfterInfo($conn, $param);
+
+while ($binding_rs && !$binding_rs->EOF) {
+    $default = '';
+    $fields = $binding_rs->fields;
+    $depth2 = $fields["depth2"];
+    $mpcode = $fields["mpcode"];
+
+    if ($depth2 === "세로상철") {
+        $default = "selected=\"selected\"";
+        $binding_mpcode = $binding_rs->fields["mpcode"];
+    }
+
+    $binding_html .= option($mpcode, $depth2, $default);
+
+    $binding_rs->MoveNext();
+}
+$template->reg($prefix . "_binding_html", $binding_html); 
+
+unset($binding_rs);
+unset($param);
+
+$param["sell_site"] = $fb->session("sell_site");
+$param["mpcode"]    = $binding_mpcode;
+$param["amt"]       = $price_info_arr["amt"];
+
+$binding_price = $dao->selectBindingPrice($conn, $param);
+$binding_price = intval($binding_price);
+$template->reg($prefix . "_binding_price", $binding_price); 
+
+// 기본사용 자바스크립트, css 파일 불러오는 용
+$template->reg("dir", "product"); 
+$template->reg("page", "mt_frm"); 
+
+//design_dir 경로
+$template->reg("design_dir", "/design_template"); 
+$template->htmlPrint($_SERVER["PHP_SELF"]); 
+
+$conn->Close();
+?>
+

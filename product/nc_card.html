@@ -1,0 +1,94 @@
+<?
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/sess_common.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/Template.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/ConnectionPool.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/job/common/ProductCommonDAO.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/product/info/SheetCutInfo.php");
+
+$connectionPool = new ConnectionPool();
+$conn = $connectionPool->getPooledConnection();
+
+$template = new Template();
+$dao = new ProductCommonDAO();
+
+// 명함 상품 정보 처리부분 include
+// 사진, 배너, 카테고리 셀렉트박스
+include_once($_SERVER["DOCUMENT_ROOT"] . "/product/info/common_info.php");
+
+// 로그인 상태인지 체크하는부분 include
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/login_check.php");
+
+$flag_arr = array(
+    "affil_yn"      => false,
+    "pos_yn"        => false,
+    "mix_yn"        => false,
+    "paper_name_yn" => false,
+    "size_typ_yn"   => false
+);
+$info = new SheetCutInfo($conn,
+                         $template,
+                         $sortcode_b,
+                         "nc",
+                         $fb->session("sell_site"),
+                         $flag_arr);
+
+// 백판사이즈 관련로직 추가
+$html  = "<dt>백판사이즈</dt>";
+$html .= "<dd>";
+$html .= "   <label>가로 <input id=\"back_wid_size\" name=\"nc_back_wid_size\" type=\"text\" value=\"%s\" %s>mm</label>,";
+$html .= "   <label>세로 <input id=\"back_vert_size\" name=\"nc_back_vert_size\" type=\"text\" value=\"%s\" %s>mm</label>";
+$html .= "</dd>";
+
+$pos_html .= "<dt>백판위치</dt>";
+$pos_html .= "<dd>";
+$pos_html .= "   <input type=\"radio\" id=\"back_pos_both\" name=\"back_pos_dvs\" value=\"양면\" %s />&nbsp;양면";
+$pos_html .= "   &nbsp;&nbsp;<input type=\"radio\" id=\"back_pos_bef\" name=\"back_pos_dvs\" value=\"전면\" %s />&nbsp;전면";
+$pos_html .= "   &nbsp;&nbsp;<input type=\"radio\" id=\"back_pos_aft\" name=\"back_pos_dvs\" value=\"후면\" %s />&nbsp;후면";
+$pos_html .= "</dd>";
+
+$cate_name = $dao->selectCateName($conn, $sortcode_b);
+
+$disabled_attr = '';
+$checked_attr  = '';
+if (strpos($cate_name, "누드") > -1) {
+    // 명함명에 누드가 들어가는 명함은 라디오버튼 전면만 활성화
+    $disabled_attr = "disabled=\"disabled\"";
+    $checked_attr  = "checked=\"checked\"";
+}
+
+if ($cate_name === "홀로그램플러스 카드명함" ||
+        $cate_name === "반누드플러스 카드명함" ||
+        $cate_name === "홀로그램 더블플러스 카드명함") {
+    // 홀로그램 플러스, 반누드 플러스, 홀로그램 더블은 백판사이즈 수정 가능
+    $html  = sprintf($html, "82", ''
+                          , "50", '');
+    $html .= sprintf($pos_html, $disabled_attr
+                              , $checked_attr
+                              , $disabled_attr);
+
+//} else if (strpos($cate_name, "플러스") > -1) {
+} else if ($cate_name === "실버플러스 카드명함" ||
+        $cate_name === "골드플러스 카드명함" ||
+        $cate_name === "은펄플러스 카드명함" ||
+        $cate_name === "금펄플러스 카드명함" ||
+        $cate_name === "금펄더블플러스 카드명함") {
+    // 기타 ~플러스 카드명함은 82*50 사이즈로 고정
+    $html = sprintf($html, "82", "readonly"
+                         , "50", "readonly");
+    $html .= "<dt></dt><dd>자사 백판을 사용해 디자인 해주세요.</dd>";
+} else {
+    // 나머지 카드명함은 비노출
+    $html = '';
+}
+$template->reg("back_size", $html); 
+
+// 기본사용 자바스크립트, css 파일 불러오는 용
+$template->reg("dir", "product"); 
+$template->reg("page", "nc"); 
+
+//design_dir 경로
+$template->reg("design_dir", "/design_template"); 
+$template->htmlPrint($_SERVER["PHP_SELF"]); 
+
+$conn->Close();
+?>

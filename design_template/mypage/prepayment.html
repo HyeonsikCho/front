@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    [TPH_I/common/head.html]
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+</head>
+<body>
+<header class="top">
+    [TPH_I/common/header.html]
+</header>
+<section class="contents lnb memberInfo">
+    <header class="title">
+        <h2><img src="[TPH_Vdesign_dir]/images/mypage/title.png" alt="마이페이지"></h2>
+        <ol class="location">
+            [TPH_I/common/home_btn.html]
+            <li><a href="/mypage/main.html"><span>마이페이지</span></a></li>
+            <li><a href="/mypage/member_modify.html"><span>회원정보</span></a></li>
+            <li><a href="/mypage/prepayment.html"><span>선입금 충전</span></a></li>
+        </ol>
+    </header>
+    <nav class="lnb">
+        [TPH_I/mypage/common/lnb.html]
+    </nav>
+    <h3 class="pageTitle">선입금 충전</h3>
+    <section class="moneyInformation">
+        <dl class="prepaid">
+            <dt>선입금</dt>
+            <dd>&#8361;[TPH_Vprepay_price]</dd>
+        </dl>
+        <dl class="restAmount">
+            <dt>주문 부족 금액</dt>
+            <dd>&#8361;[TPH_Vorder_lack_price]</dd>
+        </dl>
+    </section>
+    <section class="searchCondition">
+        <div class="rowWrap">
+            <dl class="date">
+                <dt>거래일</dt>
+                <dd>
+                    [TPH_I/common/datepicker.html]
+                </dd>
+            </dl>
+        </div>
+        <button class="search" onclick="getPrepaymentList(10, 1);">검색</button>
+    </section>
+    <table class="list searchResult _details">
+        <caption>
+            <div class="resultNum" id="resultNum">
+            </div>
+            <select onchange="changeListNum(this.value);" class="listNum">
+                <option value="10">10개씩 보기</option>
+                <option value="20">20개씩 보기</option>
+                <option value="50">50개씩 보기</option>
+            </select>
+        </caption>
+        <colgroup>
+            <col style="width:70px">
+            <col style="width:120px">
+            <col style="width:120px">
+            <col>
+            <col style="width:120px">
+            <col style="width:80px">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>거래일</th>
+                <th>거래내역</th>
+                <th>결제금액</th>
+                <th>결제상태</th>
+                <th>영수증출력</th>
+            </tr>
+        </thead>
+        <tbody id="list">
+        </tbody>
+    </table>
+    <ul class="paging" id="paging">
+        <li><button class="on">1</button></li>
+    </ul>
+    <div class="function center">
+        <strong><button class="function" onclick="showPrepaymentPop();">충전하기</button></strong>
+    </div>
+    [TPH_I/mypage/common/banner.html]
+</section>
+<footer>
+    [TPH_I/common/footer.html]
+</footer>
+</body>
+</html>

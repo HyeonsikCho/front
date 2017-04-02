@@ -1,0 +1,283 @@
+<?php
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/sess_common.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common_define/common_config.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/ConnectionPool.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/job/order/SheetDAO.php");
+
+/*
+ * Copyright (c) 2016 Nexmotion, Inc
+ * All rights reserved.
+ *
+ * REVISION HISTORY (reverse chronological order)
+ * =============================================================================
+ * 2016/12/27 엄준현 추가
+ * =============================================================================
+ */
+
+/*
+This is an upload script for SWFUpload that attempts to properly handle uploaded files
+in a secure way.
+
+Notes:
+
+	SWFUpload doesn't send a MIME-TYPE. In my opinion this is ok since MIME-TYPE is no better than
+	 file extension and is probably worse because it can vary from OS to OS and browser to browser (for the same file).
+	 The best thing to do is content sniff the file but this can be resource intensive, is difficult, and can still be fooled or inaccurate.
+	 Accepting uploads can never be 100% secure.
+
+	You can't guarantee that SWFUpload is really the source of the upload.  A malicious user
+	 will probably be uploading from a tool that sends invalid or false metadata about the file.
+	 The script should properly handle this.
+
+	The script should not over-write existing files.
+
+	The script should strip away invalid characters from the file name or reject the file.
+
+	The script should not allow files to be saved that could then be executed on the webserver (such as .php files).
+	 To keep things simple we will use an extension whitelist for allowed file extensions.  Which files should be allowed
+	 depends on your server configuration. The extension white-list is _not_ tied your SWFUpload file_types setting
+
+	For better security uploaded files should be stored outside the webserver's document root.  Downloaded files
+	 should be accessed via a download script that proxies from the file system to the webserver.  This prevents
+	 users from executing malicious uploaded files.  It also gives the developer control over the outgoing mime-type,
+	 access restrictions, etc.  This, however, is outside the scope of this script.
+
+	SWFUpload sends each file as a separate POST rather than several files in a single post. This is a better
+	 method in my opinions since it better handles file size limits, e.g., if post_max_size is 100 MB and I post two 60 MB files then
+	 the post would fail (2x60MB = 120MB). In SWFupload each 60 MB is posted as separate post and we stay within the limits. This
+	 also simplifies the upload script since we only have to handle a single file.
+
+	The script should properly handle situations where the post was too large or the posted file is larger than
+	 our defined max.  These values are not tied to your SWFUpload file_size_limit setting.
+
+*/
+
+if ($is_login === false) {
+    HandleError("No Login");
+    exit(0);
+}
+
+// Code for Session Cookie workaround
+	if (isset($_POST["PHPSESSID"])) {
+		session_id($_POST["PHPSESSID"]);
+	} else if (isset($_GET["PHPSESSID"])) {
+		session_id($_GET["PHPSESSID"]);
+	}
+
+// Check post_max_size (http://us3.php.net/manual/en/features.file-upload.php#73762)
+	$POST_MAX_SIZE = ini_get('post_max_size');
+	$unit = strtoupper(substr($POST_MAX_SIZE, -1));
+	$multiplier = ($unit == 'M' ? 1048576 : ($unit == 'K' ? 1024 : ($unit == 'G' ? 1073741824 : 1)));
+
+	if ((int)$_SERVER['CONTENT_LENGTH'] > $multiplier*(int)$POST_MAX_SIZE && $POST_MAX_SIZE) {
+		header("HTTP/1.1 500 Internal Server Error"); // This will trigger an uploadError event in SWFUpload
+
+		HandleError("POST exceeded maximum allowed size.");
+		exit(0);
+	}
+
+// Settings
+    //TODO 파일 저장 경로
+    $connectionPool = new ConnectionPool();
+    $conn = $connectionPool->getPooledConnection();
+
+	$upload_name = "file";
+
+    $state_arr    = $_SESSION["state_arr"];
+    $member_seqno = $_SESSION["org_member_seqno"];
+    $order_seqno  = $_GET["seqno"];
+
+    $dao = new SheetDAO();
+
+    $param = array();
+    $param["member_seqno"]       = $member_seqno;
+    $param["order_common_seqno"] = $order_seqno;
+
+    $order_rs = $dao->selectOrderCommon($conn,
+                                        $param,
+                                        "order_state");
+
+    if ($order_rs->EOF) {
+        HandleError("Not Exist Order");
+        exit(0);
+    }
+
+    $order_state = intval($order_rs->fields["order_state"]);
+    unset($order_rs);
+
+    // 접수를 넘어갔거나 접수중이면 불가
+    if ($order_state > intval($state_arr["접수보류"]) ||
+            intval($state_arr["접수중"]) <= $order_state &&
+            $order_state <= intval($state_arr["시안확인완료"])) {
+        HandleError("Incorrect State");
+        exit(0);
+    }
+
+    $param["order_seqno"] = $order_seqno;
+    $file_rs = $dao->selectOrderFile($conn, $param);
+
+    $save_path = $file_rs["file_path"];
+    $file_name = $file_rs["save_file_name"];
+
+    if ($file_rs->EOF) {
+        HandleError("Not Exist File");
+        exit(0);
+    }
+
+    $file_path = $save_path . $file_name;
+
+    @unlink($file_path);
+
+    $tmp_name = explode('.', $_FILES[$upload_name]['name']);
+    $ext      = array_pop($tmp_name);
+    $file_name  = explode('.', $file_name)[0];
+    $file_name .= '.' . $ext;
+
+	$max_file_size_in_bytes = 524288000; // 500MB in bytes
+	$extension_whitelist = array("zip","egg","rar","jpg","jpeg",
+                                 "sit","zip","ai", "png","alz",
+                                 "cdr","cdt","eps","cmx","7z","pdf"); // Allowed file extensions
+	$valid_chars_regex = '.A-Z0-9_ !@#$%^&()+={}\[\]\',~`-'; // Characters allowed in the file name (in a Regular Expression format)
+
+// Other variables
+	$MAX_FILENAME_LENGTH = 260;
+	$file_extension = "";
+	$uploadErrors = array(
+        0=>"There is no error, the file uploaded with success",
+        1=>"The uploaded file exceeds the upload_max_filesize directive in php.ini",
+        2=>"The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form",
+        3=>"The uploaded file was only partially uploaded",
+        4=>"No file was uploaded",
+        6=>"Missing a temporary folder"
+	);
+
+// Validate the upload
+	if (!isset($_FILES[$upload_name])) {
+		HandleError("No upload found in \$_FILES for " . $upload_name);
+		exit(0);
+	} else if (isset($_FILES[$upload_name]["error"]) && $_FILES[$upload_name]["error"] != 0) {
+		HandleError($uploadErrors[$_FILES[$upload_name]["error"]]);
+		exit(0);
+	} else if (!isset($_FILES[$upload_name]["tmp_name"]) || !@is_uploaded_file($_FILES[$upload_name]["tmp_name"])) {
+		HandleError("Upload failed is_uploaded_file test.");
+		exit(0);
+	} else if (!isset($_FILES[$upload_name]['name'])) {
+		HandleError("File has no name.");
+		exit(0);
+	}
+
+// Validate the file size (Warning: the largest files supported by this code is 2GB)
+	$file_size = @filesize($_FILES[$upload_name]["tmp_name"]);
+	if (!$file_size || $file_size > $max_file_size_in_bytes) {
+		HandleError("File exceeds the maximum allowed size", -600);
+		exit(0);
+	}
+
+	if ($file_size <= 0) {
+		HandleError("File size outside allowed lower bound");
+		exit(0);
+	}
+
+// Validate file extension
+	$path_info = pathinfo($_FILES[$upload_name]['name']);
+	$file_extension = strtolower($path_info["extension"]);
+	$is_valid_extension = false;
+	foreach ($extension_whitelist as $extension) {
+		if (strcasecmp($file_extension, $extension) == 0) {
+			$is_valid_extension = true;
+			break;
+		}
+	}
+	if (!$is_valid_extension) {
+		HandleError("Invalid file extension");
+		exit(0);
+	}
+
+// Validate file contents (extension and mime-type can't be trusted)
+	/*
+		Validating the file contents is OS and web server configuration dependant.  Also, it may not be reliable.
+		See the comments on this page: http://us2.php.net/fileinfo
+
+		Also see http://72.14.253.104/search?q=cache:3YGZfcnKDrYJ:www.scanit.be/uploads/php-file-upload.pdf+php+file+command&hl=en&ct=clnk&cd=8&gl=us&client=firefox-a
+		 which describes how a PHP script can be embedded within a GIF image file.
+
+		Therefore, no sample code will be provided here.  Research the issue, decide how much security is
+		 needed, and implement a solution that meets the needs.
+	*/
+
+
+// create save_path if not exists
+  if( !is_dir($save_path) )
+  {
+    mkdir($save_path, 0755, true);
+  }
+
+// Process the file
+	/*
+		At this point we are ready to process the valid file. This sample code shows how to save the file. Other tasks
+		 could be done such as creating an entry in a database or generating a thumbnail.
+
+		Depending on your server OS and needs you may need to set the Security Permissions on the file after it has
+		been saved.
+	*/
+	if (!@move_uploaded_file($_FILES[$upload_name]["tmp_name"], $file_path)) {
+		HandleError("File could not be saved.");
+		exit(0);
+	}
+
+	// success
+
+    $param["save_file_name"]   = $file_name;
+    $param["origin_file_name"] = $_FILES[$upload_name]['name'];
+    $param["size"]             = $file_size;
+
+    $conn->StartTrans();
+    $dao->updateOrderFile($conn, $param);
+
+    if ($conn->HasFailedTrans() === true) {
+        $conn->FailTrans();
+        $conn->RollbackTrans();
+        HandleError("Data Update Faild");
+        exit(0);
+    }
+
+    // 주문상태 접수대기로 업데이트 하는 부분 추가 필요
+    if ($order_state === intval($state_arr["재주문"])) {
+        $param["order_state"] = $state_arr["입금완료"];
+
+        $ret = $dao->updateOrderCommonState($conn, $param);
+        $ret = $dao->updateOrderDetailState($conn, $param);
+
+        $detail_rs = $dao->selectOrderDetailSeqno($conn, $order_seqno);
+
+        while ($detail_rs && !$detail_rs->EOF) {
+            $param["order_detail_seqno"] =
+                $detail_rs->fields["order_detail_seqno"];
+            $ret = $dao->updateOrderDetailCountFileState($conn, $param);
+
+            $detail_rs->MoveNext();
+        }
+    }
+
+    $conn->CompleteTrans();
+
+	showResult(true, "upload completed");
+
+	exit(0);
+
+function showResult($success, $message)
+{
+	$result = array('success'    => $success,
+                    'message'    => $message);
+	echo json_encode($result);
+}
+
+/* Handles the error output. This error message will be sent to the uploadSuccess event handler.  The event handler
+will have to check for any error messages and react as needed. */
+function HandleError($message, $code = '') {
+	$result = array('success'    => false,
+                    'code'       => $code,
+                    'message'    => $message);
+	echo json_encode($result);
+}
+?>

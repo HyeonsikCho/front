@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    [TPH_I/common/head.html]
+    <script src="[TPH_Vdesign_dir]/js/lib/highcharts.js"></script>
+</head>
+<body>
+<header class="top">
+    [TPH_I/common/header.html]
+</header>
+<section class="contents lnb benefits">
+    <header class="title">
+        <h2><img src="[TPH_Vdesign_dir]/images/mypage/title.png" alt="마이페이지"></h2>
+        <ol class="location">
+            [TPH_I/common/home_btn.html]
+            <li><a href="/mypage/main.html"><span>마이페이지</span></a></li>
+            <li><a href="/mypage/member_modify.html"><span>회원정보</span></a></li>
+            <li><a href="/mypage/benefits_grade.html"><span>회원등급</span></a></li>
+        </ol>
+    </header>
+    <nav class="lnb">
+        [TPH_I/mypage/common/lnb.html]
+    </nav>
+    <h3 class="pageTitle">회원등급</h3>
+        [TPH_I/mypage/common/summary.html]
+    <nav class="pageTab">
+        <ul>
+            <li class="on">회원등급</li>
+            <li><a href="/mypage/benefits_event.html">이벤트</a></li>
+            <li><a href="/mypage/benefits_point.html">포인트</a></li>
+            <li><a href="/mypage/benefits_coupon.html">쿠폰</a></li>
+            <li><a href="/mypage/benefits_category.html">카테고리별 할인</a></li>
+        </ul>
+    </nav>
+    <section class="gradeStatus">
+      [TPH_Vgrade_status_html]
+    </section>
+    <dl class="gradeOverview">
+        [TPH_Vgrade_overview_html]
+        <dd class="note">
+            <ul class="hyphen">
+                <li>회원 등급에 마우스 커서를 올리면 해당 등급의 상세 설명을 보실 수 있습니다.</li>
+                <li>회원 등급은 이전 3개월 간의 구입 금액의 합을 기준으로 정해집니다.</li>
+                <li>회원 등급은 상향 후 최소 3개월간 유지됩니다.</li>
+            </ul>
+        </dd>
+    </dl>
+    <section class="gradeGraph">
+        <h4 class="sectionTitle">
+            <select onchange="getChart(this.value);">
+              [TPH_Vyear_html]
+            </select>
+            년도 월별 회원등급 추이
+        </h4>
+        <figure id="chart">
+        </figure>
+    </section>
+    [TPH_I/mypage/common/banner.html]
+</section>
+<footer>
+    [TPH_I/common/footer.html]
+</footer>
+</body>
+</html>

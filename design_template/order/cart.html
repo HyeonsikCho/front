@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    [TPH_I/common/head.html]
+</head>
+<body>
+<header class="top">
+    [TPH_I/common/header.html]
+</header>
+<section class="contents cart">
+    <header class="title">
+        <ol class="location">
+        </ol>
+        <h2><img src="[TPH_Vdesign_dir]/images/order/title/cart.png" alt="장바구니"></h2>
+        <span class="description">주문하실 상품을 선택하세요.</span>
+        <ol class="sequence">
+            <li><img src="[TPH_Vdesign_dir]/images/order/sequence_step1_on.png" alt="STEP1 장바구니"></li>
+            <li><img src="[TPH_Vdesign_dir]/images/order/sequence_step2.png" alt="STEP2 주문서 작성"></li>
+            <li><img src="[TPH_Vdesign_dir]/images/order/sequence_step3.png" alt="STEP3 주문완료"></li>
+        </ol>
+    </header>
+    <article class="notice">
+        <div class="wrap">
+            <h3>주문 전에 확인해주세요.</h3>
+            <ul>
+                <li>장바구니에 담긴 상품은 반드시 주문 버튼을 클릭하여 주문서 작성 및 결제를 완료해야 인쇄 및 제작이 진행됩니다.</li>
+                <li>장바구니에 담긴 상품은 담은날로부터 일주일이 경과하면 장바구니에서 삭제됩니다.</li>
+                <li>자세히 보기를 통해 최종 카테고리, 수량/건 등의 내용을 간편하게 수정하실 수 있습니다.</li>
+                <li>단, 항목 수정 후 수정 버튼을 클릭하지 않으면, 주문 시 수정 사항이 반영되지 않습니다. 수정 버튼을 꼭 클릭해 주세요.</li>
+                <li>작업 파일은 주문서 작성 단계에서 올리실 수 있습니다.</li>
+            </ul>
+        </div>
+    </article>
+    <table class="list order _details">
+        <colgroup>
+            <col width="40">
+            <col width="40">
+            <col width="80">
+            <col width="180">
+            <col>
+            <col width="90">
+            <col width="100">
+            <col width="60">
+        </colgroup>
+        <thead>
+            <tr>
+                <th><input type="checkbox" class="_general"></th>
+                <th>번호</th>
+                <th>담은날</th>
+                <th>인쇄물제목</th>
+                <th>상품정보</th>
+                <th>수량(건)</th>
+                <th>결제예정금액</th>
+                <th>상세</th>
+            </tr>
+        </thead>
+
+        [TPH_Vcart_list]
+    </table>
+    <article class="priceSummary">
+        <dl class="ordinary">
+            <dt>정상판매가</dt>
+            <dd><strong>[TPH_Vsell_price]</strong> 원</dd>
+        </dl>
+        <dl class="membershipDiscount">
+            <dt>회원등급할인</dt>
+            <dd><strong>[TPH_Vgrade_sale_price]</strong> 원</dd>
+        </dl>
+        <dl class="eventDiscount">
+            <dt>이벤트할일</dt>
+            <dd><strong>[TPH_Vevent_sale_price]</strong> 원</dd>
+        </dl>
+        <dl class="paymentAmount">
+            <dt>결제예정금액</dt>
+            <dd><strong>[TPH_Vsale_price]</strong> 원</dd>
+        </dl>
+    </article>
+    <div class="function">
+        <div class="right">
+            <button class="gray" onclick="location.href='/index.html'">상품 더 담기</button>
+            <strong class="blue"><button onclick="goSheet(false);">선택 상품 주문</button></strong>
+            <strong><button onclick="goSheet(true);">전체 상품 주문</button></strong>
+        </div>
+        <button class="function" onclick="delCart(false);">선택 상품 삭제</button>
+    </div>
+</section>
+<footer>
+    [TPH_I/common/footer.html]
+</footer>
+</body>
+</html>

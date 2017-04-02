@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    [TPH_I/common/head.html]
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <style type="text/css">
+        ul.paging .first:after,
+        ul.paging .last:before { content: '···'; margin: 0 6px; }
+    </style>
+</head>
+<body>
+<header class="top">
+    [TPH_I/common/header.html]
+</header>
+<section class="contents lnb benefits">
+    <header class="title">
+        <h2><img src="[TPH_Vdesign_dir]/images/mypage/title.png" alt="마이페이지"></h2>
+        <ol class="location">
+            [TPH_I/common/home_btn.html]
+            <li><a href="/mypage/main.html"><span>마이페이지</span></a></li>
+            <li><a href="/mypage/member_modify.html"><span>회원정보</span></a></li>
+            <li><a href="/mypage/benefits_point.html"><span>포인트조회</span></a></li>
+        </ol>
+    </header>
+    <nav class="lnb">
+        [TPH_I/mypage/common/lnb.html]
+    </nav>
+    <h3 class="pageTitle">포인트조회</h3>
+        [TPH_I/mypage/common/summary.html]
+    <nav class="pageTab">
+        <ul>
+            <li><a href="/mypage/benefits_grade.html">회원등급</a></li>
+            <li><a href="/mypage/benefits_event.html">이벤트</a></li>
+            <li class="on">포인트</li>
+            <li><a href="/mypage/benefits_coupon.html">쿠폰</a></li>
+            <li><a href="/mypage/benefits_category.html">카테고리별 할인</a></li>
+        </ul>
+    </nav>
+    <section class="tip">
+        <div class="wrap">
+            <ul class="notice hyphen">
+                <li>포인트는 상품 구입 시 적립되며, 상품별로 적립 금액이 상이합니다.</li>
+                <li>적립된 포인트는 12개월 동안 유지되며, 미사용 시 자동 소멸됩니다.</li>
+                <li>상품 구입 시 상품 가격의 최대 50%까지 포인트로 할인 받을 수 있습니다.</li>
+                <li>이벤트 상품 등 일부 상품에는 포인트 사용이 불가할 수 있습니다.</li>
+            </ul>
+        </div>
+    </section>
+    <section class="searchCondition">
+        <div class="rowWrap">
+            <dl class="date">
+                <dt>거래일</dt>
+                <dd>
+                    [TPH_I/common/datepicker.html]
+                </dd>
+            </dl>
+            <dl class="last">
+                <dt>구분</dt>
+                <dd>
+                    <select id="dvs">
+                        <option value="">전체</option>
+                        <option value="적립">적립</option>
+                        <option value="사용">사용</option>
+                    </select>
+                </dd>
+            </dl>
+        </div>
+        <button onclick="searchList();" class="search">검색</button>
+    </section>
+    <table class="list searchResult noEllipsis">
+        <caption>
+            <div class="resultNum" id="resultNum">
+            </div>
+            [TPH_I/common/list_num.html]
+            </caption>
+        <colgroup>
+            <col style="width:40px"/>
+            <col style="width:100px"/>
+            <col style="width:80px"/>
+            <col>
+            <col>
+            <col>
+            <col>
+            <col>
+        </colgroup>
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>거래일</th>
+                <th>구분</th>
+                <th>적립포인트</th>
+                <th>사용포인트</th>
+                <th>주문번호</th>
+                <th>주문금액</th>
+                <th>잔여포인트</th>
+            </tr>
+        </thead>
+        <tbody id="point_list">
+        </tbody>
+    </table>
+    <ul class="paging" id="paging">
+        <li><button class="on">1</button></li>
+    </ul>
+    [TPH_I/mypage/common/banner.html]
+</section>
+<footer>
+    [TPH_I/common/footer.html]
+</footer>
+</body>
+</html>

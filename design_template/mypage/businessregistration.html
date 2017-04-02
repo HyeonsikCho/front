@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    [TPH_I/common/head.html]
+    <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <style type="text/css">
+        ul.paging .first:after,
+        ul.paging .last:before { content: '···'; margin: 0 6px; }
+    </style>
+</head>
+<body>
+<header class="top">
+    [TPH_I/common/header.html]
+</header>
+<section class="contents lnb orderList">
+    <header class="title">
+        <h2><img src="[TPH_Vdesign_dir]/images/mypage/title.png" alt="마이페이지"></h2>
+        <ol class="location">
+            [TPH_I/common/home_btn.html]
+            <li><a href="/mypage/main.html"><span>마이페이지</span></a></li>
+            <li><a href="/mypage/businessregistration.html"><span>관리 사업자등록증</span></a></li>
+        </ol>
+    </header>
+    <nav class="lnb">
+        [TPH_I/mypage/common/lnb.html]
+    </nav>
+    <h3 class="pageTitle">관리 사업자등록증</h3>
+    <table class="searchResult _orderDetails">
+        <caption>
+            <div class="resultNum" id="resultNum">
+            </div>
+        </caption>
+        <colgroup>
+            <col style="width:40px">
+            <col style="width:100px">
+            <col style="width:100px">
+            <col style="width:100px">
+            <col style="width:100px">
+            <col>
+            <col style="width:100px">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>등록번호</th>
+                <th>상호</th>
+                <th>대표자명</th>
+                <th>전화번호</th>
+                <th>주소</th>
+                <th>관리</th>
+            </tr>
+        </thead>
+        <tbody id="list">
+            <!--<tr class="waiting">
+                <td>3</td>
+                <td>201-02-05005</td>
+                <td>(주)컴퍼니</td>
+                <td>삼대표</td>
+                <td>03-9797-6464</td>
+                <td class="address">서울 중구 필동2가 84-12번지</td>
+                <td><button class="modify" onclick="layerPopup('l_businessRegistration', 'pop_registration_edit.html');">수정/삭제</button></td>
+            </tr>-->
+        </tbody>
+    </table>
+    <ul class="paging" id="paging">
+        <li><button class="on">1</button></li>
+    </ul>
+    <div class="function center">
+        <strong><button class="function" onclick="layerPopup('l_businessRegistration', 'popup/pop_registration_write.html');">신규 등록</button></strong>
+    </div>
+    [TPH_I/mypage/common/banner.html]
+</section>
+<footer>
+    [TPH_I/common/footer.html]
+</footer>
+</body>
+</html>

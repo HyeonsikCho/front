@@ -1,0 +1,20 @@
+0813-170953.962 - 19159 - T51020018DFmoqMp     - MSG : START - tr_cd=[00101000]+mall_id=[T5102001]+order_no=[ORDER_201608131471075799950]
+0813-170953.989 - 19159 - T51020018DFmoqMp     - MSG : PG_서버_접속__정상
+0813-170953.999 - 19159 - T51020018DFmoqMp     - MSG : PG_서버_요청_전문_전송__정상
+0813-170954.051 - 19159 - T51020018DFmoqMp     - MSG : PG_서버_응답_전문_수신__정상
+0813-170954.051 - 19159 - T51020018DFmoqMp     - MSG : ENDED - res=[res_cd=0000res_msg=계좌 채번 정상cno=16081317062923704095order_no=ORDER_201608131471075799950tran_date=20160813170629bank_cd=020bank_flag=Ybank_nm=우리은행account_no=T1619576718784deposit_nm=한국정보통신(주) 테expire_date=20160813235959escrow_yn=Ncomplex_yn=Nstat_cd=TS07stat_msg=입금대기pay_type=22memb_id=T5102001memb_gubun=2bk_pay_yn=N]
+0813-172214.866 - 19189 - T51020018DFmoqMp     - MSG : START - tr_cd=[00101000]+mall_id=[T5102001]+order_no=[ORDER_201608131471076540852]
+0813-172214.877 - 19189 - T51020018DFmoqMp     - MSG : PG_서버_접속__정상
+0813-172214.888 - 19189 - T51020018DFmoqMp     - MSG : PG_서버_요청_전문_전송__정상
+0813-172214.973 - 19189 - T51020018DFmoqMp     - MSG : PG_서버_응답_전문_수신__정상
+0813-172214.974 - 19189 - T51020018DFmoqMp     - MSG : ENDED - res=[res_cd=0000res_msg=계좌 채번 정상cno=16081317185023704103order_no=ORDER_201608131471076540852tran_date=20160813171850bank_cd=011bank_flag=Ybank_nm=농협중앙회account_no=T3672364435361deposit_nm=한국정보통신(주) 테expire_date=20160813235959escrow_yn=Ncomplex_yn=Nstat_cd=TS07stat_msg=입금대기pay_type=22memb_id=T5102001memb_gubun=2bk_pay_yn=N]
+0813-180758.590 - 19261 - T51020018DFmoqMp     - MSG : START - tr_cd=[00101000]+mall_id=[T5102001]+order_no=[ORDER_201608131471079284564]
+0813-180758.603 - 19261 - T51020018DFmoqMp     - MSG : PG_서버_접속__정상
+0813-180758.613 - 19261 - T51020018DFmoqMp     - MSG : PG_서버_요청_전문_전송__정상
+0813-180758.677 - 19261 - T51020018DFmoqMp     - MSG : PG_서버_응답_전문_수신__정상
+0813-180758.677 - 19261 - T51020018DFmoqMp     - MSG : ENDED - res=[res_cd=0000res_msg=계좌 채번 정상cno=16081318043423704108order_no=ORDER_201608131471079284564tran_date=20160813180434bank_cd=004bank_flag=Ybank_nm=국민은행account_no=T9649078155384deposit_nm=한국정보통신(주) 테expire_date=20160813235959escrow_yn=Ncomplex_yn=Nstat_cd=TS07stat_msg=입금대기pay_type=22memb_id=T5102001memb_gubun=2bk_pay_yn=N]
+0813-202740.901 - 19521 - T51020018DFmoqMp     - MSG : START - tr_cd=[00101000]+mall_id=[T5102001]+order_no=[ORDER_201608131471087666830]
+0813-202740.914 - 19521 - T51020018DFmoqMp     - MSG : PG_서버_접속__정상
+0813-202740.924 - 19521 - T51020018DFmoqMp     - MSG : PG_서버_요청_전문_전송__정상
+0813-202740.986 - 19521 - T51020018DFmoqMp     - MSG : PG_서버_응답_전문_수신__정상
+0813-202740.986 - 19521 - T51020018DFmoqMp     - MSG : ENDED - res=[res_cd=0000res_msg=계좌 채번 정상cno=16081320241623704112order_no=ORDER_201608131471087666830tran_date=20160813202416bank_cd=011bank_flag=Ybank_nm=농협중앙회account_no=T3672364435447deposit_nm=한국정보통신(주) 테expire_date=20160813235959escrow_yn=Ncomplex_yn=Nstat_cd=TS07stat_msg=입금대기pay_type=22memb_id=T5102001memb_gubun=2bk_pay_yn=N]

@@ -1,0 +1,10 @@
+<?
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/sess_common.php");
+
+if ($_SERVER["HTTP_HOST"] !== "www.yesprinting.co.kr") {
+    header("Location: http://www.yesprinting.co.kr");
+    exit;
+}
+
+header("Location: /main/main.html");
+?>

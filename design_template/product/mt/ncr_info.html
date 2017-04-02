@@ -1,0 +1,250 @@
+        <form id="frm" action="/order/add_cart.html" method="post">
+            <section class="selection">
+                <dl>
+                    <dt><label for="printTitle">인쇄물제목</label></dt>
+                    <dd class="full"><div class="inputWrap"><input type="text" id="title" name="title" maxlength="15"></div></dd>
+                    <dt><label for="productName">상품명</label></dt>
+                    <dd>
+                        <select class="_relatedSummary _productName" id="mt_ncr_cate_sortcode" name="mt_ncr_cate_sortcode" onchange="moveProduct(this.value);" style="width: 160px; margin-right: 10px;">
+                            [TPH_Vcate_bot]
+                        </select>
+                        <label><input type="checkbox" id="diff_yn" onclick="changeDiff(this);"> 내용 다름</label>
+                    </dd>
+                    <dt>종이</dt>
+                    <dd>
+                        <dl class="paper">
+                            <dt><label for="paperTop">상</label></dt>
+                            <dd>
+                                <select id="paperTop" name="mt_ncr_paper" onchange="changePaper('T');">
+                                    [TPH_Vmt_ncr_top_paper]
+                                </select>
+                            </dd>
+                            <dt id="paperMid1_dt"><label for="paperMid1">중</label></dt>
+                            <dd id="paperMid1_dd">
+                                <select id="paperMid1" onchange="changePaper('M1');">
+                                    [TPH_Vmt_ncr_mid1_paper]
+                                </select>
+                            </dd>
+                            <dt id="paperMid2_dt"><label for="paperMid2">중</label></dt>
+                            <dd id="paperMid2_dd">
+                                <select id="paperMid2" onchange="changePaper('M2');">
+                                    [TPH_Vmt_ncr_mid2_paper]
+                                </select>
+                            </dd>
+                            <dt><label for="paperBot">하</label></dt>
+                            <dd>
+                                <select id="paperBot" onchange="changePaper('B');">
+                                    [TPH_Vmt_ncr_bot_paper]
+                                </select>
+                            </dd>
+                        </dl>
+                    </dd>
+                    <dt><label for="size">사이즈</label></dt>
+                    <dd class="_relatedSummary size">
+                        <select class="withBtn _size" id="size_dvs" name="mt_ncr_size_dvs" onchange="changeSizeDvs(this.value);">
+                            <option value="stan" class="_preset">규격사이즈</option>
+                            <option value="manu" class="_custom">비규격사이즈</option>
+                        </select>
+                        <select class="_preset" id="mt_ncr_size" name="mt_ncr_size" onchange="changeSize.exec('mt_ncr');">
+                            [TPH_Vmt_ncr_size]
+                        </select>
+                        <span id="mt_ncr_similar_size" divide="1" style="padding-left:10px; color:#f36f23; display:none;"></span>
+                        <dl>
+                            <dt>재단사이즈</dt>
+                            <dd class="_cuttingSize">
+                                <label>가로 <input id="mt_ncr_cut_wid_size" name="mt_ncr_cut_wid_size" type="text" maxlength="3">mm</label>,
+                                <label>세로 <input id="mt_ncr_cut_vert_size" name="mt_ncr_cut_vert_size" type="text" maxlength="3">mm</label>
+                            </dd>
+                            <dt>작업사이즈</dt>
+                            <dd class="_workingSize[TPH_Vmt_ncr_size_gap]" id="size_gap">
+                                <label>가로 <input id="work_wid_size" name="mt_ncr_work_wid_size" type="text" readonly>mm</label>,
+                                <label>세로 <input id="work_vert_size" name="mt_ncr_work_vert_size" type="text" readonly>mm</label>
+                            </dd>
+                        </dl>
+                    </dd>
+                    <dt><label for="color">인쇄도수</label></dt>
+                    <dd class="colorDetails master">
+                        <select class="withBtn _relatedSummary _color" onchange="changeMtTmpt(this.value);" id="mt_ncr_print_tmpt" name="mt_ncr_bef_tmpt">
+                            [TPH_Vmt_ncr_print_tmpt]
+                        </select>
+                        <select id="binding_typ" disabled="disabled">
+                            <option value="">인쇄방향</option>
+                            <option value="머리+꼬리">머리+꼬리</option>
+                            <option value="머리+머리">머리+머리</option>
+                        </select>
+                        <ul class="primaryColor">
+                            <li>
+                                <dl>
+                                    <dt>전면</dt>
+                                    <dd>
+                                        <ul id="bef">
+                                            <li><label><input type="checkbox" name="mt_ncr_tmpt_chk" onclick="chkTmptLim('bef');" value="먹"> 먹</label></li>
+                                            <li><label><input type="checkbox" name="mt_ncr_tmpt_chk" onclick="chkTmptLim('bef');" value="원청"> 원청</label></li>
+                                            <li><label><input type="checkbox" name="mt_ncr_tmpt_chk" onclick="chkTmptLim('bef');" value="군청"> 군청</label></li>
+                                            <li><label><input type="checkbox" name="mt_ncr_tmpt_chk" onclick="chkTmptLim('bef');" value="원적"> 원적</label></li>
+                                            <li><label><input type="checkbox" name="mt_ncr_tmpt_chk" onclick="chkTmptLim('bef');" value="금적"> 금적</label></li>
+                                        </ul>
+                                    </dd>
+                                </dl>
+                            </li>
+                            <li>
+                                <dl>
+                                    <dt>후면</dt>
+                                    <dd>
+                                        <ul id="aft">
+                                            <li><label><input type="checkbox" name="mt_ncr_tmpt_chk" onclick="chkTmptLim('aft');" value="먹"> 먹</label></li>
+                                            <li><label><input type="checkbox" name="mt_ncr_tmpt_chk" onclick="chkTmptLim('aft');" value="원청"> 원청</label></li>
+                                            <li><label><input type="checkbox" name="mt_ncr_tmpt_chk" onclick="chkTmptLim('aft');" value="군청"> 군청</label></li>
+                                            <li><label><input type="checkbox" name="mt_ncr_tmpt_chk" onclick="chkTmptLim('aft');" value="원적"> 원적</label></li>
+                                            <li><label><input type="checkbox" name="mt_ncr_tmpt_chk" onclick="chkTmptLim('aft');" value="금적"> 금적</label></li>
+                                        </ul>
+                                    </dd>
+                                </dl>
+                            </li>
+                        </ul>
+                        <button type="button" onclick="$('#color').css('display') === 'none' ? $('#color').css('display', '') : $('#color').css('display', 'none');">색상보기</button>
+                        [TPH_I/product/common/master_color.html]
+                    </dd>
+                    <dt class="binding">제본</dt>
+                    <dd>
+                        <select id="mt_ncr_binding_val" name="mt_ncr_binding_val" onchange="changeBinding($(this).find('option:selected').text());">
+                            [TPH_Vmt_ncr_binding_html]
+                        </select>
+                    </dd>
+                    <dt class="amount"><label for="amount">수량</label></dt>
+                    <dd class="_relatedSummary amount">
+                        <select class="_amount" id="mt_ncr_amt" amt_unit="[TPH_Vmt_ncr_amt_unit]" onchange="changeAmt();">
+                            [TPH_Vmt_ncr_amt]
+                        </select>
+                        <div class="range">
+                            <div class="bar">
+                                <div class="hr bg"></div>
+                                <div class="_anchor"><img src="[TPH_Vdesign_dir]/images/product/range_anchor.png" alt="▲"></div>
+                                <hr class="hr on">
+                            </div>
+                            <ul class="mark">
+                            </ul>
+                        </div>
+                    </dd>
+                </dl>
+                <div class="option _folding">
+                    <button type="button" class="_closed" title="열기"><img src="[TPH_Vdesign_dir]/images/common/btn_semicircle_right.png" alt="▶"></button>
+                    <button type="button" class="_opened" title="닫기"><img src="[TPH_Vdesign_dir]/images/common/btn_semicircle_left.png" alt="◀"></button>
+                    <div class="_folder">
+                        <dl>
+                            <dt>인쇄유형</dt>
+                            <dd>
+                                <select id="mt_ncr_mono_yn" name="mt_ncr_mono_yn" onchange="changeData();">
+                                    [TPH_Vmt_ncr_mono_dvs]
+                                </select>
+                            </dd>
+                            <dt>재질느낌</dt>
+                            <dd id="mt_ncr_paper_sense" class="select">[TPH_Vmt_ncr_paper_sense]</dd>
+                            <dt>인쇄방식</dt>
+                            <dd>
+                                <select id="mt_ncr_print_purp" name="mt_ncr_print_purp"  onchange="changePrintPurp('mt_ncr');">
+                                    [TPH_Vmt_ncr_print_purp]
+                                </select>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </section>
+            <!-- 요청 -->
+            <section class="after _folding">
+                <dl>
+                    <dt id="opt_default_price" price="0">옵션</dt>
+                    <dd class="list" style="padding-left: 0px;" id="opt">
+                        [TPH_Vmt_ncr_opt]
+                        [TPH_Vmt_ncr_add_opt]
+                    </dd>
+                </dl>
+            </section><!-- 요청 -->
+            <!-- 후공정 -->
+            <section class="after aft_sec mt_ncr_after _folding">
+                <button type="button" title="열기" class="_closed foldingbtn"><img src="[TPH_Vdesign_dir]/images/common/btn_circle_bottom.png" alt="▼"></button>
+                <button type="button" title="닫기" class="_opened foldingbtn"><img src="[TPH_Vdesign_dir]/images/common/btn_circle_top.png" alt="▲"></button>
+                <dl>
+                    <dt id="after_default_price" price="0">후공정</dt>
+                    <dd class="overview mt_ncr_overview">
+                        <ul>
+                        </ul>
+                    </dd>
+                    <dd class="_folder mt_ncr_after_list list" id="after">
+                        [TPH_Vmt_ncr_after]
+                        [TPH_Vmt_ncr_add_after]
+                    </dd>
+                </dl>
+            </section><!-- 후공정 -->
+            <section class="summary">
+                <dl>
+                    <dt>주문내역</dt>
+                    <dd>
+                        <ul>
+                        </ul>
+                    </dd>
+                </dl>
+            </section>
+            <!-- 가격 -->
+            <section class="price _folding">
+                <button type="button" title="열기" class="_closed foldingBtn"><img src="[TPH_Vdesign_dir]/images/common/btn_circle_bottom.png" alt="▼"></button>
+                <button type="button" title="닫기" class="_opened foldingBtn"><img src="[TPH_Vdesign_dir]/images/common/btn_circle_top.png" alt="▲"></button>
+                <dl class="ordinary">
+                    <dt>정상판매가</dt>
+                    <dd class="description" style="text-decoration: none;">부가세 10% 포함</dd>
+                    <dd id="sell_price" val="[TPH_Vmt_ncr_sell_price]" class="price">[TPH_Vmt_ncr_sell_price]원</dd>
+                </dl>
+
+                <dl class="_folder">
+                    <dd class="detail" id="sale">
+                        [TPH_Vmt_ncr_grade_sale]
+                        [TPH_Vmt_ncr_event_sale]
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>결제금액</dt>
+                    <dd class="description">공급가 : <span id="supply_price" style="font-weight:bold;">[TPH_Vmt_ncr_supply_price]</span>원 + 부가세 : <span id="tax" style="font-weight:bold;">[TPH_Vmt_ncr_tax]</span>원</dd>
+                    <dd class="price"><span id="sale_price" val="[TPH_Vmt_ncr_sale_price]" style="font-size: 20px;">[TPH_Vmt_ncr_sale_price]</span> 원</dd>
+                </dl>
+                <!-- 2016/01/04 최대 혜택가 삭제함 -->
+
+            </section><!-- 가격 -->
+
+            <!-- 공통 -->
+            <input type="hidden" name="flag" value="flag" /><!-- chk -->
+            <input type="hidden" id="mt_ncr_flattyp_yn" name="mt_ncr_flattyp_yn" value="[TPH_Vmt_ncr_flattyp_yn]" /><!-- 낱장형여부 -->
+            <input type="hidden" id="prdt_dvs" name="prdt_dvs" value="mt_ncr" /><!-- 상품 페이지에 들어가있는 제품구분값 -->
+            <input type="hidden" name="mt_ncr_cate_name" value="" /><!-- 카테고리명-->
+            <input type="hidden" name="mt_ncr_amt_unit" value="" /><!-- 수량단위 -->
+            <input type="hidden" id="mt_ncr_tmpt_dvs" value="[TPH_Vmt_ncr_tmpt_dvs]" /><!-- 도수구분 -->
+            <input type="hidden" id="mt_ncr_typ" name="mt_ncr_typ" value="[TPH_Vmt_ncr_page_dvs]" /><!-- 상품 페이지에 들어가있는 제품구분값 -->
+            <input type="hidden" id="order_detail" name="mt_ncr_order_detail" value="" /><!-- 상품 페이지에 들어가있는 제품구분값 -->
+            <input type="hidden" name="mt_ncr_amt" value="" /><!-- 상품실수량 -->
+            <!-- 후공정, 주문요약 표시용 -->
+            <input type="hidden" id="after_basic" value="[TPH_Vmt_ncr_basic_after]" /><!-- 요약정보 표시용 변수 -->
+            <input type="checkbox" id="mt_ncr_binding" name="mt_ncr_chk_after[]" value="제본" checked="checked" aft="binding" style="display:none;" /><!-- 요약정보 표시용 변수 -->
+            <input type="hidden" id="mt_ncr_binding_price" name="mt_ncr_binding_price" value="[TPH_Vmt_ncr_binding_price]" />
+            <input type="hidden" id="mt_ncr_binding_info" name="mt_ncr_binding_info" value="" />
+            <!-- 표시용 -->
+            <input type="hidden" name="cart_flag" id="cart_flag" value="Y" /><!-- 장바구니 이동여부 -->
+            <!-- 종이 -->
+            <input type="hidden" name="mt_ncr_paper_name" value="" /><!-- 종이명 -->
+            <input type="hidden" name="mt_ncr_basisweight" value="" /><!-- 도수값 -->
+            <!-- 인쇄 -->
+            <input type="hidden" name="mt_ncr_page" value="[TPH_Vmt_ncr_page]" /><!-- 페이지수 -->
+            <input type="hidden" id="mt_ncr_tmpt_name" name="mt_ncr_tmpt_name" value="" /><!-- 도수명 -->
+            <input type="hidden" name="mt_ncr_bef_tmpt_name" value="" /><!-- 도수명 -->
+            <!-- 사이즈 -->
+            <input type="hidden" name="mt_ncr_size_name" value="" /><!-- 사이즈명 -->
+            <input type="hidden" name="mt_ncr_pos_num" value="" /><!-- 사이즈명 -->
+            <!-- 가격정보 -->
+            <input type="hidden" name="mt_ncr_sell_price" value="" /><!-- 판매금액 -->
+            <input type="hidden" name="mt_ncr_sale_price" value="" /><!-- 할인금액 -->
+            <input type="hidden" name="mt_ncr_member_sale_rate" id="mt_ncr_member_sale_rate" value="[TPH_Vmt_ncr_member_sale_rate]" /><!-- 회원할인률 -->
+            <input type="hidden" name="mt_ncr_grade_sale_rate" id="mt_ncr_grade_sale_rate" value="[TPH_Vmt_ncr_grade_sale_rate]" /><!-- 등급할인률 -->
+            <input type="hidden" name="mt_ncr_after_price" value="" /><!-- 후공정금액 -->
+            <input type="hidden" name="opt_price" value="" /><!-- 옵션금액 -->
+            <!-- 옵션 -->
+            <input type="hidden" name="opt_add" value="" /><!-- 추가후공정 맵핑코드 -->
+            <input type="hidden" name="opt_add_price" value="" /><!-- 추가옵션 가격 -->
+        </form>

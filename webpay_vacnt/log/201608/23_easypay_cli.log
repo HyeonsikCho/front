@@ -1,0 +1,15 @@
+0823-115247.102 - 28918 - T51020018NFmoqMp     - MSG : START - tr_cd=[00101000]+mall_id=[T5102001]+order_no=[ORDER_201608231471920769713]
+0823-115247.126 - 28918 - T51020018NFmoqMp     - MSG : PG_서버_접속__정상
+0823-115247.137 - 28918 - T51020018NFmoqMp     - MSG : PG_서버_요청_전문_전송__정상
+0823-115247.206 - 28918 - T51020018NFmoqMp     - MSG : PG_서버_응답_전문_수신__정상
+0823-115247.206 - 28918 - T51020018NFmoqMp     - MSG : ENDED - res=[res_cd=0000res_msg=계좌 채번 정상cno=16082311491823712134order_no=ORDER_201608231471920769713tran_date=20160823114918bank_cd=004bank_flag=Ybank_nm=국민은행account_no=T9649078165910deposit_nm=한국정보통신(주) 테expire_date=20160823235959escrow_yn=Ncomplex_yn=Nstat_cd=TS07stat_msg=입금대기pay_type=22memb_id=T5102001memb_gubun=2bk_pay_yn=N]
+0823-185301.746 - 30164 - T51020018NFmoqMp     - MSG : START - tr_cd=[00101000]+mall_id=[T5102001]+order_no=[ORDER_201608231471946174190]
+0823-185305.974 - 30166 - T51020018NFmoqMp     - MSG : START - tr_cd=[00101000]+mall_id=[T5102001]+order_no=[ORDER_201608231471946178421]
+0823-185306.086 - 30166 - T51020018NFmoqMp     - MSG : PG_서버_접속__정상
+0823-185306.096 - 30166 - T51020018NFmoqMp     - MSG : PG_서버_요청_전문_전송__정상
+0823-185306.149 - 30166 - T51020018NFmoqMp     - MSG : PG_서버_응답_전문_수신__정상
+0823-185306.149 - 30166 - T51020018NFmoqMp     - MSG : ENDED - res=[res_cd=0000res_msg=계좌 채번 정상cno=16082318493723713798order_no=ORDER_201608231471946178421tran_date=20160823184937bank_cd=003bank_flag=Ybank_nm=기업은행account_no=T8201382497058deposit_nm=한국정보통신(주) 테expire_date=20160823235959escrow_yn=Ncomplex_yn=Nstat_cd=TS07stat_msg=입금대기pay_type=22memb_id=T5102001memb_gubun=2bk_pay_yn=N]
+0823-185306.772 - 30164 - T51020018NFmoqMp     - MSG : PG_서버_접속__정상
+0823-185306.782 - 30164 - T51020018NFmoqMp     - MSG : PG_서버_요청_전문_전송__정상
+0823-185306.931 - 30164 - T51020018NFmoqMp     - MSG : PG_서버_응답_전문_수신__정상
+0823-185306.931 - 30164 - T51020018NFmoqMp     - MSG : ENDED - res=[res_cd=0000res_msg=계좌 채번 정상cno=16082318493823713799order_no=ORDER_201608231471946174190tran_date=20160823184938bank_cd=003bank_flag=Ybank_nm=기업은행account_no=T8201382497072deposit_nm=한국정보통신(주) 테expire_date=20160823235959escrow_yn=Ncomplex_yn=Nstat_cd=TS07stat_msg=입금대기pay_type=22memb_id=T5102001memb_gubun=2bk_pay_yn=N]

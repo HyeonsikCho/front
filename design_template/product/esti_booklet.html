@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!--
+    <script src="[TPH_Vdesign_dir]/js/design/ad_catabro_design.js"></script>
+    -->
+    [TPH_I/common/head.html]
+    [TPH_I/product/common/product_head.html]
+    <script src="[TPH_Vdesign_dir]/js/uploader/plupload.full.min.js"></script>
+    <script>
+        var commonObj = {
+            "listId"     : "work_file_list",
+            "uploader"   : null,
+            "estiSeqno"  : null,
+        };
+
+        $(document).ready(function() {
+            var runtimes = "html5,flash,silverlight,html4";
+            var mimeTypes = [
+                {extensions : "zip,egg,rar,jpg,jpeg,sit,zip,ai,png,alz,cdr,cdt,eps,cmx,7z,pdf"}
+            ];
+            var listId = commonObj.listId;
+
+            var uploader = new plupload.Uploader({
+                url                 : "/proc/product/upload_esti_file.php",
+                runtimes            : runtimes,
+                browse_button       : "work_file", // you can pass in id...
+                flash_swf_url       : "/design_template/js/uploader/Moxie.swf",
+                silverlight_xap_url : "/design_template/js/uploader/Moxie.xap",
+                multi_selection     : false,
+
+                filters : {
+                    max_file_size : "500mb",
+                    mime_types    : mimeTypes
+                },
+                init : {
+                    PostInit : function() {
+                        $("#" + listId).html('');
+                    },
+                    FilesAdded : function(up, files) {
+                        // 파일을 새로 추가할 경우
+                        if (up.files.length > 1) {
+                            up.removeFile(up.files[0]);
+                        }
+
+                        plupload.each(files, function(file) {
+                            if (file.size > 524288000) {
+                                return alertReturnFalse("500MB를 넘는 파일은 웹하드를 이용해주세요.");
+                            }
+
+                            document.getElementById(listId).innerHTML =
+                                "<div id=\"" + file.id + "\">" +
+                                file.name + " (" +
+                                plupload.formatSize(file.size) +
+                                ")<b></b>";
+                        });
+                    },
+                    FilesRemoved : function(up, files) {
+                        document.getElementById(listId).innerHTML = '';
+                    },
+                    UploadProgress : function(up, file) {
+                        document.getElementById(file.id)
+                            .getElementsByTagName("b")[0]
+                            .innerHTML = "<span>" + file.percent + "%</span>";
+                    },
+                    FileUploaded : function(up, file, response) {
+                        var jsonObj = JSON.parse(response.response);
+                        if (!jsonObj.success) {
+                            alert(jsonObj.message);
+                            return false;
+                        }
+
+                        alert("견적 신청이 완료되었습니다.");
+                        location.reload();
+                    },
+                    Error : function(up, err) {
+                        if (checkBlank(err.code) === false &&
+                            parseInt(err.code) === -600) {
+                            return alertReturnFalse("500MB를 넘는 파일은 웹하드를 이용해주세요.");
+                        }
+
+                        $("#" + listId).html("\nError #" + err.code + ": " + err.message);
+                    }
+                }
+            });
+
+            uploader.init();
+
+            commonObj.uploader = uploader;
+        });
+
+        /**
+         * @brief 파일 재전송
+         *
+         * @param seqno = 주문 일련번호
+         */
+        var upload = function() {
+            var url = "/proc/product/upload_esti_file.php?" +
+                      "seqno=" + commonObj.estiSeqno;
+
+            commonObj.uploader.settings.url = url;
+            commonObj.uploader.start();
+        };
+    </script>
+    <style>
+        .memo {left: 430px !important;}
+        .memo dd {width: 560px !important;}
+        .memo dd input {width: 537px !important; margin-left: 5px !important;}
+        .colorDetails dt {width: 45px !important;}
+        .colorDetails dd {width: 188px !important;}
+    </style>
+</head>
+<body>
+<header class="top">
+    [TPH_I/common/header.html]
+</header>
+<section class="contents ad_catabro">
+    <header class="title">
+        [TPH_I/product/common/cate_dscr.html]
+    </header>
+    <div class="productOptions">
+        [TPH_I/product/esti/booklet_info.html]
+
+        <section class="purchase">
+			<div class="function">
+				<button onclick="insertEsti(true);" type="button" style="width: 140px;" class="sub">별도견적(파일있음)</button>
+				<button onclick="insertEsti(false);" type="button" style="width: 140px;" class="sub">별도견적(파일없음)</button>
+			</div>
+		</section>
+    </div>
+    <div>
+        [TPH_I/common/is_login.html]
+    </div>
+</section>
+<aside id="login_aside" class="member _folded">
+    [TPH_Vside_menu]
+</aside>
+<footer>
+    [TPH_I/common/footer.html]
+</footer>
+
+[TPH_I/product/common/common_pop.html]
+</body>
+</html>

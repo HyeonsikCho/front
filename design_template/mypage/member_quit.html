@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    [TPH_I/common/head.html]
+</head>
+<body>
+<header class="top">
+    [TPH_I/common/header.html]
+</header>
+<section class="contents lnb memberInfo">
+    <header class="title">
+        <h2><img src="[TPH_Vdesign_dir]/images/mypage/title.png" alt="마이페이지"></h2>
+        <ol class="location">
+            [TPH_I/common/home_btn.html]
+            <li><a href="/mypage/main.html"><span>마이페이지</span></a></li>
+            <li><a href="/mypage/member_modify.html"><span>회원정보</span></a></li>
+            <li><a href="/mypage/member_quit.html"><span>회원탈퇴</span></a></li>
+        </ol>
+    </header>
+    <nav class="lnb">
+        [TPH_I/mypage/common/lnb.html]
+    </nav>
+    <h3 class="pageTitle">회원 탈퇴</h3>
+    <section class="quitMessage">
+        <strong>디프린팅을 이용해 주셔서 감사합니다.</strong>
+    </section>
+    <section class="survey">
+        <strong>디프린팅의 이용에 <strong>불편한 사항</strong>이 있으셨나요?</strong>
+        <div class="wrap">
+            <p>
+                불편한 사항 및 다양한 의견을 자유롭게 남겨주세요. 고객님의 소중한 의견을 통해 더욱 발전하는 디프린팅이 되도록하겠습니다.
+            </p>
+            <ul>
+                <li><label><input type="checkbox" value="1" id="reduce_1"> 상품종류 부족</label></li>
+                <li><label><input type="checkbox" value="2" id="reduce_2"> 상품가격 불만</label></li>
+                <li><label><input type="checkbox" value="3" id="reduce_3"> 상품풀질 불만</label></li>
+                <li><label><input type="checkbox" value="4" id="reduce_4"> 반품/교환 서비스 불만</label></li>
+                <li><label><input type="checkbox" value="5" id="reduce_5"> 납기 및 배송 불만</label></li>
+                <li><label><input type="checkbox" value="6" id="reduce_6"> AS 서비스 불만</label></li>
+                <li><label><input type="checkbox" value="7" id="reduce_7"> 상담원 고객응대 불만</label></li>
+                <li><label><input type="checkbox" value="8" id="reduce_8"> 쇼핑몰 불편 및 속도 불만</label></li>
+                <li><label><input type="checkbox" value="9" id="reduce_9"> 이용빈도 낮음</label></li>
+                <li><label><input type="checkbox" value="10" id="reduce_10"> 타인 주민번호 도용</label></li>
+                <li><label><input type="checkbox" value="11" id="reduce_11"> 중복 가입</label></li>
+                <li><label><input type="checkbox" value="12" id="reduce_12"> 이민</label></li>
+                <li><label><input type="checkbox" value="13" id="reduce_13"> 재가입</label></li>
+                <li><label><input type="checkbox" value="14" id="reduce_14"> 기타</label></li>
+            </ul>
+            <div class="textareaWrap">
+                <textarea id="withdraw_reason"></textarea>
+            </div>
+        </div>
+    </section>
+    <article class="notice">
+        <div class="wrap">
+            <em>탈퇴 신청에 앞서 아래의 사항을 반드시 확인하시기 바랍니다.</em>
+            <ul>
+                <li>회원 탈퇴 요청 후 관리자가 최종 처리하면 회원 탈퇴와 동시에 회원정보, 적립금, 포인트, 쿠폰이 모두 소멸됩니다.</li>
+                <li>회원님은 현재 포인트 [TPH_Vpoint] P와 쿠폰 [TPH_Vcoupon]장을 보유하고 있으며, 탈퇴와 동시에 모두 소멸됩니다.</li>
+                <li>소멸된 적립금과 포인트, 쿠폰은 회원탈퇴 완료 후 즉시 재가입시에도 복구되지 않습니다.</li>
+            </ul>
+        </div>
+    </article>
+    <div class="function center">
+        <strong><button class="function" onclick="makeWithdrawal('[TPH_Vmember_seqno]'); return false;">탈퇴 신청</button></strong>
+    </div>
+    [TPH_I/mypage/common/banner.html]
+</section>
+<footer>
+    [TPH_I/common/footer.html]
+</footer>
+</body>
+</html>

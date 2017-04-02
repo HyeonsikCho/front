@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    [TPH_I/common/head.html]
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+</head>
+<body>
+<header class="top">
+    [TPH_I/common/header.html]
+</header>
+<section class="contents lnb deliveryInfo">
+    <header class="title">
+        <h2><img src="[TPH_Vdesign_dir]/images/mypage/title.png" alt="마이페이지"></h2>
+        <ol class="location">
+            [TPH_I/common/home_btn.html]
+            <li><span>마이페이지</span></li>
+            <li><span>배송 정보</span></li>
+            <li><span>나의배송 관리</span></li>
+        </ol>
+    </header>
+    <nav class="lnb">
+        [TPH_I/mypage/common/lnb.html]
+    </nav>
+    <h3 class="pageTitle">나의배송 관리</h3>
+    <section class="setInformation">
+        <dl class="default">
+            <dt>기본배송지 <a href="#none" target="_self"><img src="[TPH_Vdesign_dir]/images/common/btn_circle_setting.png" alt="관리"></a></dt>
+            <dd>[TPH_Vaddr]</dd>
+            <dd>[TPH_Vaddr_detail]</dd>
+        </dl>
+        <dl class="type">
+            <dt>배송유형</dt>
+            <dd>[TPH_Vdlvr_dvs] 이용중</dd>
+            <dd> </dd>
+        </dl>
+    </section>
+    <section class="deliveryType">
+        <dl class="home">
+            <dt>무료 택배</dt>
+            <dd>
+                <p>신청 후 일일 일회 묶음배송이 40,000원을 초과하여 주문하시는 고객에 한하여 무료로 택배를 발송해 드립니다.<br>단, 명함/스티커의 품목에 한하여 적용이 되고 제주도 및 해외는 제외입니다. 당사의 묶음 포장 기준을 참고 하십시요.
+                </p>
+                <em>묶음배송 기준<br>40,000원 초과 시<br> 자동 적용</em>
+            </dd>
+        </dl>
+        <dl class="direct">
+            <dt>무료 직배송</dt>
+            <dd>
+                <p>신청 후 월 거래금액이 330,000원(VAT 포함) 이상 시에는 무료배송 기준이 되어 다음달에는 자동으로 55,000원(VAT포함) 이 이월됩니다. 이월된 55,000원은 환불되지 않습니다.<br>다만 이월된 금액의 사용은 고객의 요청에 따라 일시정지나 포인트 이월금으로 활용할 수 있습니다.
+                </p>
+                <em>55,000(VAT포함)</em>
+                <p class="freeStatus">무료 직배송 혜택까지<br><strong>&#8361;130,000</strong><br>남았습니다.</p>
+                <button class="last applicated" onclick="layerPopup('l_directApplication', 'popup/l_directapplication.html')">이용 중</button>
+            </dd>
+        </dl>
+        <dl class="friend">
+            <dt>배송친구</dt>
+            <dd>
+                <p>배송친구를 신청하시면 가까운 근처의 배송친구 메인 업체에서 물건을 수령하실 수 있습니다.<br>물량이 주기적이지 않거나 적은 소규모의 기획사무실에 적합하며 월 11,000원의 저렴한 비용으로 물건을 받아 보실 수 있습니다.</p>
+                <em>11,000원(VAT포함)</em>
+                <button onclick="layerPopup('l_friendApplication', 'popup/l_friendapplication.html');">배송친구 신청</button>
+                <p>배송친구 메인업체는 자사에서 엄격한 심사를 거쳐 선정되며 선정된 배송친구 메인업체는 포인트나 쿠폰 등 다양한 혜택을 드립니다.</p>
+                <button class="last" onclick="layerPopup('l_friendMainApplication', 'popup/l_friendmainapplication.html');">배송친구 메인 업체 신청</button>
+            </dd>
+        </dl>
+    </section>
+</section>
+<footer>
+    [TPH_I/common/footer.html]
+</footer>
+</body>
+</html>

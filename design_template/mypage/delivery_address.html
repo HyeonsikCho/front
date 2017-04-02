@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    [TPH_I/common/head.html]
+    <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+</head>
+<body>
+<header class="top">
+    [TPH_I/common/header.html]
+</header>
+<section class="contents lnb deliveryInfo">
+    <header class="title">
+        <h2><img src="[TPH_Vdesign_dir]/images/mypage/title.png" alt="마이페이지"></h2>
+        <ol class="location">
+            [TPH_I/common/home_btn.html]
+            <li><a href="/mypage/main.html"><span>마이페이지</span></a></li>
+            <li><a href="/mypage/delivery_address.html"><span>배송정보</span></a></li>
+            <li><a href="/mypage/delivery_address.html"><span>배송관리</span></a></li>
+        </ol>
+    </header>
+    <nav class="lnb">
+        [TPH_I/mypage/common/lnb.html]
+    </nav>
+    <h3 class="pageTitle">나의 배송지관리</h3>
+    <section class="setInformation">
+        <dl class="default">
+            <dt>기본배송지 <!--<a href="#none" target="_self"><img src="[TPH_Vdesign_dir]/images/common/btn_circle_setting.png" alt="관리"></a>--></dt>
+            <dd id="basicDlvr"></dd>
+        </dl>
+        <dl class="type">
+            <dt>배송유형 <!--<a href="#none" target="_self"><img src="[TPH_Vdesign_dir]/images/common/btn_circle_setting.png" alt="관리"></a>--></dt>
+            <dd id="basicDvs"></dd>
+            <dd></dd>
+        </dl>
+    </section>
+    <nav class="pageTab2">
+        <ul>
+            <li class="main on" id="init_btn" onclick="getMainPage('1', this);" style="cursor: pointer;">나의 배송지관리</li>
+            <li class="main" onclick="getMainPage('2', this);" style="cursor: pointer;">나의 배송관리</li>
+        </ul>
+    </nav>
+    <div id="main_page">
+    </div>
+    [TPH_I/mypage/common/banner.html]
+</section>
+<footer>
+    [TPH_I/common/footer.html]
+</footer>
+</body>
+</html>

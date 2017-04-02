@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    [TPH_I/common/head.html]
+    <script src="[TPH_Vdesign_dir]/js/uploader/plupload.full.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+</head>
+<body>
+<header class="top">
+    [TPH_I/common/header.html]
+</header>
+<section class="contents lnb estimateInfo">
+    <header class="title">
+        <h2><img src="[TPH_Vdesign_dir]/images/mypage/title.png" alt="마이페이지"></h2>
+        <ol class="location">
+            [TPH_I/common/home_btn.html]
+            <li><a href="/mypage/main.html"><span>마이페이지</span></a></li>
+            <li><a href="/mypage/order_all.html"><span>주문 정보</span></a></li>
+            <li><a href="/mypage/estimate_list.html"><span>견적문의</span></a></li>
+        </ol>
+    </header>
+    <nav class="lnb">
+	[TPH_I/mypage/common/lnb.html]
+    </nav>
+    <h3 class="pageTitle">견적 문의</h3>
+    <form name="frm" id="frm">
+    <ol class="write">
+        <li>
+            <h4><img src="[TPH_Vdesign_dir]/images/mypage/estimateinfo_write_step1.png" alt="Step1"></h4>
+            <dl class="base">
+                <dt>문의 제목</dt>
+                <dd><div class="inputWrap"><input type="text" id="title" name="title" ></div></dd>
+            </dl>
+        </li>
+        <li class="productOptions nc_normal">
+            <h4><img src="[TPH_Vdesign_dir]/images/mypage/estimateinfo_write_step2.png" alt="Step2"></h4>
+            <dl class="base">
+                <dt>파일첨부</dt>
+                <dd>
+                    <button type="button" name="work_file" id="work_file" style="padding: 0 10px; background: #898989; color: #fff; height: 25px; vertical-align: middle; margin-right: 10px;">파일첨부
+                    <button type="button" id="work_file_upload" style="padding: 0 10px; background: #898989; color: #fff; height: 25px; vertical-align: middle;" onclick="uploadFile();">업로드</button>
+                    <br />
+                    <span id="work_file_list"></span>
+                    <p class="note">파일을 압축하여 올려주세요.</p>
+                </dd>
+                <br />
+                <input type="hidden" id="work_file_seqno" name="work_file_seqno" />
+                <dt>문의내용</dt>
+                <dd>
+                    <div class="textareaWrap"><textarea id="inq_cont" name="inq_cont"></textarea></div>
+                    <p class="note">주문 상 특이사항이나 반드시 확인이 필요한 내용들을 기재해 주시면 보다 정확한 견적을 받아보실 수 있습니다.</p>
+                </dd>
+
+            </dl>
+        </li>
+    </ol>
+    </form>
+    <div class="function center">
+        <strong><button class="function" onclick="regiReq(); return false;">견적 문의</button></strong>
+        <button class="function" onclick="goList(); return false;">취소</button>
+    </div>
+    [TPH_I/mypage/common/banner.html]
+</section>
+<footer>
+   [TPH_I/common/footer.html]
+</footer>
+</body>
+</html>

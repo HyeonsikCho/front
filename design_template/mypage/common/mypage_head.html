@@ -1,0 +1,97 @@
+    <script src="[TPH_Vdesign_dir]/js/uploader/plupload.full.min.js"></script>
+    <script>
+        var commonObj = {
+            "listId"     : "work_file_list",
+            "uploader"   : null,
+            "orderState" : null,
+            "orderSeqno" : null
+        };
+
+        $(document).ready(function() {
+            var runtimes = "html5,flash,silverlight,html4";
+            var mimeTypes = [
+                {extensions : "zip,egg,rar,jpg,jpeg,sit,zip,ai,png,alz,cdr,cdt,eps,cmx,7z,pdf"}
+            ];
+            var listId = commonObj.listId;
+
+            var uploader = new plupload.Uploader({
+                url                 : "/proc/mypage/upload_file.php",
+                runtimes            : runtimes,
+                browse_button       : "work_file", // you can pass in id...
+                flash_swf_url       : "/design_template/js/uploader/Moxie.swf",
+                silverlight_xap_url : "/design_template/js/uploader/Moxie.xap",
+                multi_selection     : false,
+
+                filters : {
+                    max_file_size : "500mb",
+                    mime_types    : mimeTypes
+                },
+                init : {
+                    PostInit : function() {
+                        $("#" + listId).html('');
+                    },
+                    FilesAdded : function(up, files) {
+                        // 파일을 새로 추가할 경우
+                        if (up.files.length > 1) {
+                            up.removeFile(up.files[0]);
+                        }
+
+                        plupload.each(files, function(file) {
+                            if (file.size > 524288000) {
+                                return alertReturnFalse("500MB를 넘는 파일은 웹하드를 이용해주세요.");
+                            }
+
+                            document.getElementById(listId).innerHTML =
+                                "<div id=\"" + file.id + "\">" +
+                                file.name + " (" +
+                                plupload.formatSize(file.size) +
+                                ")<b></b>";
+                        });
+                    },
+                    FilesRemoved : function(up, files) {
+                        document.getElementById(listId).innerHTML = '';
+                    },
+                    UploadProgress : function(up, file) {
+                        document.getElementById(file.id)
+                            .getElementsByTagName("b")[0]
+                            .innerHTML = "<span>" + file.percent + "%</span>";
+                    },
+                    FileUploaded : function(up, file, response) {
+                        var jsonObj = JSON.parse(response.response);
+                        if (!jsonObj.success) {
+                            alert(jsonObj.message);
+                            return false;
+                        }
+
+                        alert("파일 재전송이 완료되었습니다.");
+                        location.reload();
+                    },
+                    Error : function(up, err) {
+                        if (checkBlank(err.code) === false &&
+                            parseInt(err.code) === -600) {
+                            return alertReturnFalse("500MB를 넘는 파일은 웹하드를 이용해주세요.");
+                        }
+
+                        $("#" + listId).html("\nError #" + err.code + ": " + err.message);
+                    }
+                }
+            });
+
+            uploader.init();
+
+            commonObj.uploader = uploader;
+        });
+
+        /**
+         * @brief 파일 재전송
+         *
+         * @param seqno = 주문 일련번호
+         */
+        var upload = function() {
+            var url = "/proc/mypage/upload_file.php?" +
+                      "seqno=" + commonObj.orderSeqno;
+
+            commonObj.uploader.settings.url = url;
+            commonObj.uploader.start();
+        };
+    </script>

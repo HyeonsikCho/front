@@ -1,0 +1,215 @@
+		<form id="frm" action="/order/add_cart.html" method="post">
+            <!-- 선택 -->
+            <section class="selection">
+               <dl>
+                    <dt><label for="title">인쇄물제목</label></dt>
+                    <dd class="full"><div class="inputWrap"><input type="text" name="title" id="title"></div></dd>
+                    <dt><label for="productName">상품명</label></dt>
+                    <dd class="right">
+                        <select onchange="moveProduct(this.value);" class="_relatedSummary _productName" id="inner_cate_sortcode" name="inner_cate_sortcode">
+                            [TPH_Vcate_bot]
+                        </select>
+                    </dd>
+                    <dt>인쇄유형</dt>
+                    <dd>
+                        <select id="inner_mono_yn" name="inner_mono_yn" onchange="changeData('inner');">
+                            [TPH_Vinner_mono_dvs]
+                        </select>
+                    </dd>
+                    <dt><label for="size">사이즈</label></dt>
+                    <dd class="_relatedSummary size right">
+                        <select class="withBtn _size" id="inner_size_dvs">
+                            <option value="stan" class="_preset">규격사이즈</option>
+                            <option value="manu" class="_custom">비규격사이즈</option>
+                        </select>
+                        <select id="inner_size" onchange="changePage('inner');" class="_preset" pos_num="[TPH_Vinner_pos_num]">
+                            [TPH_Vinner_size]
+                        </select>
+                        <dl>
+                            <dt>재단사이즈</dt>
+                            <dd class="_cuttingSize">
+                                <label>가로 <input id="inner_wid_size" name="inner_cut_wid_size" type="text" maxlength="3">mm</label>,
+                                <label>세로 <input id="inner_vert_size" name="inner_cut_vert_size" type="text" maxlength="3">mm</label>
+                            </dd>
+                            <dt>작업사이즈</dt>
+                            <dd class="_workingSize[TPH_Vinner_size_gap]">
+                                <label>가로 <input id="inner_work_wid_size" name="inner_work_wid_size" type="text" readonly>mm</label>,
+                                <label>세로 <input id="inner_work_vert_size" name="inner_work_vert_size" type="text" readonly>mm</label>
+                            </dd>
+                        </dl>
+                        <dl>
+                        </dl>
+                    </dd>
+                </dl>
+                <dl style="padding-top: 5px;">
+                    <dt class="binding">제본</dt>
+                    <dd class="full">
+                        <select id="inner_binding_val" name="inner_binding_val" onchange="getAfterPrice.common('binding', 'inner');" style="margin-left:5px">
+                            [TPH_Vinner_binding_depth2]
+                        </select>
+                        <select id="binding" onchange="loadBindingDepth2(this.value, 'inner');" class="withBtn">
+                            [TPH_Vinner_binding_depth1]
+                        </select>
+                        <button type="button" style="width:80px;" onclick="showBindingPop()">제본 미리보기</button>
+                        <input type="hidden" id="inner_binding_price" name="inner_binding_price" value="[TPH_Vinner_binding_price]" />
+                    </dd>
+                </dl>
+            </section>
+            <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 실제 내지 정보 섹션 시작 -->
+            <section class="pages selection">
+                <h3>내지</h3>
+                <dl>
+                    <dt><label for="inner_paper">종이</label></dt>
+                    <dd>
+                        <select id="inner_paper_sort" onchange="loadPaper.exec('inner', this.value);" style="width:100px;">
+                            [TPH_Vinner_paper_sort]
+                        </select>
+                        <select id="inner_paper" name="inner_paper" onchange="loadPaperDscr.exec('inner', this.value);" style="width:131px;">
+                            [TPH_Vinner_paper]
+                        </select>
+                    </dd>
+                    <dt><label for="color">인쇄도수</label></dt>
+                    <dd>
+                        <dl>
+                            <dd class="colorDetails">
+                                <select id="inner_bef_tmpt" onchange="changeData('inner');" class="withBtn" style="width:160px;">
+                                    [TPH_Vinner_print_tmpt]
+                                </select>
+                                <button type="button" style="width:70px;">별색템플릿</button>
+                            </dd>
+                        </dl>
+                    </dd>
+                    <dt><label for="inner_bg">베다유무</label></dt>
+                    <dd class="right">
+                        <select id="inner_bg">
+                            <option>바탕의 50%</option>
+                        </select>
+                    </dd>
+                    <dt></dt>
+                    <dd>
+                    </dd>
+                    <dt class="amount"><label for="amount">수량</label></dt>
+                    <dd>
+                        <select id="inner_page" name="inner_page" onchange="changePage('inner');" style="width:103px;">
+                            [TPH_Vinner_page]
+                        </select>
+                        <span>x</span>
+                        <select class="_amount" onchange="changePage('inner');" id="inner_amt" name="inner_amt" amt_unit="[TPH_Vinner_amt_unit]" style="width:103px;">
+                            [TPH_Vinner_amt]
+                        </select>
+                        [TPH_Vinner_amt_unit]
+                    </dd>
+                </dl>
+                <div class="option _folding">
+                    <button type="button" class="_closed" title="열기"><img src="[TPH_Vdesign_dir]/images/common/btn_semicircle_right.png" alt="▶"></button>
+                    <button type="button" class="_opened" title="닫기"><img src="[TPH_Vdesign_dir]/images/common/btn_semicircle_left.png" alt="◀"></button>
+                    <div class="_folder">
+                        <dl>
+                            <dt>지질느낌</dt>
+                            <dd id="inner_paper_sense" class="select">[TPH_Vinner_paper_sense]</dd>
+                            <dt>인쇄유형</dt>
+                            <dd>
+                                <select id="inner_print_purp" name="inner_print_purp" onchange="loadPrintTmpt.exec('inner', this.value);">
+                                    [TPH_Vinner_print_purp]
+                                </select>
+                            </dd>
+                            <dt></dt>
+                            <dd></dd>
+                        </dl>
+                    </div>
+                </div>
+            </section>
+            <!-- 후공정 -->
+            <section class="after _folding">
+                <button type="button" title="열기" class="_closed foldingbtn"><img src="[TPH_Vdesign_dir]/images/common/btn_circle_bottom.png" alt="▼"></button>
+                <button type="button" title="닫기" class="_opened foldingbtn"><img src="[TPH_Vdesign_dir]/images/common/btn_circle_top.png" alt="▲"></button>
+                <dl>
+                    <dt id="after_default_price" price="[TPH_Vinner_after_default_price]">후공정</dt>
+                    <dd class="overview">
+                        <ul>
+                        </ul>
+                    </dd>
+                    <dd class="_folder list">
+                        [TPH_Vinner_after]
+                        [TPH_Vinner_add_after]
+                    </dd>
+                </dl>
+            </section><!-- 후공정 -->
+            <!-- 실제 내지 정보 섹션 끝 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
+            <!-- 요청 -->
+            <section class="after _folding">
+                <dl>
+                    <dt id="opt_default_price" price="0">옵션</dt>
+                    <dd class="list" style="padding-left: 0px;" id="opt">
+                        [TPH_Vinner_opt]
+                        [TPH_Vinner_add_opt]
+                    </dd>
+                </dl>
+            </section><!-- 요청 -->
+            <section class="summary">
+                <dl>
+                    <dt>주문내역</dt>
+                    <dd>
+                        <ul>
+                        </ul>
+                    </dd>
+                </dl>
+            </section>
+            <!-- 가격 -->
+            <section class="price _folding">
+                <button type="button" title="열기" class="_closed foldingBtn"><img src="[TPH_Vdesign_dir]/images/common/btn_circle_bottom.png" alt="▼"></button>
+                <button type="button" title="닫기" class="_opened foldingBtn"><img src="[TPH_Vdesign_dir]/images/common/btn_circle_top.png" alt="▲"></button>
+                <dl class="ordinary">
+                    <dt>정상판매가</dt>
+                    <dd class="description" style="text-decoration: none;">부가세 10% 포함</dd>
+                    <dd id="sell_price" val="[TPH_Vinner_sell_price]" class="price">[TPH_Vinner_sell_price]원</dd>
+                </dl>
+    <!-- -->
+                <dl class="_folder">
+                    <dd class="detail">
+                        [TPH_Vinner_grade_sale]
+                        [TPH_Vinner_event_sale]
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>기본할인가</dt>
+                    <dd class="description">회원등급 할인과 이벤트 할인을 적용한 가격</dd>
+                    <dd id="sale_price" val="[TPH_Vinner_sale_price]" class="price">[TPH_Vinner_sale_price]원</dd>
+                </dl>
+                <!-- 2016/01/04 최대 혜택가 삭제함 -->
+    <!-- -->
+            </section><!-- 가격 -->
+
+            <!-- 공통 -->
+            <input type="hidden" name="flag" value="N" /><!-- 낱장형여부 -->
+            <input type="hidden" id="prdt_dvs" name="prdt_dvs" value="inner" /><!-- 제품타입 -->
+            <input type="hidden" name="inner_cate_name" value="" /><!-- 카테고리명-->
+            <input type="hidden" name="inner_amt_unit" value="" /><!-- 수량단위 -->
+            <input type="hidden" id="inner_tmpt_dvs" value="[TPH_Vinner_tmpt_dvs]" /><!-- 도수구분 -->
+            <input type="hidden" id="inner_typ" name="inner_typ" value="inner" /><!-- 제품타입 -->
+            <input type="hidden" name="inner_chk_after[]" value="제본" /><!-- 추가옵션 맵핑코드 -->
+            <!-- 후공정, 주문요약 표시용 -->
+            <input type="hidden" id="after_basic" value="[TPH_Vinner_basic_after]" /><!-- 요약정보 표시용 변수 -->
+            <!-- 표시용 -->
+            <input type="hidden" name="cart_flag" id="cart_flag" value="Y" /><!-- 장바구니 이동여부 -->
+            <!-- 종이 -->
+            <input type="hidden" name="inner_paper_name" value="" /><!-- 종이명 -->
+            <input type="hidden" name="inner_paper_amt" value="" /><!-- 실제수량 -->
+            <!-- 인쇄 -->
+            <input type="hidden" name="inner_bef_tmpt_name" value="" /><!-- 전면도수명 -->
+            <!-- 사이즈 -->
+            <input type="hidden" name="inner_size_name" value="" /><!-- 사이즈명 -->
+            <!-- 별가격정보 -->
+            <input type="hidden" name="inner_paper_price" id="inner_paper_price" value="[TPH_Vinner_paper_price]" /><!-- 종이가격 -->
+            <input type="hidden" name="inner_print_price" id="inner_print_price" value="[TPH_Vinner_print_price]" /><!-- 인쇄가격 -->
+            <input type="hidden" name="inner_output_price" id="inner_output_price" value="[TPH_Vinner_output_price]" /><!-- 출력가격 -->
+            <!-- 총합가격정보 -->
+            <input type="hidden" id="inner_prdt_price" name="inner_prdt_price" value="" /><!-- 상품가격 -->
+            <input type="hidden" id="inner_basic_price" name="inner_basic_price" value="" /><!-- 상품가격 -->
+            <input type="hidden" name="inner_grade_sale_rate" value="" /><!-- 등급할인금액 -->
+            <input type="hidden" name="inner_after_price" value="" /><!-- 후공정금액 -->
+            <input type="hidden" name="inner_opt_price" value="" /><!-- 옵션금액 -->
+            <!-- 옵션 -->
+            <input type="hidden" name="opt_add" value="" /><!-- 추가옵션 맵핑코드 -->
+            <input type="hidden" name="opt_add_price" value="" /><!-- 추가옵션 가격 -->
+        </form>

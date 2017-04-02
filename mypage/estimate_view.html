@@ -1,0 +1,67 @@
+<?
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/sess_common.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/Template.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/ConnectionPool.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/FrontCommonUtil.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/job/mypage/EstiInfoDAO.php"); 
+
+if ($is_login === false) {
+    header("Location: /main/main.html");
+    exit;
+}
+
+$connectionPool = new ConnectionPool();
+$conn = $connectionPool->getPooledConnection();
+
+$template = new Template();
+$frontUtil = new FrontCommonUtil();
+$dao = new EstiInfoDAO();
+
+// 로그인 상태인지 체크하는부분 include
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/login_check.php");
+
+$param = array();
+$param["esti_seqno"] = $fb->form("seq");
+$rs = $dao->selectEstiView($conn, $param); 
+
+if ($rs->fields["user_origin_file_name"])
+    $user_attach = "<a href=\"/common/esti_file_down.php?seqno=".$rs->fields["user_file_seq"] . "\">" . $rs->fields["user_origin_file_name"]. "</a>";
+else
+    $user_attach = "첨부파일이 없습니다.";
+
+
+if ($rs->fields["admin_origin_file_name"])
+    $admin_attach = "<a href=\"/common/admin_esti_file_down.php?seqno=".$rs->fields["esti_seqno"] . "\">" . $rs->fields["admin_origin_file_name"]. "</a>";
+else
+    $admin_attach = "첨부파일이 없습니다.";
+
+$price = "0";
+if ($rs->fields["esti_price"])
+    $price = number_format($rs->fields["esti_price"]);
+
+$inq_cont =  str_replace("\n","<br>", $rs->fields["inq_cont"]);
+$answ_cont =  str_replace("\n","<br>", $rs->fields["answ_cont"]);
+
+if (!$inq_cont)
+    $inq_cont = "등록된 문의내용이 없습니다.";
+if (!$answ_cont)
+    $answ_cont = "등록된 답변이 없습니다.";
+
+$template->reg("title", $rs->fields["title"]); 
+$template->reg("user_attch_file", $user_attach); 
+$template->reg("inq_cont", $inq_cont); 
+$template->reg("state", $rs->fields["state"]); 
+$template->reg("esti_price", $price); 
+$template->reg("admin_attch_file", $admin_attach); 
+$template->reg("answ_cont", $answ_cont); 
+$template->reg("searchParam", $fb->form("searchParam")); 
+// 기본사용 자바스크립트, css 파일 불러오는 용
+$template->reg("dir", "mypage"); 
+$template->reg("page", "estimate_list"); 
+
+//design_dir 경로
+$template->reg("design_dir", "/design_template"); 
+$template->htmlPrint($_SERVER["PHP_SELF"]); 
+
+$conn->Close();
+?>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    [TPH_I/common/head.html]
+	<script src="[TPH_Vdesign_dir]/js/product/aft_lib.js"></script>
+</head>
+<body>
+<header class="top">
+    [TPH_I/common/header.html]
+</header>
+<section class="contents nc_normal">
+    <header class="title">
+        [TPH_I/product/common/cate_select.html]
+
+        <h2><img src="[TPH_Vdesign_dir]/images/product/title/nc_normal.png" alt="일반명함"></h2>
+        <span class="description nc">가장 기본적이면서 실용성이 뛰어난 명함입니다.</span>
+    </header>
+    <div class="rightWrap productOptions">
+        [TPH_I/product/prdt/sheet_cut_info.html]
+
+        [TPH_I/product/common/purchase.html]
+    </div>
+    <div class="leftWrap">
+        [TPH_I/product/common/picture.html]
+
+        [TPH_I/product/common/banner.html]
+
+        <ul class="util">
+            <li class="templete"><button type="button" onclick="layerPopup('l_information', 'popup/l_information.html', '1'); return false;">템플릿 다운로드</button></li>
+            <li class="date"><button type="button" onclick="layerPopup('l_delivery', 'popup/l_delivery.html')">출고일 확인</button></li>
+            <li class="guide"><button type="button" onclick="layerPopup('l_information', 'popup/l_information.html', '3'); return false;">디프린팅 가이드</button></li>
+            <li class="detail"><button type="button" onclick="layerPopup('l_information', 'popup/l_information.html'); return false;">상세보기</button></li>
+        </ul>
+
+        <section class="preview">
+            <img src="[TPH_Vdesign_dir]/images/product/preview_title.png" class="title" alt="Item Preview">
+            <div class="paper"></div>
+            <div class="line cutting"></div>
+            <div class="line working"></div>
+            <div class="line design"></div>
+            <div class="line tomson"></div>
+            <ul class="btns">                
+                <li class="cuttingLine on"><button type="button">재단선</button></li>
+                <li class="workingLine on"><button type="button">작업선</button></li>
+                <li class="designLine"><button type="button">디자인선</button></li>
+                <li type="thomson" class="tomsonLine"><button>도무송선</button></li>
+                <li class="baseDesign on"><button type="button">기본디자인</button></li>
+                <li class="customeDesign"><button type="button">내디자인</button></li>
+            </ul>
+        </section>
+
+        [TPH_I/common/is_login.html]
+    </div>
+
+    [TPH_I/product/common/quick_esti.html]
+</section>
+<aside id="login_aside" class="member">
+    [TPH_Vside_menu]
+</aside>
+<footer>
+    [TPH_I/common/footer.html]
+</footer>
+
+[TPH_I/product/common/estimate_pop.html]
+</body>
+</html>

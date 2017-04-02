@@ -1,0 +1,95 @@
+
+                <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 실제 내지1 정보 섹션 시작 -->
+                <section class="pages selection">
+                    <h3>표지</h3>
+                    <dl>
+                        <dt><label for="paper">종이</label></dt>
+                        <dd style="width:400px;">
+                            <select id="inner1_paper_sort" onchange="changePaperSort('inner1', this.value);" style="width:100px;">
+                                [TPH_Vinner1_paper_sort]
+                            </select>
+                            <select id="inner1_paper_name" onchange="loadPaperInfo('inner1', this.value);" style="width:100px;">
+                                [TPH_Vinner1_paper_name]
+                            </select>
+                            <select id="inner1_paper" name="inner1_paper" style="width:131px;">
+                                [TPH_Vinner1_paper]
+                            </select>
+                        </dd>
+                        <dt><label for="color">인쇄도수</label></dt>
+                        <dd class="colorDetails">
+                            <dl>
+                                <dt><label for="inner1_bef_tmpt">전면</label></dt>
+                                <dd>
+                                    <select id="inner1_bef_tmpt" name="inner1_bef_tmpt" class="_relatedSummary">
+                                        [TPH_Vinner1_bef_print_tmpt]
+                                    </select>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><label for="inner1_aft_tmpt">후면</label></dt>
+                                <dd>
+                                    <select id="inner1_aft_tmpt" name="inner1_aft_tmpt" class="_relatedSummary">
+                                        [TPH_Vinner1_aft_print_tmpt]
+                                    </select>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>인쇄방식</dt>
+                                <dd>
+                                    <select id="inner1_print_purp" name="inner1_print_purp" onchange="loadPrintTmpt('inner1');">
+                                        [TPH_Vinner1_print_purp]
+                                    </select>
+                                </dd>
+                            </dl>
+                        </dd>
+                        <dt class="amount"><label for="amount">페이지</label></dt>
+                        <dd class="_relatedSummary amount">
+                            <select class="_amount" id="inner1_page" name="inner1_page" style="width:130px;" amt_unit="p">
+                                [TPH_Vinner1_page]
+                            </select>
+                        </dd>
+                    </dl>
+                    <div class="memo option">
+                        <div>
+                            <dl>
+                                <dt></dt>
+                                <dd>
+                                    <input type="text" id="inner1_ext_paper" name="inner1_ext_paper" placeholder="종이가 없는경우 적어주세요" />
+                                </dd>
+                                <dt></dt>
+                                <dd>
+                                    <input type="text" id="inner1_ext_bef_tmpt" name="inner1_ext_bef_tmpt" placeholder="전면도수가 없는경우 적어주세요" />
+                                </dd>
+                                <dt></dt>
+                                <dd>
+                                    <input type="text" id="inner1_ext_aft_tmpt" name="inner1_ext_aft_tmpt" placeholder="후면도수가 없는경우 적어주세요" />
+                                </dd>
+                                <dt></dt>
+                                <dd>
+                                    <input type="text" id="inner1_ext_print_purp" name="inner1_ext_print_purp" placeholder="인쇄방식이 없는경우 적어주세요" />
+                                </dd>
+                                <dt></dt>
+                                <dd>
+                                    <input type="text" id="inner1_ext_amt" name="inner1_ext_amt" placeholder="페이지가 없는경우 적어주세요" />
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </section><!-- 선택 -->
+                <!-- 후공정 -->
+                <section class="after aft_sec inner1_after _folding">
+                    <button type="button" title="열기" class="_closed foldingbtn"><img src="[TPH_Vdesign_dir]/images/common/btn_circle_bottom.png" alt="▼"></button>
+                    <button type="button" title="닫기" class="_opened foldingbtn"><img src="[TPH_Vdesign_dir]/images/common/btn_circle_top.png" alt="▲"></button>
+                    <dl>
+                        <dt>후공정</dt>
+                        <dd class="overview inner1_overview">
+                            <ul>
+                            </ul>
+                        </dd>
+                        <dd class="_folder inner1_after_list list">
+                            [TPH_Vinner1_after]
+                            [TPH_Vinner1_add_after]
+                        </dd>
+                    </dl>
+                </section><!-- 후공정 -->
+                <!-- 실제 내지1 정보 섹션 끝 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->

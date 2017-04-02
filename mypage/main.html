@@ -1,0 +1,396 @@
+<?
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/sess_common.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common_define/common_info.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/Template.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/ConnectionPool.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/FrontCommonUtil.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/job/mypage/MainDAO.php"); 
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/doc/mypage/MainDOC.php");
+
+if ($is_login === false) {
+    header("Location: /main/main.html");
+    exit;
+}
+
+$connectionPool = new ConnectionPool();
+$conn = $connectionPool->getPooledConnection();
+
+$template = new Template();
+$frontUtil = new FrontCommonUtil();
+$dao = new MainDAO();
+
+$session = $fb->getSession();
+$seqno = $session["org_member_seqno"];
+$member_photo_path = $session["member_photo_path"];
+$template->reg("member_name", $session["member_name"]); 
+$template->reg("group_name", $session["group_name"]); 
+$template->reg("grade", $session["grade"]); 
+$template->reg("grade_name_ko", $session["grade_name_ko"]); 
+$template->reg("grade_name_en", $session["grade_name_en"]); 
+$template->reg("bank_name", $session["bank_name"]); 
+$template->reg("ba_num", $session["ba_num"]); 
+$template->reg("member_dvs", $session["member_dvs"]); 
+$template->reg("member_typ", $session["member_typ"]); 
+$template->reg("own_point", number_format($session["own_point"])); 
+$template->reg("cp_count", $session["cp_count"]); 
+$template->reg("prepay_price", number_format($session["prepay_price"])); 
+$template->reg("order_lack_price", number_format($session["order_lack_price"])); 
+
+$member_dvs = $session["member_dvs"];
+
+if ($session["grade"] == 1) {
+    $template->reg("grade10", "_on");
+} else if ($session["grade"] == 2) {
+    $template->reg("grade9", "_on");
+} else if ($session["grade"] == 3) {
+    $template->reg("grade8", "_on");
+} else if ($session["grade"] == 4) {
+    $template->reg("grade7", "_on");
+} else if ($session["grade"] == 5) {
+    $template->reg("grade6", "_on");
+} else if ($session["grade"] == 6) {
+    $template->reg("grade5", "_on");
+} else if ($session["grade"] == 7) {
+    $template->reg("grade4", "_on");
+} else if ($session["grade"] == 8) {
+    $template->reg("grade3", "_on");
+} else if ($session["grade"] == 9) {
+    $template->reg("grade2", "_on");
+} else if ($session["grade"] == 10) {
+    $template->reg("grade1", "_on");
+}
+
+//등급정보
+if (intval($session["grade"]) > 1) {
+
+    $param = array();
+    $param["table"] = "member_grade_policy";
+    $param["col"] = "sales_start_price, grade_name";
+    $param["where"]["grade"] = intVal($session["grade"]) - 1;
+
+    $rs = $dao->selectData($conn, $param);
+    $html  = "<strong>%s</strong> 등급 샹향까지<br>";
+    $html .= "\n&#8361;%s 필요합니다.<br>";
+
+    $start_price = abs(intVal($rs->fields["sales_start_price"]) - intVal($session["cumul_sales_price"]));
+
+    $rs_html = sprintf($html, $rs->fields["grade_name"]
+                            , number_format($start_price));
+
+    $template->reg("grade_info", $rs_html); 
+}
+
+//담당자 정보
+$html  = "<dt>%s</dt>";
+$html .= "<dd>%s</dd>";
+$html .= "<dd class=\"last\">%s</dd>";
+
+if ($session["member_mng_name"] == "") $session["member_mng_name"] = "&nbsp";
+if ($session["nc_release_name"] == "") $session["nc_release_name"] = "&nbsp";
+if ($session["bl_release_name"] == "") $session["bl_release_name"] = "&nbsp";
+if ($session["member_mng_tel"] == "") $session["member_mng_tel"] = "&nbsp";
+if ($session["nc_release_tel"] == "") $session["nc_release_tel"] = "&nbsp";
+if ($session["bl_release_tel"] == "") $session["bl_release_tel"] = "&nbsp";
+
+$mng_info  = sprintf($html, "통화접수"
+        , $session["member_mng_name"]
+        , str_replace(".", "-", $session["member_mng_tel"]));
+$mng_info .= sprintf($html, "명함출고"
+        , $session["nc_release_name"]
+        , str_replace(".", "-", $session["nc_release_tel"]));
+$mng_info .= sprintf($html, "전단출고"
+        , $session["bl_release_name"]
+        , str_replace(".", "-", $session["bl_release_tel"]));
+$mng_info .= sprintf($html, "상담"
+        , ""
+        , "02-2260-9000");
+
+
+$template->reg("mng_info", $mng_info); 
+
+//기본 배송지
+$param = array();
+$param["table"] = "member_dlvr";
+$param["col"] = "dlvr_name, recei, tel_num, cell_num, zipcode, addr, addr_detail";
+$param["where"]["member_seqno"] = $session["member_seqno"];
+$param["where"]["basic_yn"] = "Y";
+
+$rs = $dao->selectData($conn, $param);
+
+$rs_html = "";
+$html  = "\n                <dt>별칭</dt>";
+$html .= "\n                <dd>%s</dd>";
+$html .= "\n                <dt>받는 분</dt>";
+$html .= "\n                <dd class=\"last\">%s</dd>";
+$html .= "\n                <dt>휴대전화</dt>";
+$html .= "\n                <dd>%s</dd>";
+$html .= "\n                <dt>일반전화</dt>";
+$html .= "\n                <dd class=\"last\">%s</dd>";
+$html .= "\n                <dt>주소</dt>";
+$html .= "\n                <dd class=\"last\">%s %s</dd>";
+$html .= "\n                <dd class=\"last\">%s</dd>";
+
+$rs_html = sprintf($html, $rs->fields["dlvr_name"]
+                        , $rs->fields["recei"]
+                        , $rs->fields["cell_num"]
+                        , $rs->fields["tel_num"]
+                        , $rs->fields["zipcode"]
+                        , $rs->fields["addr"]
+                        , $rs->fields["addr_detail"]);
+
+$template->reg("dlvr", $rs_html); 
+
+if ($member_dvs == "기업") {
+
+    $param = array();
+    $param["member_seqno"] = $seqno;
+
+    $rs = $dao->getBuPerSeqno($conn, $param);
+
+    $bu_seqno = $seqno;
+    while ($rs && !$rs->EOF) {
+
+        $bu_seqno .= "," . $rs->fields["member_seqno"];
+        $rs->moveNext();
+    }
+}
+
+//1:1 문의
+$param = array();
+if ($member_dvs == "기업") {
+    $param["member_seqno"] = $bu_seqno;
+} else {
+    $param["member_seqno"] = $seqno;
+}
+
+$rs = $dao->selectOtoInquireSummary($conn, $param);
+
+$otoInquireHtml = "";
+$i = 0;
+$new = "";
+
+while ($rs && !$rs->EOF) {
+
+    //오늘날짜보다 차이 1일차면 new
+    if ( time() - strtotime($rs->fields["inq_date"]) < 60*60*24*1 ) 
+        $new = "new";
+    else
+        $new = "";
+
+    if ($rs->fields["answ_yn"] == "Y")
+        $class = "";
+    else 
+        $class = "waiting";
+
+    $html = "\n   <li class=\"%s %s\"><a onclick=\"ftfView(%s)\" style=\"cursor:pointer;\">%s</a></li>  ";
+    $html = sprintf( $html
+                   , $class
+                   , $new 
+                   , $rs->fields["oto_inq_seqno"] 
+                   //, str_cut($rs->fields["title"], 0, 20, "..")
+                   , $rs->fields["title"]
+            );
+
+    $otoInquireHtml .= $html;
+    $i++;
+    $rs->moveNext();
+}
+
+if ($otoInquireHtml == "") {
+    $otoInquireHtml = "<li><span style=\"line-height:34px;padding:0 120px;\">등록된 내용이 없습니다.</span></li>";
+}
+
+$template->reg("ftf", $otoInquireHtml); 
+
+//견적문의
+$param = array();
+if ($member_dvs == "기업") {
+    $param["member_seqno"] = $bu_seqno;
+} else {
+    $param["member_seqno"] = $seqno;
+}
+
+$rs = $dao->selectEstiSummary($conn, $param);
+
+$estiHtml = "";
+$i = 0;
+$new = "";
+
+while ($rs && !$rs->EOF) {
+
+    //오늘날짜보다 차이 1일차면 new
+    if ( time() - strtotime($rs->fields["regi_date"]) < 60*60*24*1 ) 
+        $new = "new";
+    else
+        $new = "";
+
+    if ($rs->fields["state"] == "견적완료")
+        $class = "";
+    else 
+        $class = "waiting";
+
+    $html = "\n   <li class=\"%s %s\"><a onclick=\"estimateView(%s)\" style=\"cursor:pointer;\">%s</a></li>  ";
+    $html = sprintf( $html
+                   , $class
+                   , $new 
+                   , $rs->fields["esti_seqno"] 
+                   //, str_cut($rs->fields["title"], 0, 20, "..")
+                   , $rs->fields["title"]
+            );
+
+    $estiHtml .= $html;
+    $i++;
+    $rs->moveNext();
+}
+
+if ($estiHtml == "") {
+    $estiHtml = "<li><span style=\"line-height:34px;padding:0 120px;\">등록된 내용이 없습니다.</span></li>";
+}
+
+$template->reg("esti", $estiHtml); 
+
+//인사
+$n = ceil(date("n"));
+$template->reg("greeting", GREETING[$n]); 
+
+//오늘
+$today = date("Y.m.d");
+
+//일주일전
+$a_week_ago = date("Y.m.d", mktime(0,0,0,date("m"), date("d")-6, date("Y")));
+
+$template->reg("period_from", $a_week_ago); 
+$template->reg("period_to", $today); 
+//기간
+$template->reg("period", $a_week_ago . " ~ " . $today); 
+
+//전체주문
+$param = array();
+if ($member_dvs == "기업") {
+    $param["member_seqno"] = $bu_seqno;
+} else {
+    $param["member_seqno"] = $seqno;
+}
+
+$state_arr = $session["state_arr"];
+
+$param["not"] = $state_arr["주문취소"];
+$param["from"] = $a_week_ago;
+$param["to"] = $today;
+
+$rs = $dao->selectOrderStatusCount($conn, $param);
+
+$tot_cnt = $rs->fields["cnt"];
+
+$param["not"] = "";
+
+//상태
+$state_rs = $dao->selectStateAdminDvs($conn);
+$count_arr = array();
+while ($state_rs && !$state_rs->EOF) {
+    $dvs = $state_rs->fields["dvs"];
+
+    $range = $dao->selectStateAdminRange($conn, $dvs);
+
+    $param["state_min"] = $range["min"];
+    $param["state_max"] = $range["max"];
+
+    $rs = $dao->selectOrderStatusCount($conn, $param);
+    $count_arr[$dvs] = $rs->fields["cnt"];
+
+    $state_rs->MoveNext();
+}
+
+$param["dvs"] = "COUNT";
+$count_rs = $dao->selectOrderList($conn, $param);
+$param["count"] = $count_rs->fields["cnt"];
+$param["dvs"] = "";
+$rs = $dao->selectOrderList($conn, $param);
+
+$param["member_dvs"] = $member_dvs;
+
+//주문 상태 HTML
+$param = array();
+$param["design_dir"] = "/design_template";
+$param["tot_cnt"] = $tot_cnt;
+
+$html = <<<HTML
+            <colgroup>
+                <col style="width:40px">
+                <col style="width:70px">
+                <col style="width:120px">
+                <col style="width:120px">
+                <col>
+                <col style="width:80px">
+                <col style="width:80px">
+                <col style="width:80px">
+                <col style="width:40px">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>주문일</th>
+                    <th>주문번호</th>
+                    <th>인쇄물제목</th>
+                    <th>상품정보</th>
+                    <th>수량(건)</th>
+                    <th>결제금액</th>
+                    <th>진행상태</th>
+                    <th>관리</th>
+                </tr>
+            </thead>
+HTML;
+
+if ($member_dvs == "기업") {
+    $html = <<<HTML
+                <colgroup>
+                    <col style="width:40px">
+                    <col style="width:70px">
+                    <col style="width:120px">
+                    <col style="width:120px">
+                    <col>
+                    <col>
+                    <col style="width:80px">
+                    <col style="width:80px">
+                    <col style="width:80px">
+                    <col style="width:40px">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>주문일</th>
+                        <th>주문번호</th>
+                        <th>주문담당자</th>
+                        <th>인쇄물제목</th>
+                        <th>상품정보</th>
+                        <th>수량(건)</th>
+                        <th>결제금액</th>
+                        <th>진행상태</th>
+                        <th>관리</th>
+                    </tr>
+                </thead>
+HTML;
+}
+
+$param["list"] = $html;
+$param["state_arr"] = $count_arr;
+
+$template->reg("order_status_html", orderStatus($param)); 
+$template->reg("dvs", $fb->form("dvs")); 
+
+// 로그인 상태인지 체크하는부분 include
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/login_check.php");
+
+//회원 구분 체크
+include_once($_SERVER["DOCUMENT_ROOT"] . "/mypage/member_dvs_check.php");
+
+// 기본사용 자바스크립트, css 파일 불러오는 용
+$template->reg("dir", "mypage"); 
+$template->reg("page", "main"); 
+
+//design_dir 경로
+$template->reg("design_dir", "/design_template"); 
+$template->htmlPrint($_SERVER["PHP_SELF"]); 
+
+$conn->Close();
+?>

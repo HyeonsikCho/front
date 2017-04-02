@@ -1,0 +1,89 @@
+@charset 'utf-8';
+
+//body { background: url('../images/cscenter/title_bg.png') center 155px repeat-x; }
+body { background: url('../images/cscenter/title_bg.png') center 105px repeat-x; }
+
+header.title { margin-left: -220px; margin-bottom: 0; }
+header.title h2 { padding: 0; height: 140px; }
+.contents .title .location { padding-bottom: 14px; }
+
+nav.lnb li.on a { background: #bf5e8e; }
+nav.lnb li.on li.on a { color: #bf5e8e; }
+ul.paging button:hover img,
+ul.paging button:focus img { background: #bf5e8e; }
+ul.paging button:hover,
+ul.paging button:focus { border-color: #bf5e8e; color: #bf5e8e; }
+ul.paging button.on { background: #bf5e8e; border-color: #bf5e8e; }
+
+.pageTitle::before { content: none; }
+
+table { border-top-color: #bf5e8e; }
+
+nav.tab {width:775px; background: #f9f9f9; border: 1px solid #e1e1e1;margin-bottom: 40px; }
+nav.tab:after { content: ''; display: block; clear: both; }
+nav.tab h4,
+nav.tab a { display: block; float: left; border-width: 0 1px; text-align: center; height: 48px; line-height: 48px; background: #f9f9f9; }
+nav.tab h4 { border-right: 1px solid #e1e1e1;background: #fff; font-size: 14px; font-weight: 700; color: #111; }
+nav.tab a:first-child  { border-left-color: #e1e1e1; }
+nav.tab a:last-child { border-right-color: #e1e1e1; }
+
+/* 디프린팅 소개 */
+.introduce { background: url('../images/service/introduce_bg.png') right bottom no-repeat; }
+.introduce em { font-size: 36px; font-weight: 700; color: #111; }
+.introduce figure { margin: 10px 0; }
+.introduce figure.bi { margin: 60px 0 60px 146px; }
+.introduce p { font-size: 13px; line-height: 24px; font-weight: 300; margin-left: 20px; }
+.introduce p + p { margin-top: 2em; }
+.introduce p.signature { padding-bottom: 270px; font-weight: 700; }
+
+/* 고객서비스 */
+.customer nav.tab h4,
+.customer nav.tab a { width: 193px; }
+.customer dl + dl { margin-top: 160px; }
+.customer dt { position: relative; height: 70px; line-height: 70px; border-radius: 35px; text-align: center; font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 23px; }
+.customer dt.character:before { position: absolute; bottom: 30px; left: 0; right: 0; text-align: center; display: block; }
+.customer dd { color: #111; font-size: 16px; line-height: 30px; padding-left: 55px; position: relative; }
+.customer dd:before { content: ''; display: block; position: absolute; left: 40px; top: 11px; width: 5px; height: 5px; background: #111; }
+.customer.designCompany dt { background-color: #fcf37f; color: #000; }
+.customer.designCompany dt.character:before { content: url('../images/service/customer_designcompany_character.png'); }
+.customer.generalCompany dt { background-color: #ed7fbc; }
+.customer.generalCompany dt.character:before { content: url('../images/service/customer_generalcompany_character.png'); }
+.customer.personalUser dt { background-color: #b7b7b7; }
+.customer.personalUser dt.character:before { content: url('../images/service/customer_personaluser_character.png'); }
+.customer.foreignUser dt { background-color: #7fcdef; }
+.customer.foreignUser dt.character:before { content: url('../images/service/customer_foreignuser_character.png'); }
+
+/* 고객서비스 */
+.order nav.tab h4,
+.order nav.tab a { width: 153px; }
+.order article { background: 604px 0 no-repeat; }
+.order article p { font-size: 13px; line-height: 30px; font-weight: 300; color: #111; }
+.order article p + p { margin-top: 2em; }
+.order .manual figure .num { display: inline-block; width: 45px;line-height: 60px; vertical-align: middle; color: #fff; font-size: 24px; font-weight: 300; background: url('../images/service/order_circle.png') center no-repeat; text-align: center; }
+.order .manual li { margin-top: 40px; }
+.order .manual figure .text { display: inline-block; line-height: 24px; vertical-align: middle; font-size: 16px; color: #111; margin-left: 13px;font-weight:700 }
+.order .manual figure .text a { font-size: 14px; letter-spacing: 0; }
+.order .manual figure img { display: block; border: 10px solid #ebebeb; margin-top: 20px; }
+.order.rapid article { background-image: url('../images/service/order_rapid_icon.png');margin:10px;}
+.order.remote article { background-image: url('../images/service/order_remote_icon.png'); }
+.order.gps article { background-image: url('../images/service/order_gps_icon.png'); }
+.order.estimate article { background-image: url('../images/service/order_estimate_icon.png'); }
+
+/* 지식센터 */
+.knowledge button.function { min-width: 110px; }
+.knowledge table.update .new a { max-width: 450px; }
+.knowledge table.update .new.reply a { max-width: 400px; }
+.knowledge table.view .text { min-height: 360px; }
+.knowledge table.write textarea { height: 459px; }
+
+/* 사이트맵 */
+.sitemap h4 { font-size: 18px; color: #000; height: 16px; line-height: 16px; border-left: 5px solid #898989; padding-left: 7px; }
+.sitemap li + li h4 { margin-top: 20px; }
+.sitemap .list { margin-left: -20px; }
+.sitemap .list li { float: left; margin-top: 20px; margin-left: 20px; font-size: 16px; line-height: 16px; color: #555; }
+.sitemap .list li ul { clear: both; }
+.sitemap .list li li a { display: block; background: #eee; width: 122px; height: 29px; line-height: 29px; padding: 1px 9px 0; font-size: 14px; }
+.sitemap .list li ul { margin-left: -20px; }
+.sitemap .list li li li { float: none; margin-top: 8px; }
+.sitemap .list li li li + li { margin-top: 7px; }
+.sitemap .list li li li a { background: none; font-size: 12px; line-height: 18px; height: auto; }

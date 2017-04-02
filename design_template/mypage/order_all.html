@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    [TPH_I/common/head.html]
+    [TPH_I/mypage/common/mypage_head.html]
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet"  href="[TPH_Vdesign_dir]/css/lightslider.css"/>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <style type="text/css">
+        ul.paging .first:after,
+        ul.paging .last:before { content: '···'; margin: 0 6px; }
+    </style>
+    <script src="[TPH_Vdesign_dir]/js/lib/lightslider.js"></script> 
+</head>
+<body>
+<header class="top">
+    [TPH_I/common/header.html]
+</header>
+<section class="contents lnb orderList">
+    <header class="title">
+        <h2><img src="[TPH_Vdesign_dir]/images/mypage/title.png" alt="마이페이지"></h2>
+        <ol class="location">
+            [TPH_I/common/home_btn.html]
+            <li><a href="/mypage/main.html"><span>마이페이지</span></a></li>
+            <li><a href="/mypage/order_all.html"><span>주문 정보</span></a></li>
+            <li><a href="/mypage/order_all.html"><span>전체 주문</span></a></li>
+        </ol>
+    </header>
+    <nav class="lnb">
+        [TPH_I/mypage/common/lnb.html]
+    </nav>
+    <h3 class="pageTitle">전체 주문</h3>
+    <section class="searchCondition">
+        <div class="rowWrap">
+            <dl class="date">
+                <dt>주문일</dt>
+                <dd>
+                    [TPH_I/common/datepicker.html]
+                </dd>
+            </dl>
+            <dl class="status last">
+                <dt>진행상태</dt>
+                <dd>
+                    <select id="order_state">
+                        <option value='' selected>전체</option>
+                        [TPH_Vorder_state]
+                    </select>
+                </dd>
+            </dl>
+        </div>
+        <div class="rowWrap">
+            <dl class="delivery">
+                <dt>배송종류</dt>
+                <dd>
+                    <select id="dlvr_way">
+                        <option value="">전체</option>
+                        <option value="택배">택배</option>
+                        <option value="직배송">직배송</option>
+                        <option value="퀵">퀵</option>
+                    </select>
+                </dd>
+            </dl>
+            <dl class="title last">
+                <dt>인쇄물제목</dt>
+                <dd><input id="title" onkeydown="orderSearchKey(event);" name="title" type="text"></dd>
+            </dl>
+        </div>
+        <button onclick="orderSearchTxt();" class="search">검색</button>
+    </section>
+    <table class="list ordered _details searchResult">
+        <caption>
+            <div class="resultNum" id="resultNum">
+            </div>
+            [TPH_I/common/list_num.html]
+        </caption>
+        [TPH_Vhtml]
+    </table>
+    <ul class="paging" id="paging">
+        <li><button class="on">1</button></li>
+    </ul>
+    <input type="hidden" id="member_dvs" value="[TPH_Vmember_dvs]">
+    [TPH_I/mypage/common/common_pop.html]
+    [TPH_I/mypage/common/banner.html]
+</section>
+<footer>
+    [TPH_I/common/footer.html]
+</footer>
+</body>
+</html>

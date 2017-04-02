@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    [TPH_I/common/head.html]
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+    <script>
+    //우편번호 팝업
+    var getPostcode = function(dvs) {
+        new daum.Postcode({
+            oncomplete: function(data) {
+               var fullAddr = ''; // 최종 주소 변수
+               var extraAddr = ''; // 조합형 주소 변수
+
+               // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+               if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                   fullAddr = data.roadAddress;
+
+               } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                   fullAddr = data.jibunAddress;
+               }
+
+               // 사용자가 선택한 주소가 도로명 타입일때 조합한다.
+               if (data.userSelectedType === 'R'){
+                   //법정동명이 있을 경우 추가한다.
+                   if(data.bname !== ''){
+                       extraAddr += data.bname;
+                   }
+                   // 건물명이 있을 경우 추가한다.
+                   if(data.buildingName !== ''){
+                       extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                   }
+                   // 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
+                   fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+               }
+
+               // 우편번호와 주소 정보를 해당 필드에 넣는다.
+               document.getElementById(dvs + 'zipcode').value = data.zonecode; //5자리 새우편번호 사용
+               document.getElementById(dvs + 'addr').value = fullAddr;
+
+               // 커서를 상세주소 필드로 이동한다.
+               document.getElementById(dvs + 'addr_detail').focus();
+            }
+        }).open({
+            popupName: 'postcodePopup'
+        });
+    }
+
+    function isBa() {
+        var is_ba = "[TPH_Vis_ba]";
+        if (is_ba == "false") {
+            layerPopup('l_virt_ba', '/mypage/popup/l_virt_ba_moidfy.html?local=modify');
+        }
+    }
+
+    </script>
+</head>
+<!--body onload="isBa();"-->
+<body>
+<header class="top">
+    [TPH_I/common/header.html]
+</header>
+<section class="contents lnb memberInfo">
+    <header class="title">
+        <h2><img src="[TPH_Vdesign_dir]/images/mypage/title.png" alt="마이페이지"></h2>
+        <ol class="location">
+            [TPH_I/common/home_btn.html]
+            <li><a href="/mypage/main.html"><span>마이페이지</span></a></li>
+            <li><a href="/mypage/member_modify.html"><span>회원정보</span></a></li>
+            <li><a href="/mypage/member_modify.html"><span>회원정보변경</span></a></li>
+        </ol>
+    </header>
+    <nav class="lnb">
+        [TPH_I/mypage/common/lnb.html]
+    </nav>
+    <h3 class="pageTitle">회원정보변경</h3>
+    <input type="hidden" id="member_seqno" value="[TPH_Vmember_seqno]">
+    <input type="hidden" id="member_dvs" value="[TPH_Vmember_dvs]">
+    <h4 class="sectionTitle">기본 가입정보</h4>
+    <table class="line input">
+        <colgroup>
+            <col style="width:120px">
+            <col style="width:225px">
+            <col style="width:120px">
+            <col>
+        </colgroup>
+        <tbody>
+            <tr>
+                <th>회원구분</th>
+                <td>[TPH_Vmember_dvs]</td>
+                <th>회원등급</th>
+                <td>[TPH_Vgrade_name_en]</td>
+            </tr>
+            <tr>
+                <th>아이디</th>
+                <td>[TPH_Vmember_id]</td>
+                <th>가상계좌</th>
+                <td>
+                    [TPH_Vbank_name]&nbsp;
+                    [TPH_Vba_num]&nbsp;&nbsp;
+                    [TPH_Vchange_account]
+                    <p class="note">가상계좌 변경요청은 전화상으로만 가능합니다.</p>
+                </td>
+            </tr>
+            <tr>
+                <th>기존 비밀번호</th>
+                <td colspan="3">
+                    <input type="password" id="exi_pw" maxlength="20">
+                </td>
+            </tr>
+            <tr>
+                <th>신규 비밀번호</th>
+                <td>
+                    <input type="password" id="new_pw" maxlength="20">
+                    <p class="note">비밀번호는 8~12자리로 설정 가능합니다.</p>
+                </td>
+                <th>신규 비밀번호 확인</th>
+                <td>
+                    <input type="password" id="new_pw_re" maxlength="20">
+                    <button onclick="modiPw();">비밀번호 변경</button>
+                    <p class="note">신규 비밀번호를 한번 더 입력해주세요.</p>
+                </td>
+            </tr>
+    </table>
+    [TPH_Vhtml]
+    <div class="function center">
+        <strong><button class="function" onclick="modiMemberDetailInfo();">수정 완료</button></strong>
+        <button class="function" onclick="history.go(0);">취소</button>
+    </div>
+    [TPH_I/mypage/common/banner.html]
+</section>
+<footer>
+    [TPH_I/common/footer.html]
+</footer>
+</body>
+</html>

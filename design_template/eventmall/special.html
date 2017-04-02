@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    [TPH_I/common/head.html]
+    <link rel="stylesheet" href="[TPH_Vdesign_dir]/css/flipclock_dprinting.css">
+    <script src="[TPH_Vdesign_dir]/js/eventmall/flipclock.js"></script>
+</head>
+<body>
+<header class="top">
+    [TPH_I/common/header.html]
+</header>
+<section class="contents special">
+    <input type="hidden" class="serverYear" value="[TPH_Vyear]"><!-- 서버시간 연 -->
+    <input type="hidden" class="serverMonth" value="[TPH_Vmonth]"><!-- 서버시간 월 -->
+    <input type="hidden" class="serverDay" value="[TPH_Vday]"><!-- 서버시간 일 -->
+    <input type="hidden" class="serverHour" value="[TPH_Vhour]"><!-- 서버시간 시 -->
+    <input type="hidden" class="serverMinute" value="[TPH_Vmin]"><!-- 서버시간 분 -->
+    <input type="hidden" class="serverSecond" value="[TPH_Vsec]"><!-- 서버시간 초 -->
+    <header class="title">
+        <div>
+            <h2><img src="[TPH_Vdesign_dir]/images/eventmall/special_header_h2.png" alt="오.특.이"></h2>
+            <em>일생에 단 한번! 너무나 특별한 오늘!</em>
+            <p>오늘만 특별한 이벤트 - 내일은 절대 만날 수 없는 특별한 기회를 드립니다.</p>
+        </div>
+        <ol class="location">
+        <li><a href="#none" target="_self" title="첫 화면으로"><img src="[TPH_Vdesign_dir]/images/common/contents_location_home.png" alt="HOME"></a></li>
+        <li><span>오.특.이</span></li>
+        </ol>
+        </header>
+        [TPH_Vspecial_list_html]
+
+</section>
+<footer>
+    [TPH_I/common/footer.html]
+</footer>
+</body>
+</html>

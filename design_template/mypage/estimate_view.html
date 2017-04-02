@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    [TPH_I/common/head.html]
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+</head>
+<body>
+<header class="top">
+    [TPH_I/common/header.html]
+</header>
+<section class="contents lnb estimateInfo" style="min-height: 1115px;">
+    <header class="title">
+        <h2><img src="[TPH_Vdesign_dir]/images/mypage/title.png" alt="마이페이지"></h2>
+        <ol class="location">
+            [TPH_I/common/home_btn.html]
+            <li><a href="/mypage/main.html"><span>마이페이지</span></a></li>
+            <li><a href="/mypage/order_all.html"><span>주문 정보</span></a></li>
+            <li><a href="/mypage/estimate_list.html"><span>견적문의</span></a></li>
+        </ol>
+    </header>
+    <nav class="lnb">
+	[TPH_I/mypage/common/lnb.html]
+    </nav>
+    <h3 class="pageTitle">견적 상세</h3>
+    <table class="information question">
+        <colgroup>
+            <col style="width:120px">
+            <col>
+        </colgroup>
+        <thead>
+            <tr>
+                <th colspan="2">고객 문의사항</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">제목</th>
+                <td>[TPH_Vtitle]</td>
+            </tr>
+            <tr>
+                <th scope="row">첨부파일</th>
+                <td>[TPH_Vuser_attch_file]</td>
+            </tr>
+            <tr>
+                <th scope="row">문의내용</th>
+                <td>[TPH_Vinq_cont]</td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="information answer">
+        <colgroup>
+            <col style="width:120px">
+            <col>
+        </colgroup>
+        <thead>
+            <tr>
+                <th colspan="2">디프린팅 견적제안</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">진행상태</th>
+                <td>[TPH_Vstate]</td>
+            </tr>
+            <tr>
+                <th scope="row">견적금액</th>
+                <td>&#8361;[TPH_Vesti_price]</td>
+            </tr>
+            <tr>
+                <th scope="row">첨부파일</th>
+                <td>[TPH_Vadmin_attch_file]</td>
+            </tr>
+            <tr>
+                <th scope="row">답변내용</th>
+                <td>[TPH_Vansw_cont]</td>
+            </tr>
+        </tbody>
+    </table>
+    <form name="frm" id="frm">
+        <input type="hidden" name="searchParam" id="searchParam" value="[TPH_VsearchParam]" >
+    </form>
+    <div class="function narrow">
+        <!--
+        <button class="function">답글 쓰기</button>
+        -->
+        <strong class="blue right"><button class="function" onclick="goList();">목록으로</button></strong>
+    </div>
+    [TPH_I/mypage/common/banner.html]
+</section>
+<footer>
+   [TPH_I/common/footer.html]
+</footer>
+</body>
+</html>

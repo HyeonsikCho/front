@@ -1,0 +1,12 @@
+<?
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/entity/FormBean.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/Template.php");
+
+$template = new Template();
+$fb = new FormBean();
+
+$cs = $fb->form("cs");
+
+$template->reg("cs", $cs); 
+$template->htmlPrint($_SERVER["PHP_SELF"]); 
+?>

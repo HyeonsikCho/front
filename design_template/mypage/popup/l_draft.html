@@ -1,0 +1,119 @@
+<header>
+    <h2>시안보기</h2>
+    <button class="close" title="닫기"><img src="[TPH_Vdesign_dir]/images/common/btn_circle_x_white.png" alt="X"></button>
+</header>
+<article>
+<section class="draftImage">
+    <div class="demo">
+        <div class="item">            
+            <div class="clearfix">
+                <ul id="image-gallery" class="gallery list-unstyled cS-hidden" width="695px;">
+                    <li data-thumb="[TPH_Vdesign_dir]/images/test/thumb/cS-1.jpg"> 
+                        <img src="[TPH_Vdesign_dir]/images/test/cS-1.jpg" width="695px"/>
+                    </li>
+                    <li data-thumb="[TPH_Vdesign_dir]/images/test/thumb/cS-2.jpg"> 
+                        <img src="[TPH_Vdesign_dir]/images/test/cS-2.jpg" width="695px"/>
+                    </li>
+                    <li data-thumb="[TPH_Vdesign_dir]/images/test/thumb/cS-3.jpg"> 
+                        <img src="[TPH_Vdesign_dir]/images/test/cS-3.jpg" width="695px"/>
+                    </li>
+                    <li data-thumb="[TPH_Vdesign_dir]/images/test/thumb/cS-4.jpg"> 
+                        <img src="[TPH_Vdesign_dir]/images/test/cS-4.jpg" width="695px"/>
+                    </li>
+                    <li data-thumb="[TPH_Vdesign_dir]/images/test/thumb/cS-5.jpg"> 
+                        <img src="[TPH_Vdesign_dir]/images/test/cS-5.jpg" width="695px"/>
+                    </li>
+                    <li data-thumb="[TPH_Vdesign_dir]/images/test/thumb/cS-6.jpg"> 
+                        <img src="[TPH_Vdesign_dir]/images/test/cS-6.jpg" width="695px"/>
+                    </li>
+                    <li data-thumb="[TPH_Vdesign_dir]/images/test/thumb/cS-7.jpg"> 
+                        <img src="[TPH_Vdesign_dir]/images/test/cS-7.jpg" width="695px"/>
+                    </li>
+                     <li data-thumb="[TPH_Vdesign_dir]/images/test/thumb/cS-7.jpg"> 
+                        <img src="[TPH_Vdesign_dir]/images/test/cS-7.jpg" width="695px"/>
+                    </li>
+                      <li data-thumb="[TPH_Vdesign_dir]/images/test/thumb/cS-7.jpg"> 
+                        <img src="[TPH_Vdesign_dir]/images/test/cS-7.jpg" width="695px"/>
+                    </li>
+                       <li data-thumb="[TPH_Vdesign_dir]/images/test/thumb/cS-7.jpg"> 
+                        <img src="[TPH_Vdesign_dir]/images/test/cS-7.jpg" width="695px"/>
+                    </li>
+                        <li data-thumb="[TPH_Vdesign_dir]/images/test/thumb/cS-7.jpg"> 
+                        <img src="[TPH_Vdesign_dir]/images/test/cS-7.jpg" width="695px"/>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+        <!--img id="preview_file" src="[TPH_Vthumb_path]"-->
+    </section>
+    <ul class="draftCheck" style="display:[TPH_Vopt];">
+        <li><label><input type="radio" name="draftCheck"> 시안을 확있했으며, 이대로 인쇄를 진행하겠습니다.</label></li>
+        <li><label><input type="radio" name="draftCheck" class="error"> 시안에 오류가 있습니다.</label>
+            <div class="textareaWrap">
+                <textarea disabled></textarea>
+            </div>
+        </li>
+    </ul>
+    <div class="function center">
+        <strong><button class="confirm">확인</button></strong>
+        <button class="close">취소</button>
+    </div>
+</article>
+<script>
+    $(document).ready(function() {
+        $('#image-gallery').lightSlider({
+            gallery:true,
+            item:1,
+            thumbItem:11,
+            vertical:true, //세로
+            verticalHeight:455, //세로
+            slideMargin: 0,
+           // speed:500,
+           // auto:true,
+            loop:true,
+            onSliderLoad: function() {
+                $('#image-gallery').removeClass('cS-hidden'); }  
+        });
+    });
+
+    $('.l_draft .draftCheck input[type=radio]').on('click', function () {
+        if ($(this).hasClass('error')) {
+            alert('시안의 오류를 작성해주세요.');
+            $('.l_draft textarea').attr('disabled', false);
+        } else {
+            $('.l_draft textarea').attr('disabled', true);
+        }
+    });
+    
+    $('.l_draft button.confirm').on('click', function () {
+        if ($('.l_draft .draftCheck input[type=radio]:checked').length == 0) {
+            alert('시안을 확인하시고 진행 여부를 선택해주세요.');
+        } else if ($('.l_draft .draftCheck input[type=radio]:checked').hasClass('error')) {
+            confirm('시안의 오류를 제출하시겠습니까?');
+        } else {
+            confirm('시안을 확인했으며, 이대로 인쇄를 진행하시겠습니까?');
+        }
+    });
+</script>
+<script src="[TPH_Vdesign_dir]/js/lib/lightslider.js"></script> 
+<link rel="stylesheet"  href="[TPH_Vdesign_dir]/css/lightslider.css"/>
+<style>
+ul{
+    list-style: none outside none;
+    padding-left: 0;
+    margin: 0;
+}
+.content-slider li {
+    background-color: #ed3020;
+    text-align: center;
+    color: #FFF;
+}
+.content-slider h3 {
+    margin: 0;
+    padding: 70px 0;
+}
+.demo {
+    width: 802px;
+}
+</style>

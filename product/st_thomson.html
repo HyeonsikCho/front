@@ -1,0 +1,59 @@
+<?
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/sess_common.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/Template.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/ConnectionPool.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/job/common/ProductCommonDAO.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/product/info/SheetTomsonInfo.php");
+
+$connectionPool = new ConnectionPool();
+$conn = $connectionPool->getPooledConnection();
+
+$template = new Template();
+$dao = new ProductCommoNDAO();
+
+// 명함 상품 정보 처리부분 include
+// 사진, 배너, 카테고리 셀렉트박스
+include_once($_SERVER["DOCUMENT_ROOT"] . "/product/info/common_info.php");
+
+// 로그인 상태인지 체크하는부분 include
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/login_check.php");
+
+$flag_arr = array(
+    "affil_yn"    => false,
+    "pos_yn"      => false,
+    "mix_yn"      => false,
+    "size_typ_yn" => false
+);
+$info = new SheetTomsonInfo($conn,
+                            $template,
+                            $sortcode_b,
+                            "st",
+                            $fb->session("sell_site"),
+                            $flag_arr);
+
+// 보험 도무송을 제외한 나머지에 코팅정보 추가
+$html = '';
+if ($sortcode_b !== "002002007") {
+    $html = <<<html
+                    <dt>코팅</dt>
+                    <dd>
+                        <select id="coating_yn" name="coating_yn" class="withBtn">
+                            <option value="코팅">코팅</option>
+                            <option value="무코팅">무코팅</option>
+                        </select>
+                    </dd>
+html;
+
+    $template->reg("coating_html", $html); 
+}
+
+// 기본사용 자바스크립트, css 파일 불러오는 용
+$template->reg("dir", "product"); 
+$template->reg("page", "st"); 
+
+//design_dir 경로
+$template->reg("design_dir", "/design_template"); 
+$template->htmlPrint($_SERVER["PHP_SELF"]); 
+
+$conn->Close();
+?>

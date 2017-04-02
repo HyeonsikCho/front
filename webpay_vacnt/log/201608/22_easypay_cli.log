@@ -1,0 +1,10 @@
+0822-091342.680 - 21383 - T51020018MFmoqMp     - MSG : START - tr_cd=[00101000]+mall_id=[T5102001]+order_no=[ORDER_201608221471824822286]
+0822-091347.706 - 21383 - T51020018MFmoqMp     - MSG : PG_서버_접속__정상
+0822-091347.716 - 21383 - T51020018MFmoqMp     - MSG : PG_서버_요청_전문_전송__정상
+0822-091347.784 - 21383 - T51020018MFmoqMp     - MSG : PG_서버_응답_전문_수신__정상
+0822-091347.784 - 21383 - T51020018MFmoqMp     - MSG : ENDED - res=[res_cd=0000res_msg=계좌 채번 정상cno=16082209101923710774order_no=ORDER_201608221471824822286tran_date=20160822091020bank_cd=003bank_flag=Ybank_nm=기업은행account_no=T8201379497551deposit_nm=한국정보통신(주) 테expire_date=20160822235959escrow_yn=Ncomplex_yn=Nstat_cd=TS07stat_msg=입금대기pay_type=22memb_id=T5102001memb_gubun=2bk_pay_yn=N]
+0822-092423.740 - 21404 - T51020018MFmoqMp     - MSG : START - tr_cd=[00101000]+mall_id=[T5102001]+order_no=[ORDER_201608221471825463336]
+0822-092423.756 - 21404 - T51020018MFmoqMp     - MSG : PG_서버_접속__정상
+0822-092423.766 - 21404 - T51020018MFmoqMp     - MSG : PG_서버_요청_전문_전송__정상
+0822-092423.817 - 21404 - T51020018MFmoqMp     - MSG : PG_서버_응답_전문_수신__정상
+0822-092423.817 - 21404 - T51020018MFmoqMp     - MSG : ENDED - res=[res_cd=0000res_msg=계좌 채번 정상cno=16082209205523710779order_no=ORDER_201608221471825463336tran_date=20160822092056bank_cd=003bank_flag=Ybank_nm=기업은행account_no=T8201379497590deposit_nm=한국정보통신(주) 테expire_date=20160822235959escrow_yn=Ncomplex_yn=Nstat_cd=TS07stat_msg=입금대기pay_type=22memb_id=T5102001memb_gubun=2bk_pay_yn=N]

@@ -1,0 +1,10 @@
+0816-113343.510 - 25507 - T51020018GFmoqMp     - MSG : START - tr_cd=[00101000]+mall_id=[T5102001]+order_no=[ORDER_201608161471314796390]
+0816-113343.521 - 25507 - T51020018GFmoqMp     - MSG : PG_서버_접속__정상
+0816-113343.532 - 25507 - T51020018GFmoqMp     - MSG : PG_서버_요청_전문_전송__정상
+0816-113343.580 - 25507 - T51020018GFmoqMp     - MSG : PG_서버_응답_전문_수신__정상
+0816-113343.581 - 25507 - T51020018GFmoqMp     - MSG : ENDED - res=[res_cd=0000res_msg=계좌 채번 정상cno=16081611301723704645order_no=ORDER_201608161471314796390tran_date=20160816113018bank_cd=003bank_flag=Ybank_nm=기업은행account_no=T8201382397816deposit_nm=한국정보통신(주) 테expire_date=20160816235959escrow_yn=Ncomplex_yn=Nstat_cd=TS07stat_msg=입금대기pay_type=22memb_id=T5102001memb_gubun=2bk_pay_yn=N]
+0816-184139.158 - 27536 - T51020018GFmoqMp     - MSG : START - tr_cd=[00101000]+mall_id=[T5102001]+order_no=[ORDER_201608161471340499060]
+0816-184139.204 - 27536 - T51020018GFmoqMp     - MSG : PG_서버_접속__정상
+0816-184139.214 - 27536 - T51020018GFmoqMp     - MSG : PG_서버_요청_전문_전송__정상
+0816-184139.275 - 27536 - T51020018GFmoqMp     - MSG : PG_서버_응답_전문_수신__정상
+0816-184139.275 - 27536 - T51020018GFmoqMp     - MSG : ENDED - res=[res_cd=0000res_msg=계좌 채번 정상cno=16081618381323705213order_no=ORDER_201608161471340499060tran_date=20160816183813bank_cd=011bank_flag=Ybank_nm=농협중앙회account_no=T3672364447561deposit_nm=한국정보통신(주) 테expire_date=20160816235959escrow_yn=Ncomplex_yn=Nstat_cd=TS07stat_msg=입금대기pay_type=22memb_id=T5102001memb_gubun=2bk_pay_yn=N]

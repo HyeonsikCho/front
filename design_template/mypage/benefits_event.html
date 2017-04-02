@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    [TPH_I/common/head.html]
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <style type="text/css">
+        ul.paging .first:after,
+        ul.paging .last:before { content: '···'; margin: 0 6px; }
+    </style>
+</head>
+<body>
+<header class="top">
+    [TPH_I/common/header.html]
+</header>
+<section class="contents lnb benefits">
+    <header class="title">
+        <h2><img src="[TPH_Vdesign_dir]/images/mypage/title.png" alt="마이페이지"></h2>
+        <ol class="location">
+            [TPH_I/common/home_btn.html]
+            <li><a href="/mypage/main.html"><span>마이페이지</span></a></li>
+            <li><a href="/mypage/member_modify.html"><span>회원정보</span></a></li>
+            <li><a href="/mypage/benefits_event.html"><span>이벤트</span></a></li>
+        </ol>
+    </header>
+    <nav class="lnb">
+        [TPH_I/mypage/common/lnb.html]
+    </nav>
+    <h3 class="pageTitle">이벤트</h3>
+        [TPH_I/mypage/common/summary.html]
+    <nav class="pageTab">
+        <ul>
+            <li><a href="/mypage/benefits_grade.html">회원등급</a></li>
+            <li class="on">이벤트</li>
+            <li><a href="/mypage/benefits_point.html">포인트</a></li>
+            <li><a href="/mypage/benefits_coupon.html">쿠폰</a></li>
+            <li><a href="/mypage/benefits_category.html">카테고리별 할인</a></li>
+        </ul>
+    </nav>
+    <section class="searchCondition">
+        <div class="rowWrap">
+            <dl class="date">
+                <dt>참여일</dt>
+                <dd>
+                    [TPH_I/common/datepicker.html]
+                </dd>
+            </dl>
+        </div>
+        <div class="rowWrap">
+            <dl class="name full">
+                <dt>이벤트명</dt>
+                <dd class="last">
+                    <div class="inputWrap"><input id="event_typ" onkeydown="searchKey(event);" type="text"></div>
+                </dd>
+            </dl>
+        </div>
+        <button onclick="searchEventList();" class="search">검색</button>
+    </section>
+    <table class="list searchResult noEllipsis">
+        <caption>
+            <div class="resultNum" id="resultNum">
+            </div>
+            [TPH_I/common/list_num.html]
+        </caption>
+        <colgroup>
+            <col style="width:40px">
+            <col style="width:100px">
+            <col style="width:120px">
+            <col>
+            <col style="width:200px">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>등록일</th>
+                <th>이벤트</th>
+                <th>상품명</th>
+                <th>혜택</th>
+            </tr>
+        </thead>
+        <tbody id="event_list">
+        </tbody>
+    </table>
+    <ul class="paging" id="paging">
+    </ul>
+    [TPH_I/mypage/common/banner.html]
+</section>
+<footer>
+    [TPH_I/common/footer.html]
+</footer>
+</body>
+</html>

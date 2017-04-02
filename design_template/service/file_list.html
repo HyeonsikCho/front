@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    [TPH_I/common/head.html]
+</head>
+<body>
+<header class="top">
+    [TPH_I/common/header.html]
+</header>
+<section class="contents lnb knowledge">
+    <header class="title">
+        <h2><img src="[TPH_Vdesign_dir]/images/service/title.png" alt="고객센터"></h2>
+        <ol class="location">
+            [TPH_I/common/home_btn.html]
+            <li><a href="/service/introduce.html"><span>디프린팅</span></a></li>
+            <li><a href="/service/file_list.html"><span>지식센터</span></a></li>
+            <li><a href="/service/file_list.html"><span>공유 자료실</span></a></li>
+        </ol>
+    </header>
+    <nav class="lnb">
+        [TPH_I/service/common/lnb.html]
+    </nav>
+    <h3 class="pageTitle">공유 자료실</h3>
+    <table class="list searchResult update">
+        <caption>
+            <div class="search">
+                <select id="search_cnd">
+                    <option value="title">제목</option>
+                    <option value="member_name">작성자</option>
+                </select>
+                <input type="text" id="search_txt" onkeydown="searchKey(event);">
+                <button onclick="searchTxt();">검색</button>
+            </div>
+            [TPH_I/common/list_num.html]
+        </caption>
+        <colgroup>
+            <col style="width:60px">
+            <col>
+            <col style="width:80px">
+            <col style="width:80px">
+            <col style="width:70px">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>등록일</th>
+                <th>조회</th>
+            </tr>
+        </thead>
+        <tbody id="list">
+        </tbody>
+    </table>
+    <ul class="paging" id="paging">
+    </ul>
+    <div class="function center">
+       [TPH_Vregi_btn]
+    </div>
+</section>
+<footer>
+    [TPH_I/common/footer.html]
+</footer>
+</body>
+</html>

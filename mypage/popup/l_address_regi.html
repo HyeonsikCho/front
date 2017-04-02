@@ -1,0 +1,44 @@
+<?
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/sess_common.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common_define/common_info.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/Template.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/ConnectionPool.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/FrontCommonUtil.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/job/mypage/MemberDlvrDAO.php");
+
+$connectionPool = new ConnectionPool();
+$conn = $connectionPool->getPooledConnection();
+
+$template = new Template();
+$frontUtil = new FrontCommonUtil();
+$dao = new MemberDlvrDAO();
+
+$html = "\n<option value=\"%s\">%s</option>";
+    
+//전화번호앞자리
+$tel_html = "";
+foreach (TEL_NUM as $val) {
+    $tel_html .= sprintf($html, $val, $val);
+}
+$template->reg("telOpt", $tel_html);
+    
+//휴대전화앞자리
+$cell_html = "";
+foreach (CEL_NUM as $val) {
+    $cell_html .= sprintf($html, $val, $val);
+}
+$template->reg("cellOpt", $cell_html);
+ 
+// 로그인 상태인지 체크하는부분 include
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/login_check.php");
+
+// 기본사용 자바스크립트, css 파일 불러오는 용
+$template->reg("dir", "mypage"); 
+$template->reg("page", "businessregistration"); 
+
+//design_dir 경로
+$template->reg("design_dir", "/design_template"); 
+$template->htmlPrint($_SERVER["PHP_SELF"]); 
+
+$conn->Close();
+?>

@@ -1,0 +1,323 @@
+<?
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/sess_common.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/Template.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/ConnectionPool.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/FrontCommonUtil.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/job/order/SheetDAO.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common_define/common_info.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/test/Common/DPrintingFactory.php");
+
+$frontUtil = new FrontCommonUtil();
+
+if ($is_login === false) {
+    $frontUtil->errorGoBack("로그인 후 확인 가능합니다.");
+    exit;
+}
+$connectionPool = new ConnectionPool();
+$conn = $connectionPool->getPooledConnection();
+
+$template = new Template();
+$fb = new FormBean();
+$dao = new SheetDAO();
+
+// 로그인 상태인지 체크하는부분 include
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/login_check.php");
+
+// 결재중인 상태임을 표시, 주문완료에서 새로고침시 중복처리 되는거 방지용
+$fb->addSession("proc", '1');
+
+$session = $fb->getSession();
+
+$price_info_arr = array();
+
+$seqno = $fb->form("seq");
+if (empty($seqno) === false) {
+    $seqno = explode('|', $seqno);
+    $seqno = $dao->arr2paramStr($conn, $seqno);
+}
+
+//$conn->debug = 1;
+
+$state_arr = $session["state_arr"];
+
+// 원파일 업체 여부
+$onefile_etprs_yn = $session["onefile_etprs_yn"];
+$template->reg("onefile_etprs_yn", $onefile_etprs_yn);
+
+// 주문 리스트 생성
+$param = array();
+$param["member_seqno"] = $session["org_member_seqno"];
+$param["order_state"]  = $state_arr["주문대기"];
+$param["order_common_seqno"] = $seqno;
+
+$sheet_list = $dao->selectCartOrderList($conn, $param);
+
+if ($sheet_list->EOF) {
+    $conn->Close();
+    echo "<script>location.replace('/order/cart.html');</script>";
+    exit;
+}
+
+$i = 0;
+$dlvr_param = array();
+while($sheet_list && !$sheet_list->EOF) {
+    $fields = $sheet_list->fields;
+
+    $dlvr_param[$i]['order_detail']    = $fields['order_detail'];
+    $dlvr_param[$i]['amt']             = $fields['amt'];
+    $dlvr_param[$i]['amt_unit_dvs']    = $fields['amt_unit_dvs'];
+    $dlvr_param[$i]['count']           = $fields['count'];
+    $dlvr_param[$i]['order_detail']    = $fields['order_detail'];
+    $dlvr_param[$i]['cate_sortcode']   = $fields['cate_sortcode'];
+    $dlvr_param[$i++]['expec_weight']  = $fields['expec_weight'];
+
+    $sheet_list->MoveNext();
+}
+$sheet_list->MoveFirst();
+
+if ($onefile_etprs_yn === 'O') {
+    // 원파일 업체
+    // 기존에 업로드 된 파일 있을경우 전부 삭제
+    unset($param);
+    $param["order_common_seqno"] = $seqno;
+    $param["dvs"]                = '1';
+    $file_rs = $dao->selectOrderFileList($conn, $param);
+
+    $conn->StartTrans();
+    unset($param);
+    while ($file_rs && !$file_rs->EOF) {
+        $fields = $file_rs->fields;
+
+        // 실제 파일 삭제
+        $file_path = $fields["file_path"] . $fields["save_file_name"];
+        if (@unlink($file_path) === false) {
+            if (@is_file($file_path) === true) {
+                $ret = "파일 삭제에 실패했습니다.";
+                break;
+            }
+        }
+
+        // DB 정보 삭제
+        $param["member_seqno"] = $session["org_member_seqno"];
+        $param["order_file_seqno"] = $fields["order_file_seqno"];
+        $proc_ret = $dao->deleteOrderFile($conn, $param);
+
+        if ($conn->HasFailedTrans() === true || $proc_ret === false) {
+            $err_msg = "파일 삭제에 실패했습니다.";
+            echo "<script>alert('" . $err_msg . "');" .
+                "location.replace('/mypage/cart.html');</script>";
+        }
+
+        $file_rs->MoveNext();
+    }
+    $conn->CompleteTrans();
+
+    // 주문 리스트 생성
+    $sheet_list = makeOnefileOrderListHtml($conn,
+        $dao,
+        $sheet_list,
+        $price_info_arr);
+} else {
+    $sheet_list = makeEachfileOrderListHtml($conn,
+        $dao,
+        $sheet_list,
+        $price_info_arr);
+}
+
+$template->reg("sheet_list", $sheet_list);
+
+// 연락처, 휴대전화 앞부분 생성
+$tel_num_arr = TEL_NUM;
+$count_tel_num_arr = count($tel_num_arr);
+$tel_num = "";
+
+for ($i = 0; $i < $count_tel_num_arr; $i++) {
+    $val = $tel_num_arr[$i];
+    $tel_num .= option($val, $val);
+}
+$template->reg("tel_num", $tel_num);
+
+$cell_num_arr = CEL_NUM;
+$count_cell_num_arr = count($cell_num_arr);
+$cell_num = "";
+
+for ($i = 0; $i < $count_cell_num_arr; $i++) {
+    $val = $cell_num_arr[$i];
+    $cell_num .= option($val, $val);
+}
+$template->reg("cell_num", $cell_num);
+
+// 가격정보 생성
+$sum_discount = $price_info_arr["grade"] +
+                $price_info_arr["event"];
+$prepay_price = doubleval($session["prepay_price"]);
+$order_lack_price = $prepay_price - $price_info_arr["sum"];
+$sum_order_price = $price_info_arr["sell"];
+$pay_price = $sum_order_price + $sum_discount;
+
+if ($order_lack_price >= 0) {
+    $order_lack_price = 0;
+}
+// 주문금액
+//$template->reg("sell_price", number_format($price_info_arr["sell"]));
+$template->reg("sell_price", number_format($pay_price));
+// 주문금액합계
+$template->reg("sum_order_price", number_format($sum_order_price));
+// 회원등급할인
+$template->reg("grade_sale_price", number_format($price_info_arr["grade"]));
+// 이벤트
+$template->reg("event_sale_price", number_format($price_info_arr["event"]));
+// 할인금액 합계
+$template->reg("sum_discount", number_format($sum_discount));
+// 최종결재금액
+$template->reg("pay_price", number_format($pay_price));
+// 선입금
+$template->reg("prepay_price", number_format($prepay_price));
+// 주문부족금액
+$template->reg("order_lack_price", number_format($order_lack_price));
+
+// 카드결제여부 생성
+$card_pay_yn = $session["card_pay_yn"];
+$card_yn_html = "";
+if ($card_pay_yn === 'Y') {
+    $card_html = "<label><input type=\"radio\" name=\"card_pay_yn\" value=\"Y\" class=\"_card\"> 카드결제</label>";
+}
+$template->reg("card_pay_yn", $card_html);
+
+// 결제확인 팝업 정보생성
+$member_info = $dao->selectMemberInfo($conn, $session["org_member_seqno"]);
+
+// 주문자명
+$template->reg("member_name", $session["member_name"]);
+// 회사명
+$template->reg("member_group", $session["group_name"]);
+// 전화번호
+$template->reg("member_tel_num", $member_info["tel_num"]);
+// 휴대전화번호
+$template->reg("member_cell_num", $member_info["cell_num"]);
+// 메일
+$template->reg("member_mail", $member_info["mail"]);
+// 주소
+$member_addr = $member_info["addr"] . ' ' . $member_info["addr_detail"];
+$template->reg("member_zipcode", $member_info["zipcode"]);
+$template->reg("member_addr", $member_addr);
+// 영수증 발행구분
+$template->reg("receipt", getReceiptHtml($session["member_dvs"]));
+
+//배송정보 생성
+$delivery_info = $dao->selectDirectDlvrInfo($conn, $session["org_member_seqno"]);
+
+$dlvr_way = "";
+
+// 배송방법
+if($delivery_info['direct_dlvr_yn'] == 'Y') {
+    $template->reg("direct_dlvr",
+                   getDlvrDirectHtml($delivery_info['direct_dlvr_yn']));
+}
+
+/***********************************************************************************
+ *** 개발 영역 : 택배운임료 불러오기
+ *** 개  발  자 : 조현식
+ *** 개발 날짜 : 2016.06.28
+ ***********************************************************************************/
+/*
+$factory = new DPrintingFactory();
+$dlvr_cost = 0;
+for($i=0; $i < count($dlvr_param) ; $i++) {
+	$cate_sortcode = $dlvr_param[$i]['cate_sortcode'];
+	$product = $factory->create($cate_sortcode);
+	$dlvr_cost += $product->getParcelCost($dlvr_param[$i]);
+}
+$template->reg("dlvr_cost", $dlvr_cost);
+*/
+
+// 기본사용 자바스크립트, css 파일 불러오는 용
+$template->reg("dir", "order");
+$template->reg("page", "sheet");
+
+//design_dir 경로
+$template->reg("design_dir", "/design_template");
+$template->htmlPrint($_SERVER["PHP_SELF"]);
+
+$conn->Close();
+
+/******************************************************************************
+ * 함수 영역
+ *****************************************************************************/
+
+/**
+ * @brief 회원구분에 따른 영수증 발행 html 반환
+ *
+ * @param $member_dvs = 회원구분값
+ *
+ * @return html
+ */
+function getReceiptHtml($member_dvs) {
+    if ($member_dvs === "기업" || $member_dvs === "기업개인") {
+        return <<<html
+                <!-- 세금계산서 시작 -->
+                <dt><label><input type="radio" name="public_dvs" value="세금계산서" checked="checked"> 세금계산서</label></dt>
+                <dd class="tax">
+                    <div class="wrap">
+                        <ul class="data">
+                            <li><label><input type="radio" name="dataType" onclick="getMemberInfo();" disabled checked> 회원정보와 동일</label></li>
+                            <li><label><input type="radio" name="dataType" onclick="showOrganizerPop();"> 관리사업자 불러오기</label></li>
+                            <li><label><input type="radio" name="dataType" onclick="initPublicInput();" disabled class="_edit _new"> 별도 기입</label></li>
+                        </ul>
+                        <ul class="input">
+                            <li><label>회원명 : <input type="text" name="member_name" id="receipt_member_name" disabled readonly></label></li>
+                            <li><label>공급받는자 : <input type="text" name="supply_corp" id="supply_corp" disabled readonly></label></li>
+                            <li><label>사업자번호 : <input type="text" name="crn" id="crn" disabled readonly></label></li>
+                            <li><label>대표자 : <input type="text" name="repre_name" id="repre_name" disabled readonly></label></li>
+                            <li class="address"><label>주소 : <input type="text" name="zipcode" id="zipcode" style="width:40px; margin-right:5px;" disabled readonly><input type="text" name="addr" id="addr" disabled readonly></label></li>
+                            <li><label>업태 : <input type="text" name="bc" id="bc" disabled readonly></label></li>
+                            <li><label>종목 : <input type="text" name="tob" id="tob" disabled readonly></label></li>
+                        </ul>
+                    </div>
+                </dd><!-- 세금계산서 끝 -->
+html;
+    } else {
+        return <<<html
+                <!-- 현금영수증 시작 -->
+                <dt><label><input type="radio" name="public_dvs" value="현금영수증"> 현금영수증</label></dt>
+                <dd class="cash">
+                    <div class="wrap">
+                        <label>
+                            증빙구분
+                            <select name="evid_dvs">
+                                <option value="소득공제">소득공제용</option>
+                                <option value="지출증빙">지출증빙용</option>
+                            </select>
+                        </label>
+                        <input type="text" name="cashreceipt_num">
+                    </div>
+                </dd><!-- 현금영수증 끝 -->
+                <dt><label><input type="radio" name="public_dvs" class="_disabled" value="미발행" checked="checked"> 미발행</label></dt>
+html;
+    }
+}
+
+/**
+ * @brief 직배여부에 따라 배송방법 html 반환
+ *
+ * @param $direct_dlvr_yn = 직배여부
+ *
+ * @return html
+ */
+function getDlvrDirectHtml($direct_dlvr_yn) {
+    if ($direct_dlvr_yn === 'Y') {
+        return <<<html
+                <tr id ="direct">
+                    <th scope="row">직배</th>
+                    <td colspan="3">
+                        <button type="button" class="selectItem" id="product_select_direct" onclick="showSelectProductPopup('direct');">상품선택</button>
+                        <ul class="items" id="direct_items">
+                        </ul>
+                    </td>
+                </tr>
+html;
+    }
+
+    return '';
+}
+?>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    [TPH_I/common/head.html]
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <style type="text/css">
+        ul.paging .first:after,
+        ul.paging .last:before { content: '···'; margin: 0 6px; }
+    </style>
+</head>
+<body>
+<header class="top">
+    [TPH_I/common/header.html]
+</header>
+<section class="contents lnb paymentInfo">
+    <header class="title">
+        <h2><img src="[TPH_Vdesign_dir]/images/mypage/title.png" alt="마이페이지"></h2>
+        <ol class="location">
+            [TPH_I/common/home_btn.html]
+            <li><a href="/mypage/main.html"><span>마이페이지</span></a></li>
+            <li><a href="/mypage/payment_list.html"><span>결제 정보</span></a></li>
+            <li><a href="/mypage/payment_deal.html"><span>거래내역</span></a></li>
+        </ol>
+    </header>
+    <nav class="lnb">
+        [TPH_I/mypage/common/lnb.html]
+    </nav>
+    <h3 class="pageTitle">거래내역</h3>
+    <section class="dealerInformation">
+        <table class="information from">
+            <colgroup>
+                <col style="width:">
+                <col>
+                <col style="width:">
+                <col>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th colspan="4">공급자</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">등록번호</th>
+                    <td colspan="3">[TPH_Vlicensee_num]</td>
+                </tr>
+                <tr>
+                    <th scope="row">상호</th>
+                    <td>[TPH_Vsell_site]</td>
+                    <th scope="row">대표자</th>
+                    <td>[TPH_Vrepre_name]</td>
+                </tr>
+                <tr>
+                    <th scope="row">사업장소재지</th>
+                    <td colspan="3">[TPH_Vaddr] [TPH_Vaddr_detail]</td>
+                </tr>
+                <tr>
+                    <th scope="row">업태</th>
+                    <td>[TPH_Vbc]</td>
+                    <th scope="row">종목</th>
+                    <td>[TPH_Vtob]</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="information to">
+            <colgroup>
+                <col style="width:">
+                <col>
+                <col style="width:">
+                <col>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th colspan="4">공급 받는 자</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">등록번호</th>
+                    <td colspan="3">[TPH_Ved_licensee_num]</td>
+                </tr>
+                <tr>
+                    <th scope="row">상호</th>
+                    <td>[TPH_Ved_sell_site]</td>
+                    <th scope="row">대표자</th>
+                    <td>[TPH_Ved_repre_name]</td>
+                </tr>
+                <tr>
+                    <th scope="row">사업장소재지</th>
+                    <td colspan="3">[TPH_Ved_addr] [TPH_Ved_addr_detail]</td>
+                </tr>
+                <tr>
+                    <th scope="row">업태</th>
+                    <td>[TPH_Ved_bc]</td>
+                    <th scope="row">종목</th>
+                    <td>[TPH_Ved_tob]</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    <section class="searchCondition">
+        <div class="rowWrap">
+            <dl class="date">
+                <dt>주문일</dt>
+                <dd>
+                    <input type="text" class="_date" id="from" name="from" value="">
+                    ~
+                    <input type="text" class="_date" id="to" name="to" value="">
+                    <ul class="preset">
+                        <li><button onclick="dateSet(0); return false;">오늘</button></li>
+                        <li><button onclick="dateSet(1); return false;">어제</button></li>
+                        <li><button onclick="dateSet(7); return false;">일주일</button></li>
+                        <li><button onclick="setMonth(1); return false;">1개월</button></li>
+                        <li><button onclick="setMonth(2); return false;">2개월</button></li>
+                        <li><button onclick="setMonth(3); return false;">3개월</button></li>
+                        <li><button onclick="setMonth(4); return false;">4개월</button></li>
+                        <li><button onclick="setMonth(5); return false;">5개월</button></li>
+                        <li><button onclick="setMonth(6); return false;">6개월</button></li>
+                    </ul>
+                </dd>
+            </dl>
+        </div>
+        <button class="search" onclick="getPaymentList(10, 1);">검색</button>
+    </section>
+    <table class="list searchResult">
+        <caption class="center">
+            <div class="resultNum" id="resultNum">
+            </div>
+        </caption>
+        <colgroup>
+            <col>
+            <col>
+            <col>
+            <col>
+            <col>
+            <col>
+            <col>
+            <col>
+        </colgroup>
+        <thead>
+            <tr>
+                <th>주문일</th>
+                <th>주문번호</th>
+                <th>주문내용</th>
+                <th>수량</th>
+                <th>건수</th>
+                <th>주문금액</th>
+                <th>할인금액</th>
+                <th>결제금액</th>
+            </tr>
+        </thead>
+        <tbody id="list">
+        </tbody>
+    </table>
+    <ul class="paging" id="paging">
+        <li><button class="on">1</button></li>
+    </ul>
+    <div class="function narrow">
+        <div class="right">
+            <strong class="blue"><button class="function" onclick="printLayerPopup();">인쇄</button></strong>
+            <strong class="bred"><button class="function" onclick="downloadExcel();">엑셀로 다운로드</button></strong>
+        </div>
+        <iframe id="file_ifr" src="" style="display:none; width:0px; height:0px;" width=0 height=0></iframe>
+    </div>
+    [TPH_I/mypage/common/banner.html]
+</section>
+<footer>
+    [TPH_I/common/footer.html]
+</footer>
+</body>
+</html>

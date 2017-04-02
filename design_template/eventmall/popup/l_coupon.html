@@ -1,0 +1,54 @@
+<article>
+    <header>
+        <button class="close" title="닫기"><img src="[TPH_Vdesign_dir]/images/common/btn_popupclose_gray.png" alt="X"></button>
+    </header>
+    <section class="coupon">
+        <div class="wrap">
+            <figure style="padding-bottom:0px"><img src="[TPH_Vthumb_path]" alt="DPRINTING COUPON"></figure>
+            <!--<figure><img src="[TPH_Vdesign_dir]/images/eventmall/pointcoupon_popup_coupon_figure.png" alt="DPRINTING COUPON"></figure>-->
+        </div>
+    </section>
+    <dl>
+        <dt>&nbsp;쿠폰명&nbsp;</dt>
+        <dd>[TPH_Vcp_name]</dd>
+        <dt>사용조건</dt>
+        <dd>[TPH_Vcondition]</dd>
+        <dt>카테고리</dt>
+        <dd>[TPH_Vcate_name]</dd>
+        <dt>남은쿠폰</dt>
+        <dd>[TPH_VleftCouponCount] 매</dd>
+        <dt>사용기간</dt>
+        <dd>[TPH_Vperiod]&nbsp;[TPH_Vusehour]</dd>
+    </dl>
+    <button type="button" class="download" onclick="couponDownload('[TPH_Vcp_seqno]', '[TPH_Vmember_seqno]', '[TPH_Vperiod]');">쿠폰 다운로드</button>
+</article>
+
+<script>
+function couponDownload(cp_seqno, member_seqno, period) {
+    var periodArr = period.split(" ~ ");
+    var use_able_start_date = periodArr[0];
+    var use_deadline = periodArr[1];
+
+    var url = "/proc/eventmall/pointcoupon/Regi_cp_issue.php";
+    var data = {
+        "cp_seqno" : cp_seqno,
+        "member_seqno" : member_seqno,
+        "use_able_start_date" : periodArr[0],
+        "use_deadline" : periodArr[1]
+    }
+    var callback = function(result) {
+        if (result == "T") {
+            alert("쿠폰이 발급되었습니다.");
+        } else if (result == "O") {
+            alert("쿠폰 발급에 실패했습니다.\n이미 발급된 쿠폰입니다.");
+        } else {
+            alert("쿠폰 발급에 실패했습니다.");
+        }
+        $(".close").click();
+        location.reload(true);
+    }
+    
+    //ajax 통신
+    ajaxCall(url, "html", data, callback);
+}
+</script>

@@ -1,0 +1,1520 @@
+<?
+/*
+ * Copyright (c) 2015-2016 Nexmotion, Inc.
+ * All rights reserved.
+ * 
+ * REVISION HISTORY (reverse chronological order)
+ *=============================================================================
+ * 2016/09/02 엄준현 수정(order/cart.html -> mypage/cart.html)
+ * 2016/12/12 엄준현 수정(스티커 코팅/무코팅 처리로직 추가)
+ * 2016/12/13 엄준현 수정(예상무게 로직 변경)
+ *=============================================================================
+ *
+ */
+
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common/sess_common.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/ConnectionPool.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/job/order/CartDAO.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/job/common/ProductCommonDAO.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/FrontCommonUtil.php");
+include_once($_SERVER["DOCUMENT_ROOT"] .  "/com/nexmotion/common/util/CalcPriceUtil.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/define/common_config.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/define/product_info_class.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common_define/prdt_default_info.php");
+
+$frontUtil = new FrontCommonUtil();
+
+if ($is_login === false) {
+    $frontUtil->errorGoBack("로그인 후 확인 가능합니다.");
+    exit;
+}
+
+$connectionPool = new ConnectionPool();
+$conn = $connectionPool->getPooledConnection();
+
+$fb = new FormBean();
+$dao = new CartDAO();
+
+/*
+echo "<pre>";
+$conn->debug = 1;
+*/
+
+// insert 실패시 에러메세지
+$err_msg = '';
+// 이동할 페이지
+$location = "Location: ";
+
+$session = $fb->getSession();
+$fb = $fb->getForm();
+
+// Y -> 장바구니로 이동, N -> 주문서 작성으로 이동, A -> Ajax 장바구니추가
+$cart_flag = $fb["cart_flag"];
+
+// 비정상 접근 검출
+$flag = $fb["flag"];
+
+if (empty($flag) === true) {
+    $location .= "/main/main.html";
+    $err_line = __LINE__;
+    goto MOVE;
+}
+
+//! 주문_공통 테이블
+//@ 제목, 빈값이면 뒤로가기
+$title = $fb["title"];
+if (empty($title)) {
+    echo "<script>" .
+         "    alert(\"인쇄물제목을  입력해주세요.\");" .
+         "    history.back();" .
+         "</script>";
+    exit;
+}
+
+$state_arr = $session["state_arr"];
+
+// 주문_공통 테이블에 들어가야 하는 정보들
+$order_common_param = array();
+$order_common_param["title"] = $title;
+$order_common_param["del_yn"] = 'N';
+// 회원_일련번호
+$order_common_param["member_seqno"] = $session["org_member_seqno"];
+// 회사_관리_일련번호
+$order_common_param["cpn_admin_seqno"] = $session["sell_site"];
+// 주문_상태
+$order_common_param["order_state"] = $state_arr["주문대기"];
+// 클레임_여부
+$order_common_param["claim_yn"] = 'N';
+// 추가_옵션_금액
+$order_common_param["add_opt_price"] = $frontUtil->rmComma($fb["opt_price"]);
+// 이벤트_금액
+//*****************************************************/
+$event_price = 0;
+if (empty($fb["event_price"]) === false) {
+    $event_price = $fb["event_price"];
+}
+$order_common_param["event_price"] = $event_price;
+// 이벤트_여부
+$event_yn = 'N';
+if (empty($fb["event_yn"]) === false) {
+    $event_yn = $fb["event_yn"];
+}
+$order_common_param["event_yn"] = $event_yn;
+// 제품 공통구분값, 책자형 제품인지 구분
+$common_prdt_dvs = $fb["common_prdt_dvs"];
+// 책자형인지 판단
+$is_booklet = false;
+if (empty($common_prdt_dvs) === false) {
+    $prefix = $common_prdt_dvs . '_';
+    $common_cate_sortcode = $fb[$prefix . "cate_sortcode"];
+    $common_sell_price = $fb[$prefix . "sell_price"];
+    $common_sale_price = $fb[$prefix . "sale_price"];
+    $common_amt        = $fb[$prefix . "amt"];
+
+    $cate_info = $dao->selectCateInfo($conn, $common_cate_sortcode);
+    $flattyp_yn = $cate_info["flattyp_yn"];
+    unset($cate_info);
+
+    $is_booklet = true;
+
+    $order_common_param["cate_sortcode"] = $common_cate_sortcode;
+    $order_common_param["order_detail"]  = $fb[$prefix . "order_detail"];
+
+    $order_common_param["mono_yn"]       = 'N';
+
+    $order_common_param["expec_weight"]  = '-';
+
+    $order_common_param["amt"]           = $common_amt;
+    $order_common_param["amt_unit_dvs"]  = $fb[$prefix . "amt_unit"];
+    $order_common_param["count"]         = '1';
+
+    $order_common_param["page_cnt"]      = intval($fb[$prefix . "sheet_count"]);
+
+    // 주문_번호
+    $order_num = $frontUtil->makeOrderNum($conn,
+                                          $dao,
+                                          $common_cate_sortcode);
+    $order_common_param["order_num"] = $order_num;
+}
+// 옵션 사용 여부
+$order_common_param["opt_use_yn"] = 'Y';
+if (empty($fb["opt_add"]) === true) {
+    $order_common_param["opt_use_yn"] = 'N';
+}
+
+$order_common_param["expec_weight"]     = 0.0;
+$order_common_param["sell_price"]       = 0;
+$order_common_param["grade_sale_price"] = 0;
+$order_common_param["add_after_price"]  = 0;
+
+//! 주문_상세 테이블
+$dvs_arr = explode('|', $fb["prdt_dvs"]);
+$dvs_arr_count = count($dvs_arr);
+
+$order_detail_param_arr = null;
+$param = array();
+for ($i = 0; $i < $dvs_arr_count; $i++) {
+    $dvs = $dvs_arr[$i];
+    $prefix = $dvs . '_';
+    $typ = $fb[$prefix . "typ"];
+
+    $cate_sortcode = $fb[$prefix . "cate_sortcode"];
+
+    //@ 카테고리 분류코드 없는경우 비정상 접근
+    if (empty($cate_sortcode) === true) {
+        $location .= "/main/main.html";
+        $err_line = __LINE__;
+        goto MOVE;
+    }
+
+    // 제품 카테고리 낱장여부, 도수구분 검색
+    $cate_info = $dao->selectCateInfo($conn, $cate_sortcode);
+    $flattyp_yn = $cate_info["flattyp_yn"];
+    $tmpt_dvs   = $cate_info["tmpt_dvs"];
+    $typset_way = $cate_info["typset_way"];
+    unset($cate_info);
+
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    // 가격 서버에서 재계산, 파라미터 변조 방지
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    unset($param);
+    // 수량
+    $amt = $fb[$prefix . "amt"];
+    if (empty($amt)) {
+        $amt = $common_amt;
+    }
+    // 건수
+    $count = 1;
+    if (empty($fb[$prefix . "count"]) === false) {
+        $count = intval($fb[$prefix . "count"]);
+    }
+
+    $param["prefix"]        = $prefix;
+    $param["cate_sortcode"] = $cate_sortcode;
+    $param["amt"]           = $amt;
+    $param["count"]         = $count;
+    $param["flattyp_yn"]    = $flattyp_yn;
+    $param["sell_site"]     = $session["sell_site"];
+    $param["grade"]         = $session["grade"];
+    $param["member_seqno"]  = $session["member_seqno"];
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //$re_calc_price_arr = reCalcPrice($conn, $frontUtil, $fb, $param);
+
+    // 수량_단위_구분
+    $amt_unit_dvs = $fb[$prefix . "amt_unit"];
+
+    //@ 수량_단위_구분 없는경우 비정상 접근
+    if (empty($amt_unit_dvs) === true) {
+        $location .= "/main/main.html";
+        $err_line = __LINE__;
+        goto MOVE;
+    }
+
+    $param["fb"]         = $fb;
+    $param["tmpt_dvs"]   = $tmpt_dvs;
+    $param["prefix"]     = $prefix;
+    $param["typ"]        = $typ;
+    $param["flattyp_yn"] = $flattyp_yn;
+    $param["idx"]        = $i;
+    $param["is_booklet"] = $is_booklet;
+
+    // 판매금액, 등급 할인금액 계산
+    $price_arr = calcBasicPrice($param, $frontUtil);
+
+    //@ 가격배열이 나오지 않는경우 파라미터 변조로 간주
+    if ($price_arr === false) {
+        $location .= "/main/main.html";
+        $err_line = __LINE__;
+        goto MOVE;
+    }
+
+    // 판매_금액, 등급할인 빠진 금액
+    $sell_price = $price_arr["sell_price"];
+    // 로그인_할인
+    $login_sale = $price_arr["login_sale"];
+    // 등급_할인_금액
+    $grade_sale_price = $price_arr["grade_sale_price"];
+    // 추가_후공정_금액
+    $add_after_price = $frontUtil->rmComma($fb[$prefix . "after_price"]);
+
+    //@ 기본_금액, 정상판매가 없는경우 비정상적 접근
+    if (!isset($sell_price)) {
+        $location .= "/main/main.html";
+        $err_line = __LINE__;
+        goto MOVE;
+    }
+
+    // 주문_공통 가격정보에 입력하기 위해 합산
+    $order_common_param["sell_price"]       += $sell_price;
+    $order_common_param["grade_sale_price"] += $grade_sale_price;
+    $order_common_param["add_after_price"]  += $add_after_price;
+
+    // 주문_상세 테이블 입력용 파라미터 생성
+    $param["cate_sortcode"] = $cate_sortcode;
+    $param["tmpt_dvs"]      = $tmpt_dvs;
+    $param["util"]          = $frontUtil;
+    $order_detail_param_arr[$i] = makeOrderDetailParam($conn, $dao, $param);
+
+    $order_detail_param_arr[$i]["amt"]              = $amt;
+    $order_detail_param_arr[$i]["count"]            = $count;
+    $order_detail_param_arr[$i]["dvs"]              = $dvs;
+    $order_detail_param_arr[$i]["flattyp_yn"]       = $flattyp_yn;
+    $order_detail_param_arr[$i]["cate_sortcode"]    = $cate_sortcode;
+    $order_detail_param_arr[$i]["sell_price"]       = $sell_price;
+    $order_detail_param_arr[$i]["grade_sale_price"] = $grade_sale_price;
+    $order_detail_param_arr[$i]["add_after_price"]  = $add_after_price;
+    $order_detail_param_arr[$i]["amt_unit_dvs"]     = $amt_unit_dvs;
+    $order_detail_param_arr[$i]["typset_way"]       = $typset_way;
+
+    $expec_weight = $order_detail_param_arr[$i]["expec_weight"];
+    $order_common_param["expec_weight"] += $expec_weight;
+
+    if ($is_booklet === false) {
+        $common_cate_sortcode = $cate_sortcode;
+        $temp = $order_detail_param_arr[$i];
+
+        $order_common_param["cate_sortcode"] = $cate_sortcode;
+        $order_common_param["order_detail"]  = $temp["order_detail"];
+
+        $order_common_param["mono_yn"]       = $temp["mono_yn"];
+
+        $order_common_param["amt"]           = $amt;
+        $order_common_param["amt_unit_dvs"]  = $amt_unit_dvs;
+        $order_common_param["count"]         = $count;
+
+        if (empty($fb[$prefix . "sheet_count"]) === true) {
+            $amt = doubleval($fb[$prefix . "amt"]);
+        } else {
+            $amt = doubleval($fb[$prefix . "sheet_count"]);
+        }
+
+        $order_common_param["page_cnt"] = $amt;
+
+        // 주문번호
+        $order_num = $frontUtil->makeOrderNum($conn,
+                                              $dao,
+                                              $cate_sortcode);
+        $order_common_param["order_num"] = $order_num;
+        unset($temp);
+    }
+}
+
+unset($dvs_arr);
+
+$order_common_param["group_seqno"] = "null";
+if ($session["member_dvs"] === "기업" ||
+        $session["member_dvs"] === "기업개인") {
+    $order_common_param["group_seqno"] = $session["member_seqno"];
+}
+
+$insert_ret = $dao->insertOrderCommon($conn, $order_common_param);
+
+if ($insert_ret === false) {
+    $err_line = __LINE__;
+    $err_msg = "주문 데이터 입력에 실패했습니다.";
+    $conn->FailTrans();
+    $conn->RollbackTrans();
+    goto ERR;
+}
+
+$order_common_seqno = $conn->Insert_ID("order_common");
+
+$order_detail_param_arr_count = count($order_detail_param_arr);
+
+$order_after_basic_param_arr = array();
+$order_after_add_param_arr = array();
+
+// 에러났을 경우 데이터 삭제할 때 사용
+$order_detail_dvs_num_arr = array();
+$order_detail_seqno_arr = array();
+
+$conn->StartTrans();
+for ($i = 0; $i < $order_detail_param_arr_count; $i++) {
+    $order_detail_param = $order_detail_param_arr[$i];
+
+    $dvs           = $order_detail_param["dvs"];
+    $prefix        = $dvs . '_';
+
+    $flattyp_yn    = $order_detail_param["flattyp_yn"];
+    $count         = $order_detail_param["count"];
+    $cate_sortcode = $order_detail_param["cate_sortcode"];
+
+    $order_detail_param["order_common_seqno"] = $order_common_seqno;
+
+    $order_detail_param["state"] = $state_arr["주문대기"];
+
+    $detail_num = str_pad(strval($i + 1), 2, '0', STR_PAD_LEFT);
+    $order_detail_param["detail_num"] = $detail_num;
+    // 주문_상세_번호
+    $order_detail_num = $order_num . $detail_num;
+    $order_detail_param["order_detail_num"] = $order_detail_num;
+
+    //! 낱장여부에 따라 주문_상세 or 주문_상세_책장 입력
+    $order_detail_dvs_num = null;
+    if ($flattyp_yn === 'Y') {
+        $order_detail_dvs_num = 'S' . $order_detail_num;
+        $order_detail_param["order_detail_dvs_num"] = $order_detail_dvs_num;
+        $dao->insertOrderDetail($conn, $order_detail_param);
+
+        $order_detail_seqno = $conn->Insert_ID();
+
+        $order_detail_seqno_arr[] = $order_detail_seqno;
+
+        //! 주문_상세_건수_파일
+        unset($param);
+        $param["count"] = intval($count);
+        $param["order_detail_seqno"] = $order_detail_seqno;
+        $param["order_detail_num"]   = $order_detail_dvs_num;
+        $param["state"]              = $state_arr["주문대기"];
+        $dao->insertOrderDetailCountFile($conn, $param);
+
+        if ($conn->HasFailedTrans() === true) {
+            $err_line = __LINE__;
+            $err_msg = "주문 상세 데이터 입력에 실패했습니다.";
+            $conn->FailTrans();
+            $conn->RollbackTrans();
+            goto ORDER_DETAIL_FILE_ERR;
+        }
+    } else {
+        $order_detail_dvs_num = 'B' . $order_detail_num;
+        $order_detail_param["order_detail_dvs_num"] = $order_detail_dvs_num;
+        $dao->insertOrderDetailBrochure($conn, $order_detail_param);
+
+        $order_detail_seqno = $conn->Insert_ID();
+
+        $order_detail_seqno_arr[] = $order_detail_seqno;
+    }
+
+    $order_detail_dvs_num_arr[$i] = $order_detail_dvs_num;
+
+    if ($conn->HasFailedTrans() === true) {
+        $err_line = __LINE__;
+        $err_msg = "주문 상세 데이터 입력에 실패했습니다.";
+        $conn->FailTrans();
+        $conn->RollbackTrans();
+        goto ORDER_DETAIL_ERR;
+    }
+
+    //! 주문_후공정_내역
+    $after_en_arr = ProductInfoClass::AFTER_ARR;
+
+    // 기본 후공정 검색
+    unset($param);
+    $param["cate_sortcode"] = $cate_sortcode;
+    $param["basic_yn"]      = 'Y';
+
+    $default_after_rs = $dao->selectCateAfterInfo($conn, $param);
+
+    while ($default_after_rs && !$default_after_rs->EOF) {
+        $name = $default_after_rs->fields["after_name"];
+        $depth1 = $default_after_rs->fields["depth1"];
+        $depth2 = $default_after_rs->fields["depth2"];
+        $depth3 = $default_after_rs->fields["depth3"];
+
+        $after_en = $after_en_arr[$name];
+
+        $info   = $fb[$prefix . $after_en . "_info"];
+        $price  = $fb[$prefix . $after_en . "_price"];
+
+        if (empty($price)) {
+            $price = 0;
+        }
+
+        $order_after_basic_param_arr[$i][$name]["order_detail_dvs_num"] = $order_detail_dvs_num;
+        $order_after_basic_param_arr[$i][$name]["after_name"] = $name;
+        $order_after_basic_param_arr[$i][$name]["depth1"]   = $depth1;
+        $order_after_basic_param_arr[$i][$name]["depth2"]   = $depth2;
+        $order_after_basic_param_arr[$i][$name]["depth3"]   = $depth3;
+        $order_after_basic_param_arr[$i][$name]["price"]    = $price;
+        $order_after_basic_param_arr[$i][$name]["basic_yn"] = 'Y';
+        $order_after_basic_param_arr[$i][$name]["seq"]      = null;
+        $order_after_basic_param_arr[$i][$name]["detail"]   = $info;
+
+        $default_after_rs->MoveNext();
+    }
+
+    unset($default_after_rs);
+
+    // 추가 후공정 검색
+    $after_ko_arr = $fb[$prefix . "chk_after"];
+    $count_after_ko_arr = count($after_ko_arr);
+
+    $after_add_mpcode = "";
+    $after_add_info_arr = array();
+
+    for ($j = 0; $j < $count_after_ko_arr; $j++) {
+        $after_ko = $after_ko_arr[$j];
+        $after_en = $after_en_arr[$after_ko];
+
+        $mpcode = $fb[$prefix . $after_en . "_val"];
+        $info   = $fb[$prefix . $after_en . "_info"];
+        $price  = $fb[$prefix . $after_en . "_price"];
+
+        if (empty($mpcode) === true /*|| empty($price) === true*/) {
+            $err_line = __LINE__;
+            $err_msg = "주문 후공정 내역 데이터 입력에 실패했습니다.";
+            $conn->FailTrans();
+            $conn->RollbackTrans();
+            goto AFT_ERR;
+        }
+
+        if ($price === 0) {
+            continue;
+        }
+
+        $after_add_info_arr[$mpcode]["info"]  = $info;
+        $after_add_info_arr[$mpcode]["price"] = $price;
+
+        $after_add_mpcode .= $dao->parameterEscape($conn, $mpcode) . ',';
+    }
+
+    if (empty($after_add_mpcode) === false) {
+        $param["mpcode"]   = substr($after_add_mpcode, 0, -1);
+        $param["basic_yn"] = 'N';
+
+        $add_after_rs = $dao->selectCateAfterInfo($conn, $param);
+
+        $order_after_add_param_arr[] = makeAfterAddParam($add_after_rs,
+                                                         $after_add_info_arr,
+                                                         $order_detail_dvs_num);
+    }
+}
+$conn->CompleteTrans();
+
+$conn->StartTrans();
+
+// 스티커에서 coating_yn 체크해서 무코팅이면 코팅 입력제외
+$coating_yn = $fb["coating_yn"];
+
+$order_after_basic_param_arr_count = count($order_after_basic_param_arr);
+
+for ($i = 0; $i < $order_after_basic_param_arr_count; $i++) {
+    $order_after_basic_param = $order_after_basic_param_arr[$i];
+
+    foreach ($order_after_basic_param as $param) {
+        $param["order_common_seqno"] = $order_common_seqno;
+        $after_name = $param["after_name"];
+
+        if ($after_name === "코팅" && $coating_yn === "무코팅") {
+            continue;
+        }
+
+        $dao->insertOrderAfterHistory($conn, $param);
+
+        if ($conn->HasFailedTrans() === true) {
+            $err_line = __LINE__;
+            $err_msg = "주문 후공정 내역 데이터 입력에 실패했습니다.";
+            $conn->FailTrans();
+            $conn->RollbackTrans();
+            goto AFT_ERR;
+        }
+    }
+}
+
+$conn->CompleteTrans();
+
+$conn->StartTrans();
+
+$order_after_add_param_arr_count = count($order_after_add_param_arr);
+
+for ($i = 0; $i < $order_after_add_param_arr_count; $i++) {
+    $order_after_add_param = $order_after_add_param_arr[$i];
+    $order_after_add_param_count = count($order_after_add_param);
+
+    for ($j = 0; $j < $order_after_add_param_count; $j++) {
+        $param = $order_after_add_param[$j];
+        $param["order_common_seqno"] = $order_common_seqno;
+
+        $dao->insertOrderAfterHistory($conn, $param);
+
+        if ($conn->HasFailedTrans() === true) {
+            $err_line = __LINE__;
+            $err_msg = "주문 후공정 내역 데이터 입력에 실패했습니다.";
+            $conn->FailTrans();
+            $conn->RollbackTrans();
+            goto AFT_ERR;
+        }
+    }
+}
+
+$conn->CompleteTrans();
+
+//! 주문_옵션_내역 테이블
+unset($param);
+$param["cate_sortcode"] = $common_cate_sortcode;
+$param["basic_yn"]      = 'Y';
+
+$default_opt_rs = $dao->selectCateOptInfo($conn, $param);
+
+$order_opt_basic_param = array();
+
+while ($default_opt_rs && !$default_opt_rs->EOF) {
+    $name = $default_opt_rs->fields["opt_name"];
+    $depth1 = $default_opt_rs->fields["depth1"];
+    $depth2 = $default_opt_rs->fields["depth2"];
+    $depth3 = $default_opt_rs->fields["depth3"];
+
+    $order_opt_basic_param[$name]["order_common_seqno"] = $order_common_seqno;
+    $order_opt_basic_param[$name]["opt_name"] = $name;
+    $order_opt_basic_param[$name]["depth1"]   = $depth1;
+    $order_opt_basic_param[$name]["depth2"]   = $depth2;
+    $order_opt_basic_param[$name]["depth3"]   = $depth3;
+    $order_opt_basic_param[$name]["price"]    = 0;
+    $order_opt_basic_param[$name]["basic_yn"] = 'Y';
+
+    $default_opt_rs->MoveNext();
+}
+
+unset($default_opt_rs);
+
+// 추가 옵션 정보 생성
+$order_opt_add_param = array();
+
+if (empty($fb["opt_add"]) === false) {
+    $opt_add_mpcode_arr = explode('|', $fb["opt_add"]);
+    $opt_add_price_arr  = explode('|', $fb["opt_add_price"]);
+
+    $count_opt_add_arr = count($opt_add_mpcode_arr);
+
+    $param["mpcode"] = $frontUtil->arr2delimStr($opt_add_mpcode_arr);
+    $param["basic_yn"] = 'N';
+
+    $add_opt_rs = $dao->selectCateOptInfo($conn, $param);
+
+    $opt_add_info_arr = makeOptAddInfoArr($add_opt_rs);
+
+    unset($add_opt_rs);
+
+    $i = 0;
+
+    if ($session["a_board_yn"] === 'Y') {
+        $order_opt_add_param[$i]["order_common_seqno"] = $order_common_seqno;
+        $order_opt_add_param[$i]["opt_name"] = "A판";
+        $order_opt_add_param[$i]["depth1"]   = '-';
+        $order_opt_add_param[$i]["depth2"]   = '-';
+        $order_opt_add_param[$i]["depth3"]   = '-';
+        $order_opt_add_param[$i]["price"]    = '0';
+        $order_opt_add_param[$i++]["basic_yn"] = 'N';
+    }
+
+    for (; $i < $count_opt_add_arr; $i++) {
+        $mpcode = $opt_add_mpcode_arr[$i];
+        $info_arr = $opt_add_info_arr[$mpcode];
+
+        $name = $info_arr["name"];
+        $depth1 = $info_arr["depth1"];
+        $depth2 = $info_arr["depth2"];
+        $depth3 = $info_arr["depth3"];
+
+        $order_opt_add_param[$i]["order_common_seqno"] = $order_common_seqno;
+        $order_opt_add_param[$i]["opt_name"] = $name;
+        $order_opt_add_param[$i]["depth1"]   = $depth1;
+        $order_opt_add_param[$i]["depth2"]   = $depth2;
+        $order_opt_add_param[$i]["depth3"]   = $depth3;
+        $order_opt_add_param[$i]["price"]    =
+            $frontUtil->rmComma($opt_add_price_arr[$i]);
+        $order_opt_add_param[$i]["basic_yn"] = 'N';
+
+        // 기본후공정하고 추가후공정하고 겹치는 이름 있을 경우
+        // 추가후공정이 기본후공정을 덮어씌움
+        if ($order_opt_basic_param[$name] !== null) {
+            unset($order_opt_basic_param[$name]);
+        }
+    }
+}
+
+$conn->StartTrans();
+
+
+foreach ($order_opt_basic_param as $param) {
+    $dao->insertOrderOptHistory($conn, $param);
+
+    if ($conn->HasFailedTrans() === true) {
+        $err_line = __LINE__;
+        $err_msg = "주문 옵션 내역 데이터 입력에 실패했습니다.";
+        $conn->FailTrans();
+        $conn->RollbackTrans();
+        goto OPT_ERR;
+    }
+}
+
+$inset_ret = $conn->CompleteTrans();
+
+$count_order_opt_add_param = count($order_opt_add_param);
+
+$conn->StartTrans();
+
+for ($i = 0; $i < $count_order_opt_add_param; $i++) {
+    $dao->insertOrderOptHistory($conn, $order_opt_add_param[$i]);
+
+    if ($conn->HasFailedTrans() === true) {
+        $err_line = __LINE__;
+        $err_msg = "주문 옵션 내역 데이터 입력에 실패했습니다.";
+        $conn->FailTrans();
+        $conn->RollbackTrans();
+        goto OPT_ERR;
+    }
+}
+
+$conn->CompleteTrans();
+
+/*
+*/
+if ($cart_flag === 'Y') {
+    $location .= "/mypage/cart.html";
+} else {
+    $location .= "/order/sheet.html?seq=" . $order_common_seqno;
+}
+
+/*
+echo "</pre>";
+goto OPT_ERR;
+exit;
+*/
+
+goto MOVE;
+
+exit;
+
+OPT_ERR:
+    $param["table"] = "order_opt_history";
+    $param["order_common_seqno"] = $order_common_seqno;
+    $ret = $dao->deleteOrderData($conn, $param);
+AFT_ERR:
+    unset($param);
+    $param["order_detail_dvs_num"] = $order_detail_dvs_num_arr;
+    $ret = $dao->deleteOrderAfterHistory($conn, $param);
+ORDER_DETAIL_FILE_ERR:
+    $param["order_detail_seqno"] = $order_detail_seqno_arr;
+    $ret = $dao->deleteOrderDetailCountFile($conn, $param);
+ORDER_DETAIL_ERR:
+    $param["table"] = "order_detail";
+    $param["order_common_seqno"] = $order_common_seqno;
+    $ret = $dao->deleteOrderData($conn, $param);
+    $param["table"] = "order_detail_brochure";
+    $param["order_common_seqno"] = $order_common_seqno;
+    $ret = $dao->deleteOrderData($conn, $param);
+ERR:
+    $param["table"] = "order_common";
+    $param["order_common_seqno"] = $order_common_seqno;
+    $ret = $dao->deleteOrderData($conn, $param);
+    $conn->Close();
+    
+    $err_msg = $err_line . ':' . $err_msg;
+    if ($cart_flag === 'A') {
+        echo $err_msg;
+    } else {
+        echo "<script>alert('" . $err_msg . "');</script>";
+    }
+    /*
+    echo <<<html
+        <input type="hidden" id="success" value="N" />
+        <input type="hidden" id="error_code" value="{$err_line}" />
+        <input type="hidden" id="error_msg" value="{$err_msg}" />
+html;
+*/
+    exit;
+MOVE:
+    //echo "<script>alert('" . $err_line . "');</script>";
+    $conn->Close();
+    /*
+    echo <<<html
+        <input type="hidden" id="success" value="Y" />
+        <input type="hidden" id="order_common_seqno" value="{$order_common_seqno}" />
+html;
+*/
+    if ($cart_flag === 'A') {
+        echo '';
+    } else {
+        header($location);
+    }
+    exit;
+
+/******************************************************************************
+ * 함수 영역
+ *****************************************************************************/
+
+/**
+ * @brief 예상무게 계산
+ *
+ * @param $conn  = connection identifier
+ * @param $dao   = 정보검색을 수행할 dao
+ * @param $param = 제품 구분 접두어, 폼빈, 유틸
+ *
+ * @return 예상무게값
+ */
+function calcExpectWeight($conn, $dao, $param) {
+    $prefix     = $param["prefix"];
+    $fb         = $param["fb"];
+    $util       = $param["util"];
+
+    $divide_val = 1000000000.0;
+
+    $cate_sortcode = $fb[$prefix . "cate_sortcode"];
+    $sortcode_t = substr($cate_sortcode, 0, 3);
+    $sortcode_m = substr($cate_sortcode, 0, 6);
+
+    if (empty($fb[$prefix . "sheet_count"]) === true) {
+        $amt = doubleval($fb[$prefix . "amt"]);
+    } else {
+        $amt = doubleval($fb[$prefix . "sheet_count"]);
+    }
+
+    if ($sortcode_m === "004001" || $sortcode_m === "004002") {
+        // 책자일 때 수량계산
+        $temp = array("amt"       => $fb[$prefix . "amt"],
+                      "pos_num"   => $fb[$prefix . "pos_num"],
+                      "page_num"  => $fb[$prefix . "page"],
+                      "amt_unit"  => $fb[$prefix . "amt_unit"],
+                      "crtr_unit" => '');
+        $amt = $util->getPaperRealPrintAmt($temp);
+    } else if ($sortcode_m === "006001") {
+        // 마스터 NCR
+        $amt = $amt * PrdtDefaultInfo::MST_GROUP;
+
+        $temp = array("amt"       => $amt,
+                      "pos_num"   => $fb[$prefix . "pos_num"],
+                      "page_num"  => $fb[$prefix . "page"],
+                      "amt_unit"  => $fb[$prefix . "amt_unit"],
+                      "crtr_unit" => '');
+        $amt = $util->getPaperRealPrintAmt($temp);
+
+    } else if ($sortcode_m === "006002") {
+        // 마스터 양식지
+        $amt = $amt * 2 * PrdtDefaultInfo::MST_GROUP;
+
+        $temp = array("amt"       => $amt,
+                      "pos_num"   => $fb[$prefix . "pos_num"],
+                      "page_num"  => $fb[$prefix . "page"],
+                      "amt_unit"  => $fb[$prefix . "amt_unit"],
+                      "crtr_unit" => '');
+        $amt = $util->getPaperRealPrintAmt($temp);
+    }
+
+	$count = intval($fb[$prefix . "count"]);
+    if ($count === 0) {
+        $count = 1;
+    }
+
+    $paper_mpcode = $fb[$prefix . "paper"];
+
+    $ret = 0;
+    $basisweight = 0;
+
+    $cut_size_wid  = intval($fb[$prefix . "cut_wid_size"]);
+    $cut_size_vert = intval($fb[$prefix . "cut_vert_size"]);
+
+    if ($sortcode_m === "006001") {
+        // 마스터 NCR
+        $basisweight_arr = explode('|', $fb[$prefix . "basisweight"]);
+
+        $ret = 0.0;
+
+        foreach ($basisweight_arr as $basisweight) {
+            $basisweight = substr($basisweight, 0, -1);
+            $basisweight = intval($basisweight);
+
+            $temp  = doubleval($basisweight *
+                               $amt *
+                               $cut_size_wid *
+                               $cut_size_vert *
+                               $count);
+            $temp /=  $divide_val;
+            $ret += $temp;
+        }
+    } else if ($sortcode_t=== "002") {
+        // 스티커
+        $basisweight = 190;
+
+        $ret  = doubleval($basisweight *
+                          $amt *
+                          $cut_size_wid *
+                          $cut_size_vert *
+                          $count);
+        $ret /=  $divide_val;
+    } else {
+        // 나머지
+        $basisweight = $dao->selectCatePaperInfo($conn, $paper_mpcode);
+        $basisweight = substr($basisweight["basisweight"] , 0, -1);
+        $basisweight = intval($basisweight);
+
+        $ret  = doubleval($basisweight * $amt *
+                          $cut_size_wid * $cut_size_vert *
+                          $count);
+        $ret /= $divide_val;
+    }
+
+    $ret = floor($ret * 10.0) / 10.0;
+
+    if ($ret === 0.0) {
+        $ret = 0.1;
+    }
+
+    return $ret;
+}
+
+/**
+ * @brief 가격 전체 재검색, 재계산
+ *
+ * @detail 파라미터 변조 방지 및 검출용
+ *
+ * @param $conn  = db connection
+ * @param $util  = util
+ * @param $fb    = 폼빈
+ * @param $param = 접두사, 분류코드, 수량, 건수
+ *
+ * @return 계산결과배열, 만약 값 비교가 틀릴경우 false
+ */
+function reCalcPrice($conn, $util, $fb, $param) {
+    $dao = new ProductCommonDAO();
+
+    $prefix = $param["prefix"];
+
+    $cate_sortcode = $param["cate_sortcode"];
+    $amt           = $param["amt"];
+    $count         = $param["count"];
+    $flattyp_yn    = $param["flattyp_yn"];
+    $sell_site     = $param["sell_site"];
+    $grade         = $param["grade"];
+    $member_seqno  = $param["member_seqno"];
+    unset($param);
+
+    $size_dvs = $fb[$prefix . "size_dvs"];
+
+    // 가격 테이블명
+    $mono_dvs = $fb[$prefix . "mono_yn"];
+    $price_tb = $dao->selectPriceTableName($conn,
+                                           $mono_dvs,
+                                           $sell_site);
+    $param["cate_sortcode"] = $cate_sortcode;
+    $param["paper_mpcode"]  = $fb[$prefix . "paper"];
+    $param["stan_mpcode"]   = $fb[$prefix . "size"];
+    $param["bef_print_mpcode"]     = $fb[$prefix . "bef_tmpt"];
+    $param["aft_print_mpcode"]     = $fb[$prefix . "aft_tmpt"];
+    $param["bef_add_print_mpcode"] = $fb[$prefix . "bef_add_tmpt"];
+    $param["aft_add_print_mpcode"] = $fb[$prefix . "aft_add_tmpt"];
+
+    if ($mono_dvs === '0') {
+        // 확정형
+        // 상품 판매가격(prdt_price)
+        $param["table_name"]    = $price_tb;
+        $param["amt"]           = $amt;
+        
+        $prdt_price = $dao->selectPrdtPlyPrice($conn, $param);
+        $prdt_price = $util->ceilVal($prdt_price["new_price"]);
+
+        // 비규격일 때 처리
+        // 명함/스티커류 자리수 계산
+        // 전단류 유사 사이즈 계산
+    } else {
+        // 계산형
+        $pos_num_arr = PrdtDefaultInfo::POSITION_NUMBER[$cate_sortcode];
+
+        // 가격 계산용 파라미터 생성
+        $param["sell_site"]     = $sell_site;
+        $param["amt_unit"]      = $fb[$prefix . "amt_unit"];
+        $param["flattyp_yn"]    = $flattyp_yn;
+
+        $param["amt"]     = $amt;
+        $param["page"]    = $fb[$prefix . "page"];
+
+        $param["pos_num"] = $price_info_arr["pos_num"];
+        $param["affil"]   = $price_info_arr["affil"];
+
+        // 마스터 인쇄일 때, 수량 낱장여부 별도처리
+        $sortcode_m = substr($cate_sortcode, 0, 6);
+        if ($sortcode_m === "006001") {
+            $param["flattyp_yn"] = 'N';
+            $param["amt"] = PrdtDefaultInfo::MST_GROUP * $amt;
+        } else if ($sortcode_m === "006002") {
+            $param["flattyp_yn"] = 'N';
+            $param["amt"] = PrdtDefaultInfo::MST_GROUP * 2 * $amt;
+        }
+
+        $calcUtil = new CalcPriceUtil($param);
+
+        // 종이가격(paper_price)
+        // 출력가격(output_price)
+        // 인쇄가격(print_price)
+
+        // 상품 판매가격(paper_price + output_price + print_price)
+
+        // 비규격일 때 처리
+    }
+
+    // 등급할인(grade_sale_price)  : prdt_price * 등급할인요율
+    unset($param);
+    $param["cate_sortcode"] = $cate_sortcode;
+    $param["grade"]         = $grade;
+    $grade_sale_rate = $dao->selectGradeSaleRate($conn, $param);
+    // 회원할인(member_sale_price) : (prdt_price + grade_sale_price) * 회원할인요율
+    $param["member_seqno"]  = $member_seqno;
+    $member_sale_rate = $dao->selectCateMemberSaleRate($conn, $param);
+
+    // 후공정(after_price)
+    // 옵션(opt_price)
+}
+
+/**
+ * @brief 판매금액, 등급할인금액 계산
+ *
+ * @detail '기본금액 != 상품금액 - 등급할인금액'일 경우
+ * 파라미터 변조로 간주
+ *
+ * @param $param = 폼빈, 제품구분
+ * @param $util  = 유틸 클래스
+ *
+ * @return 계산결과배열, 만약 값 비교가 틀릴경우 false
+ */
+function calcBasicPrice($param, $util) {
+    $ret = array(
+        "sell_price"        => null,
+        "grade_sale_price"  => null
+    );
+
+    $fb     = $param["fb"];
+    $prefix = $param["prefix"];
+    $is_booklet = $param["is_booklet"];
+
+    $sell_price  = $util->rmComma($fb[$prefix . "sell_price"]);
+    $after_price = $util->rmComma($fb[$prefix . "after_price"]);
+    $opt_price   = $util->rmComma($fb[$prefix . "opt_price"]);
+
+    $sell_price -= $after_price - $opt_price;
+
+    $grade_sale_rate  = doubleval($fb[$prefix . "grade_sale_rate"]);
+    $member_sale_rate = doubleval($fb[$prefix . "member_sale_rate"]);
+    if ($is_booklet) {
+        $common_prefix = $fb["common_prdt_dvs"] . '_';
+
+        $grade_sale_rate  = doubleval($fb[$common_prefix . "grade_sale_rate"]);
+        $member_sale_rate = doubleval($fb[$common_prefix . "member_sale_rate"]);
+    }
+
+    $grade_sale_rate  /= 100.0;
+    $grade_sale_price = $sell_price * $grade_sale_rate;
+    $grade_sale_price = $util->ceilVal($grade_sale_price);
+
+    $member_sale_rate /= 100.0;
+    $member_sale_price = ($sell_price - $grade_sale_price) * $member_sale_rate;
+    $member_sale_price = $util->ceilVal($member_sale_price);
+
+    $ret["sell_price"]       = $sell_price;
+    $ret["grade_sale_price"] = $member_sale_price + $grade_sale_price;
+
+    return $ret;
+}
+
+/**
+ * @brief 주문상세 생성
+ *
+ * @param $conn  = connection identifier
+ * @param $dao   = 정보검색을 수행할 dao
+ * @param $param = 폼빈객체, 제품구분, 낱장여부
+ */
+function makeOrderDetail($conn, $dao, $param) {
+    $fb         = $param["fb"];
+    $prefix     = $param["prefix"];
+    $flattyp_yn = $param["flattyp_yn"];
+    $tmpt_dvs   = $param["tmpt_dvs"];
+
+    $ret = null;
+
+    $cate_name         = $fb[$prefix . "cate_name"];
+    $size_name         = $fb[$prefix . "size_name"];
+    $paper_name        = $fb[$prefix . "paper_name"];
+    $bef_tmpt_name     = $fb[$prefix . "bef_tmpt_name"];
+    $aft_tmpt_name     = $fb[$prefix . "aft_tmpt_name"];
+    $bef_add_tmpt_name = $fb[$prefix . "bef_add_tmpt_name"];
+    $aft_add_tmpt_name = $fb[$prefix . "aft_add_tmpt_name"];
+
+    $size_dvs = $fb[$prefix . "size_dvs"];
+    if ($size_dvs === "manu") {
+        $size_name = "비규격";
+    }
+
+    $tmpt_str = '';
+    if ($tmpt_dvs === '0') {
+        $tmpt_str = $bef_tmpt_name;
+    } else {
+        $tmpt_str = "전면 : " . $bef_tmpt_name;
+        if (!empty($bef_add_tmpt_name)) {
+            $tmpt_str .= ", 전면추가 : " . $bef_add_tmpt_name;
+        }
+        if (!empty($aft_tmpt_name)) {
+            $tmpt_str .= ", 후면 : " . $aft_tmpt_name;
+        }
+        if (!empty($aft_add_tmpt_name)) {
+            $tmpt_str .= ", 후면추가 : " . $aft_add_tmpt_name;
+        }
+    }
+
+    if ($flattyp_yn === 'Y') {
+        // 낱장형 일 때 주문상세 문자열 생성
+        $ret = sprintf("%s / %s / %s / %s", $cate_name
+                                          , $paper_name
+                                          , $size_name
+                                          , $tmpt_str);
+    } else {
+        // 책자형 일 때 주문상세 문자열 생성
+        $page = intval($fb[$prefix . "page"]);
+
+        $ret = sprintf("%s / %s / %s / %s / 전체 %sp", $cate_name
+                                                     , $paper_name
+                                                     , $size_name
+                                                     , $tmpt_str
+                                                     , $page);
+    }
+
+    return $ret;
+}
+
+/**
+ * @brief 주문_상세 테이블 입력값 생성
+ *
+ * @param $conn  = connection identifier
+ * @param $dao   = 정보검색을 수행할 dao
+ * @param $param = 도수구분, 제품구분 접두어, 제품종류, 폼빈, 인덱스
+ *
+ * @return 테이블 입력값 배열
+ */
+function makeOrderDetailParam($conn, $dao, $param) {
+    $ret = array();
+
+    $cate_sortcode = $param["cate_sortcode"];
+    $prefix        = $param["prefix"];
+    $typ           = $param["typ"];
+    $fb            = $param["fb"];
+    $idx           = $param["idx"];
+
+    $print_mpcode_arr = getPrintMpcodeArr($conn, $dao, $param);
+
+    $cate_bef_print_mpcode = $print_mpcode_arr["bef"];
+    $cate_aft_print_mpcode = $print_mpcode_arr["aft"];
+    $cate_bef_add_print_mpcode = $print_mpcode_arr["bef_add"];
+    $cate_aft_add_print_mpcode = $print_mpcode_arr["bef_add"];
+
+    // 독판_여부
+    $mono_yn = ($fb[$prefix . "mono_yn"] === '0') ? 'N' : 'Y';
+
+    // 규격_이름
+    $size_dvs = $fb[$prefix . "size_dvs"];
+    if ($size_dvs === "manu") {
+        $stan_name = "비규격";
+    } else {
+        $stan_name = $fb[$prefix . "size_name"];
+    }
+
+    // 주문_상세
+    if (empty($fb[$prefix . "order_detail"]) === true) {
+        $order_detail = makeOrderDetail($conn, $dao, $param);
+    } else {
+        $order_detail = $fb[$prefix . "order_detail"];
+    }
+
+    // 인쇄 총도수
+    $tot_tmpt = 0;
+    // 단면/양면 구분값
+    $side_dvs = null;
+    if (empty($fb[$prefix . "tot_tmpt"]) === true) {
+        $tot_tmpt = $fb[$prefix . "tot_tmpt"];
+    }
+    // 인쇄_도수_이름, ex) 표지/양면/8, 내지1/전면/4/후면/4
+    if (empty($fb[$prefix . "tmpt_name"]) === true) {
+        $tmpt_name = makePrintTmptName($conn,
+                                       $dao,
+                                       $param,
+                                       $tot_tmpt,
+                                       $side_dvs);
+    } else {
+        makePrintTmptName($conn,
+                          $dao,
+                          $param,
+                          $tot_tmpt,
+                          $side_dvs);
+        $tmpt_name = $fb[$prefix . "tmpt_name"];
+    }
+    // 인쇄_용도_구분
+    $print_purp_dvs = $fb[$prefix . "print_purp"];
+
+    $after_use_yn = 'Y';
+    if (count($fb[$prefix . "chk_after"]) === 0) {
+        $after_use_yn = 'N';
+    }
+
+    // 예상_무게, 낱장형에서만 사용
+    $expec_weight = calcExpectWeight($conn, $dao, $param);
+
+    // 카테고리_종이_맵핑코드
+    $cate_paper_mpcode = $fb[$prefix . "paper"];
+    // 페이지_수량
+    $page_amt = $fb[$prefix . "page"];
+    // 별색_설명
+    $spc_dscr = '';
+
+    // 재단_사이즈_가로
+    $cut_size_wid = $fb[$prefix . "cut_wid_size"];
+    // 재단_사이즈_세로
+    $cut_size_vert = $fb[$prefix . "cut_vert_size"];
+    // 작업_사이즈_가로
+    $work_size_wid = $fb[$prefix . "work_wid_size"];
+    // 작업_사이즈_세로
+    $work_size_vert = $fb[$prefix . "work_vert_size"];
+
+    // 도무송_사이즈_가로
+    $tomson_size_wid = 0;
+    if (empty($fb[$prefix . "tomson_wid_size"]) === false) {
+        $tomson_size_wid = $fb[$prefix . "tomson_wid_size"];
+    }
+    // 도무송_사이즈_세로
+    $tomson_size_vert = 0;
+    if (empty($fb[$prefix . "tomson_vert_size"]) === false) {
+        $tomson_size_vert = $fb[$prefix . "tomson_vert_size"];
+    }
+
+    // 재단_앞날개_사이즈_가로
+    $cut_front_wing_size_wid = 0;
+    if (empty($fb[$prefix . "cut_front_wing_size_wid"]) === false) {
+        $cut_front_wing_size_wid = $fb[$prefix . "cut_front_wing_size_wid"];
+    }
+    // 재단_앞날개_사이즈_세로
+    $cut_front_wing_size_vert = 0;
+    if (empty($fb[$prefix . "cut_front_wing_size_vert"]) === false) {
+        $cut_front_wing_size_vert = $fb[$prefix . "cut_front_wing_size_vert"];
+    }
+    // 작업_앞날개_사이즈_가로
+    $work_front_wing_size_wid = 0;
+    if ($cut_front_wing_size_wid !== 0 &&
+            empty($fb[$prefix . "work_front_wing_size_wid"]) === false) {
+        $work_front_wing_size_wid = $fb[$prefix . "work_front_wing_size_wid"];
+    }
+    // 작업_앞날개_사이즈_세로
+    $work_front_wing_size_vert = 0;
+    if ($cut_front_wing_size_vert !== 0 &&
+            empty($fb[$prefix . "work_front_wing_size_vert"]) === false) {
+        $work_front_wing_size_vert = $fb[$prefix . "work_front_wing_size_vert"];
+    }
+
+    // 재단_뒷날개_사이즈_가로
+    $cut_rear_wing_size_wid = 0;
+    if (empty($fb[$prefix . "cut_rear_wing_size_wid"]) === false) {
+        $cut_rear_wing_size_wid = $fb[$prefix . "cut_rear_wing_size_wid"];
+    }
+    // 재단_뒷날개_사이즈_세로
+    $cut_rear_wing_size_vert = 0;
+    if (empty($fb[$prefix . "cut_rear_wing_size_vert"]) === false) {
+        $cut_rear_wing_size_vert = $fb[$prefix . "cut_rear_wing_size_vert"];
+    }
+    // 작업_뒷날개_사이즈_가로
+    $work_rear_wing_size_wid = 0;
+    if ($cut_rear_wing_size_wid !== 0 &&
+            empty($fb[$prefix . "work_rear_wing_size_wid"]) === false) {
+        $work_rear_wing_size_wid = $fb[$prefix . "work_rear_wing_size_wid"];
+    }
+    // 작업_뒷날개_사이즈_세로
+    $work_rear_wing_size_vert = 0;
+    if ($cut_rear_wing_size_vert !== 0 &&
+            empty($fb[$prefix . "work_rear_wing_size_vert"]) === false) {
+        $work_rear_wing_size_vert = $fb[$prefix . "work_rear_wing_size_vert"];
+    }
+
+    // 세네카_사이즈
+    $seneca_size = 0;
+    if (empty($fb[$prefix . "seneca_size"]) === false) {
+        $seneca_size = $fb[$prefix . "seneca_size"];
+    }
+
+    // 도무송_여부
+    $tomson_yn = 'N';
+    $sortcode_m = substr($cate_sortcode, 0, 6);
+    if ($sortcode_m == "002002" && $cate_sortcode != "002002007") {
+        $tomson_yn = 'Y';
+    }
+
+    // 결과배열 생성
+    $ret["mono_yn"]         = $mono_yn;
+    $ret["stan_name"]       = $stan_name;
+    $ret["order_detail"]    = $order_detail;
+    $ret["count"]           = $count;
+    $ret["expec_weight"]    = $expec_weight;
+    $ret["print_tmpt_name"] = $tmpt_name;
+    $ret["print_purp_dvs"]  = $print_purp_dvs;
+    $ret["tot_tmpt"]        = $tot_tmpt;
+    $ret["side_dvs"]        = $side_dvs;
+    $ret["after_use_yn"]    = $after_use_yn;
+
+    $ret["cate_bef_print_mpcode"] = $cate_bef_print_mpcode;
+    $ret["cate_aft_print_mpcode"]    = $cate_aft_print_mpcode;
+    $ret["cate_bef_add_print_mpcode"] = $cate_bef_add_print_mpcode;
+    $ret["cate_aft_add_print_mpcode"]    = $cate_aft_add_print_mpcode;
+
+    $ret["spc_dscr"] = $spc_dscr;
+
+    $ret["cate_paper_mpcode"] = $cate_paper_mpcode;
+
+    $ret["typ"] = $typ;
+    $ret["page_amt"] = $page_amt;
+
+    $ret["cut_size_wid"]  = $cut_size_wid;
+    $ret["cut_size_vert"] = $cut_size_vert;
+    $ret["work_size_wid"]  = $work_size_wid;
+    $ret["work_size_vert"] = $work_size_vert;
+    $ret["tomson_size_wid"]  = $tomson_size_wid;
+    $ret["tomson_size_vert"] = $tomson_size_vert;
+
+    $ret["cut_front_wing_size_wid"]  = $cut_front_wing_size_wid;
+    $ret["cut_front_wing_size_vert"] = $cut_front_wing_size_vert;
+    $ret["work_front_wing_size_wid"]  = $work_front_wing_size_wid;
+    $ret["work_front_wing_size_vert"] = $work_front_wing_size_vert;
+
+    $ret["cut_rear_wing_size_wid"]  = $cut_rear_wing_size_wid;
+    $ret["cut_rear_wing_size_vert"] = $cut_rear_wing_size_vert;
+    $ret["work_rear_wing_size_wid"]  = $work_rear_wing_size_wid;
+    $ret["work_rear_wing_size_vert"] = $work_rear_wing_size_vert;
+
+    $ret["seneca_size"] = $seneca_size;
+
+    $ret["tomson_yn"] = $tomson_yn;
+
+    return $ret;
+}
+
+/**
+ * @brief 추가 옵션 검색결과 맵핑코드에 맞춰서 배열생성
+ *
+ * @param $rs = 검색결과
+ *
+ * @return 생성된 배열
+ */
+function makeOptAddInfoArr($rs) {
+    $ret = array();
+
+    while ($rs && !$rs->EOF) {
+        $name = $rs->fields["opt_name"];
+        $depth1 = $rs->fields["depth1"];
+        $depth2 = $rs->fields["depth2"];
+        $depth3 = $rs->fields["depth3"];
+        $mpcode = $rs->fields["mpcode"];
+
+        $ret[$mpcode]["name"] = $name;
+        $ret[$mpcode]["depth1"] = $depth1;
+        $ret[$mpcode]["depth2"] = $depth2;
+        $ret[$mpcode]["depth3"] = $depth3;
+
+        $rs->MoveNext();
+    }
+
+    return $ret;
+}
+
+/**
+ * @brief 추가 후공정 검색결과 테이블 입력 정보배열 생성
+ *
+ * @param $rs = 검색결과
+ * @param $info_arr = 후공정 설명정보 배열
+ * @param $order_common_seqno = 주문공통_일련번호
+ *
+ * @return 생성된 배열
+ */
+function makeAfterAddParam($rs, $info_arr, $order_detail_dvs_num) {
+    $ret = array();
+
+    $i = 0;
+    while ($rs && !$rs->EOF) {
+        $name = $rs->fields["after_name"];
+        $depth1 = $rs->fields["depth1"];
+        $depth2 = $rs->fields["depth2"];
+        $depth3 = $rs->fields["depth3"];
+        $mpcode = $rs->fields["mpcode"];
+
+        $info = $info_arr[$mpcode];
+
+        $ret[$i]["order_detail_dvs_num"] = $order_detail_dvs_num;
+        $ret[$i]["after_name"] = $name;
+        $ret[$i]["depth1"]     = $depth1;
+        $ret[$i]["depth2"]     = $depth2;
+        $ret[$i]["depth3"]     = $depth3;
+        $ret[$i]["price"]      = $info["price"];
+        $ret[$i]["detail"]     = $info["info"];
+        $ret[$i]["seq"]        = $i + 1;
+        $ret[$i++]["basic_yn"] = 'N';
+
+        $rs->MoveNext();
+    }
+
+    return $ret;
+}
+
+/**
+ * @brief 인쇄맵핑코드 검색
+ *
+ * @param $conn  = connection identifier
+ * @param $dao   = 맵핑코드 검색용 dao
+ * @param $param = 도수구분, 제품구분, fb
+ *
+ * @return 인쇄도수 맵핑코드 배열
+ *
+ *
+ */
+function getPrintMpcodeArr($conn, $dao, $param) {
+    $tmpt_dvs = $param["tmpt_dvs"];
+    $prefix   = $param["prefix"];
+    $fb       = $param["fb"];
+
+    $param = array();
+    $param["cate_sortcode"] = $fb[$prefix . "cate_sortcode"];
+    $param["purp_dvs"] = $fb[$prefix . "print_purp"];
+
+    $cate_bef_print_mpcode = 0;
+    $cate_aft_print_mpcode = 0;
+    $cate_bef_add_print_mpcode = 0;
+    $cate_aft_add_print_mpcode = 0;
+
+    if ($tmpt_dvs === '0') {
+        $param["name"] = $fb[$prefix . "bef_tmpt_name"];
+        $cate_bef_print_mpcode = $dao->selectCatePrintMpcode($conn, $param);
+    } else {
+        // 카테고리_전면_인쇄_맵핑코드
+        $param["name"]     = $fb[$prefix . "bef_tmpt_name"];
+        $param["side_dvs"] = "전면";
+        $cate_bef_print_mpcode = $dao->selectCatePrintMpcode($conn, $param);
+        // 카테고리_전면_추가_인쇄_맵핑코드
+        $param["name"]     = $fb[$prefix . "bef_add_tmpt_name"];
+        if (!empty($param["name"])) {
+            $param["side_dvs"] = "전면추가";
+            $cate_bef_add_print_mpcode = $dao->selectCatePrintMpcode($conn, $param);
+        }
+        // 카테고리_후면_인쇄_맵핑코드
+        $param["name"]     = $fb[$prefix . "aft_tmpt_name"];
+        if (!empty($param["name"])) {
+            $param["side_dvs"] = "후면";
+            $cate_aft_print_mpcode = $dao->selectCatePrintMpcode($conn, $param);
+        }
+        // 카테고리_후면_추가_인쇄_맵핑코드
+        $param["name"]     = $fb[$prefix . "aft_add_tmpt_name"];
+        if (!empty($param["name"])) {
+            $param["side_dvs"] = "후면추가";
+            $cate_aft_add_print_mpcode = $dao->selectCatePrintMpcode($conn, $param);
+        }
+    }
+
+    return array(
+        "bef" => $cate_bef_print_mpcode,
+        "aft" => $cate_aft_print_mpcode,
+        "bef_add" => $cate_bef_add_print_mpcode,
+        "aft_add" => $cate_aft_add_print_mpcode
+    );
+}
+
+/**
+ * @brief 인쇄_도수_이름 생성
+ *
+ * @detail 형식은 다음과 같다
+ * ex) 표지:양면/8, 표지:전면/4/후면/4, 내지1:전면/4/후면/4
+ *
+ * @param $conn      = connection identifier
+ * @param $dao       = 맵핑코드 검색용 dao
+ * @param $param     = 정보를 가져올 fb, 낱장여부
+ * @param &$tot_tmpt = 총도수 반환용 변수
+ * @param &$side_dvs = 단/양면 구분값 반환용 변수
+ *
+ * @return 인쇄_도수_이름
+ */
+function makePrintTmptName($conn, $dao, $param, &$tot_tmpt, &$side_dvs) {
+    $ret = '';
+
+    $tmpt_dvs = $param["tmpt_dvs"];
+    $fb       = $param["fb"];
+
+    if ($tmpt_dvs === '0') {
+        $print_mpcode_arr = getPrintMpcodeArr($conn, $dao, $param);
+
+        $print_mpcode = $print_mpcode_arr["bef"];
+        $print_mpcode = $dao->parameterEscape($conn, $print_mpcode);
+
+        $rs = $dao->selectPrintTmptInfo($conn, $print_mpcode);
+        $rs = $rs->fields;
+
+        $tot_tmpt = $rs["tot_tmpt"];
+
+        if (!empty($rs["beforeside_tmpt"])) {
+            $side_dvs = "단면";
+        }
+
+        if (!empty($rs["aftside_tmpt"])) {
+            $side_dvs = "양면";
+        }
+
+        $ret .= sprintf("전면 %s / 후면 %s / 추가 %s", $rs["beforeside_tmpt"]
+                                                     , $rs["aftside_tmpt"]
+                                                     , $rs["add_tmpt"]);
+
+    } else {
+        $print_mpcode_arr = getPrintMpcodeArr($conn, $dao, $param);
+        $print_mpcode = $dao->arr2paramStr($conn, $print_mpcode_arr);
+
+        $rs = $dao->selectPrintTmptInfo($conn, $print_mpcode);
+
+        $ret = getPrintTmptInfo($rs, $tot_tmpt, $side_dvs);
+    }
+
+    return $ret;
+}
+
+/**
+ * @brief makePrintTmptName() 에서 사용하는 함수
+ * 쿼리 검색결과에서 면구분/도수 값만 추출해서 문자열 생성
+ *
+ * @param $rs        = 쿼리 검색결과
+ * @param &$tot_tmpt = 총도수 반환용 변수
+ * @param &$side_dvs = 단/양면 구분값 반환용 변수
+ *
+ * @return $면구분$/$도수$ 문자열
+ */
+function getPrintTmptInfo($rs, &$tot_tmpt, &$side_dvs) {
+    $ret = '';
+
+    $bef_chk = false;
+    $aft_chk = false;
+
+    while ($rs && !$rs->EOF) {
+        $side_dvs = $rs->fields["side_dvs"];
+        $add_tmpt = $rs->fields["add_tmpt"];
+
+        $tot_tmpt += intval($rs->fields["tot_tmpt"]);
+
+        $tmpt = null;
+        $form = "";
+
+        if ($side_dvs === "전면") {
+            $form = "전면 %s / 전면추가 %s /";
+            $tmpt = $rs->fields["beforeside_tmpt"];
+
+            if (intval($tmpt) > 0 || intval($add_tmpt) > 0) {
+                $bef_chk = true;
+            }
+        } else if ($side_dvs === "후면") {
+            $form = " 후면 %s / 후면추가 %s /";
+            $tmpt = $rs->fields["aftside_tmpt"];
+
+            if (intval($tmpt) > 0 || intval($add_tmpt) > 0) {
+                $aft_chk = true;
+            }
+        }
+
+        $ret .= sprintf($form, $tmpt, $add_tmpt);
+
+        $rs->MoveNext();
+    }
+
+    if ($bef_chk || $aft_chk) {
+        $side_dvs = "단면";
+    }
+
+    if ($bef_chk && $aft_chk) {
+        $side_dvs = "양면";
+    }
+
+    return substr($ret, 0, -1);
+}
+?>
