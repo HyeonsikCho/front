@@ -8,8 +8,17 @@
     <style type="text/css">
         ul.paging .first:after,
         ul.paging .last:before { content: '···'; margin: 0 6px; }
+        .pageTitle {letter-spacing: 0;margin-top: 0;line-height: 0;margin-bottom: 15px;}
+        .searchCondition button.search, ul.paging button.on, ul.paging button:hover, ul.paging button:focus  {background:#ec8601;border:none}
+        .searchCondition dt, .searchCondition button.search,
+        .searchCondition .date input[type=text], .searchCondition .date .preset button,
+        .searchCondition select, table.list th, table.list td,
+        table.searchResult caption .resultNum, table.searchResult caption select
+         {letter-spacing:-0.5px;font-size:12px;font-family:'굴림';font-weight:500}
+         nav.lnb li.on li.on a {color:#ec8601}
+         nav.lnb li.on a {background:#ec8601}
     </style>
-    <script src="[TPH_Vdesign_dir]/js/lib/lightslider.js"></script> 
+    <script src="[TPH_Vdesign_dir]/js/lib/lightslider.js"></script>
 </head>
 <body>
 <header class="top">
@@ -28,7 +37,7 @@
     <nav class="lnb">
         [TPH_I/mypage/common/lnb.html]
     </nav>
-    <h3 class="pageTitle">미결제 주문</h3>
+    <h3 class="pageTitle"><img src="[TPH_Vdesign_dir]/images/mypage/center_2.png" alt="미결제 주문"></h3>
     <section class="searchCondition">
         <div class="rowWrap">
             <dl class="date">

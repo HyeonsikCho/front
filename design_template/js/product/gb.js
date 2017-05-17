@@ -15,7 +15,7 @@ $(document).ready(function() {
     sortcode = $("#gb_cate_sortcode").val();
     cateName = $("#gb_cate_sortcode").find("option:selected").text();
     amtUnit  = $("#gb_amt").attr("amt_unit");
-	
+
 	showUvDescriptor(prdtDvs);
 });
 
@@ -99,7 +99,8 @@ var calcPrice = function(flag) {
         changeData();
         return false;
     }
-    sellPrice = ceilVal(sellPrice);
+    sellPrice  = ceilVal(sellPrice);
+    sellPrice *= count;
     // 등급 할인율
     var gradeSale = parseFloat($("#gb_grade_sale_rate").val());
     gradeSale /= 100.0;
@@ -216,6 +217,14 @@ var changeAmt = function() {
     reCalcAfterPrice(prdtDvs, null);
     changeData();
 }
+
+/**
+ * @brief 건수변경시 후공정 가격 재계산 및 상품가격 재검색
+ */
+var changeCount = function() {
+    reCalcAfterPrice(prdtDvs, null);
+    calcPrice();
+};
 
 /**
  * @brief 가격 배열에서 후공정 가격 계산해서 반환

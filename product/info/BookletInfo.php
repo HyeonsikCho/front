@@ -2,7 +2,7 @@
 /*
  * Copyright (c) 2016 Nexmotion, Inc.
  * All rights reserved.
- * 
+ *
  * REVISION HISTORY (reverse chronological order)
  *============================================================================
  * 2016-11-25 엄준현 추가(책자형 관련 로직 수정구현)
@@ -132,7 +132,7 @@ class BookletInfo extends CommonInfo {
         /*
         if ($mix_yn === true) {
             $cate_bot = $dao->selectMixCateHtml($conn, $sortcode_b);
-            $template->reg($prefix . "cate_bot", $cate_bot); 
+            $template->reg($prefix . "cate_bot", $cate_bot);
         }
         */
 
@@ -143,9 +143,9 @@ class BookletInfo extends CommonInfo {
         $tmpt_dvs   = $cate_info_arr["tmpt_dvs"];
         $flattyp_yn = $cate_info_arr["flattyp_yn"];
         unset($cate_info_arr);
-        $template->reg($prefix . "mono_dvs", makeMonoDvsOption($mono_dvs)); 
-        $template->reg($prefix . "tmpt_dvs", $tmpt_dvs); 
-        $template->reg($prefix . "flattyp_yn", $flattyp_yn); 
+        $template->reg($prefix . "mono_dvs", makeMonoDvsOption($mono_dvs));
+        $template->reg($prefix . "tmpt_dvs", $tmpt_dvs);
+        $template->reg($prefix . "flattyp_yn", $flattyp_yn);
 
         //!! 공통정보 아닐 때 바로 종이정보 검색
         if ($common_flag) goto PAPER;
@@ -166,7 +166,7 @@ PAPER:
             $paper_sort = $dao->selectCatePaperSortHtml($conn,
                                                         $param,
                                                         $price_info_arr);
-            $template->reg($prefix . "paper_sort", $paper_sort); 
+            $template->reg($prefix . "paper_sort", $paper_sort);
 
             $param["sort"] = $price_info_arr["paper_sort"];
         }
@@ -175,13 +175,13 @@ PAPER:
         $paper_name = $dao->selectCatePaperNameHtml($conn,
                                                     $param,
                                                     $price_info_arr);
-        $template->reg($prefix . "paper_name", $paper_name); 
+        $template->reg($prefix . "paper_name", $paper_name);
 
         //0-2 종이 html 생성
         $param["name"] = $price_info_arr["paper_name"];
         $param["default"] = $default_sel_arr["paper"];
         $paper = $dao->selectCatePaperHtml($conn, $param, $price_info_arr);
-        $template->reg($prefix . "paper", $paper["info"]); 
+        $template->reg($prefix . "paper", $paper["info"]);
         unset($paper);
 
         //!! 공통정보 아닐 때 바로 인쇄도수 검색
@@ -212,10 +212,10 @@ PAPER:
                                          $pos_yn,
                                          $size_typ_yn);
 
-        $template->reg($prefix . "size", $size); 
-        $template->reg($prefix . "def_stan_mpcode", $price_info_arr["stan_mpcode"]); 
-        $template->reg($prefix . "def_cut_wid"    , $price_info_arr["def_cut_wid"]); 
-        $template->reg($prefix . "def_cut_vert"   , $price_info_arr["def_cut_vert"]); 
+        $template->reg($prefix . "size", $size);
+        $template->reg($prefix . "def_stan_mpcode", $price_info_arr["stan_mpcode"]);
+        $template->reg($prefix . "def_cut_wid"    , $price_info_arr["def_cut_wid"]);
+        $template->reg($prefix . "def_cut_vert"   , $price_info_arr["def_cut_vert"]);
 
         //3 재단, 작업사이즈간 차이 정보 생성
         $size_gap = " _gap%s";
@@ -236,14 +236,14 @@ TMPT:
                                                     $price_info_arr);
         if ($tmpt_dvs === '0') {
             $tmpt = $print_tmpt["단면"] . $print_tmpt["양면"];
-            $template->reg($prefix . "print_tmpt", $tmpt); 
+            $template->reg($prefix . "print_tmpt", $tmpt);
         } else {
-            $template->reg($prefix . "bef_print_tmpt", $print_tmpt["전면"]); 
-            $template->reg($prefix . "aft_print_tmpt", $print_tmpt["후면"]); 
-            $template->reg($prefix . "bef_add_print_tmpt", $print_tmpt["전면추가"]); 
-            $template->reg($prefix . "aft_add_print_tmpt", $print_tmpt["후면추가"]); 
+            $template->reg($prefix . "bef_print_tmpt", $print_tmpt["전면"]);
+            $template->reg($prefix . "aft_print_tmpt", $print_tmpt["후면"]);
+            $template->reg($prefix . "bef_add_print_tmpt", $print_tmpt["전면추가"]);
+            $template->reg($prefix . "aft_add_print_tmpt", $print_tmpt["후면추가"]);
         }
-        $template->reg($prefix . "print_purp", $print_tmpt["purp_dvs"]); 
+        $template->reg($prefix . "print_purp", $print_tmpt["purp_dvs"]);
 
         unset($print_tmpt);
         unset($param);
@@ -262,7 +262,7 @@ TMPT:
                                                   "depth1",
                                                   $param,
                                                   $price_info_arr);
-        $template->reg($prefix . "binding_depth1", $binding_depth1); 
+        $template->reg($prefix . "binding_depth1", $binding_depth1);
 
         // 제본 depth2 정보 생성
         $param["default"]  = $default_sel_arr["binding_d2"];
@@ -273,17 +273,17 @@ TMPT:
                                                   $param,
                                                   $price_info_arr);
         unset($param);
-        $template->reg($prefix . "binding_depth2", $binding_depth2); 
+        $template->reg($prefix . "binding_depth2", $binding_depth2);
 
         if ($mix_yn === false) {
             //5 옵션 체크박스 생성
             $param["cate_sortcode"] = $sortcode_b;
             $param["dvs"]           = $dvs;
             $opt = $dao->selectCateOptHtml($conn, $param);
-            $template->reg($prefix . "opt", $opt["html"]); 
+            $template->reg($prefix . "opt", $opt["html"]);
 
             //6 옵션 가격 레이어 생성
-            $template->reg($prefix . "add_opt", ''); 
+            $template->reg($prefix . "add_opt", '');
             if (empty($opt["info_arr"]) === false) {
                 $add_opt = $opt["info_arr"]["name"];
                 $add_opt = $dao->parameterArrayEscape($conn, $add_opt);
@@ -293,7 +293,7 @@ TMPT:
                 $param["opt_idx"]  = $opt["info_arr"]["idx"];
                 $add_opt = $dao->selectCateAddOptInfoHtml($conn, $param);
                 unset($param);
-                $template->reg($prefix . "add_opt", $add_opt); 
+                $template->reg($prefix . "add_opt", $add_opt);
             }
         }
 
@@ -304,23 +304,23 @@ AFTER_CHKBOX:
         $except_arr = array("제본" => true);
 
         $after = $dao->selectCateAfterHtml($conn, $param, $except_arr);
-        $template->reg($prefix . "after", $after["html"]); 
+        $template->reg($prefix . "after", $after["html"]);
         unset($param);
 
         //8 기본 후공정 내역에 표시할 정보 생성
-        $template->reg($prefix . "basic_after", ''); 
+        $template->reg($prefix . "basic_after", '');
         if (empty($after["info_arr"]["basic"]) === false) {
             $basic_after = $after["info_arr"]["basic"];
             $basic_after = $util->arr2delimStr($basic_after, '|');
-            $template->reg($prefix . "basic_after", $basic_after); 
+            $template->reg($prefix . "basic_after", $basic_after);
         }
 
         //9 추가 후공정 가격 레이어 생성
-        $template->reg($prefix . "after", ''); 
-        $template->reg($prefix . "add_after", ''); 
+        $template->reg($prefix . "after", '');
+        $template->reg($prefix . "add_after", '');
         if (empty($after["info_arr"]["add"]) === false) {
             $add_after = $after["info_arr"]["add"];
-            $template->reg($prefix . "after", $after["html"]); 
+            $template->reg($prefix . "after", $after["html"]);
 
             $param["cate_sortcode"] = $sortcode_b;
             $param["dvs"]           = $dvs;
@@ -337,7 +337,7 @@ AFTER_CHKBOX:
                 unset($param["subpaper"]);
             }
             unset($param);
-            $template->reg($prefix . "add_after", $add_after_html); 
+            $template->reg($prefix . "add_after", $add_after_html);
         }
 
         //!! 후공정 정보 생성 후 탈출
@@ -345,7 +345,7 @@ AFTER_CHKBOX:
 
         //11 지질느낌 검색
         $paper_sense = $dao->selectPaperDscr($conn, $price_info_arr["paper_mpcode"]);
-        $template->reg($prefix . "paper_sense", $paper_sense); 
+        $template->reg($prefix . "paper_sense", $paper_sense);
 
         //!! 공통정보 아닐 때 바로 페이지 검색
         if ($common_flag) goto PAGE;
@@ -387,8 +387,8 @@ AFTER_CHKBOX:
             unset($amt_arr);
         //}
 
-        $template->reg($prefix . "amt", $amt); 
-        $template->reg($prefix . "amt_unit", $amt_unit); 
+        $template->reg($prefix . "amt", $amt);
+        $template->reg($prefix . "amt_unit", $amt_unit);
 
         // 12-1 페이지 정보 생성
 PAGE:
@@ -422,7 +422,7 @@ PAGE:
             }
             $page .= option($val, $page_val, $attr);
         }
-        $template->reg($prefix . "page", $page); 
+        $template->reg($prefix . "page", $page);
 
         /*
         if ($mono_dvs === 0) {
@@ -447,7 +447,7 @@ PAGE:
 
             $page = $price_rs["page"];
             $page_dvs = $price_rs["page_dvs"];
-            
+
             $sell_price = doubleval($price_rs["new_price"]);
             $sell_price = $util->ceilVal($sell_price);
 
@@ -455,7 +455,7 @@ PAGE:
         } else {*/
         if ($calc_flag) {
             $class_path = $_SERVER["DOCUMENT_ROOT"] . 
-                          "/com/nexmotion/common/util/CalcPriceUtil.php";
+                          "/common_lib/CalcPriceUtil.php";
 
             include_once($class_path);
 
@@ -513,16 +513,16 @@ PAGE:
             $output_price = $util->ceilVal($calc_util->calcBookletOutputPrice());
             $sell_price   = $paper_price + $print_price + $output_price;
 
-            $template->reg($prefix . "paper_price" , $paper_price); 
-            $template->reg($prefix . "print_price" , $print_price); 
-            $template->reg($prefix . "output_price", $output_price); 
+            $template->reg($prefix . "paper_price" , $paper_price);
+            $template->reg($prefix . "print_price" , $print_price);
+            $template->reg($prefix . "output_price", $output_price);
             $template->reg($prefix . "org_sell_price"  , $sell_price);
         }
         //}
 
         unset($param);
-        $template->reg($prefix . "page"    , $page); 
-        $template->reg($prefix . "page_dvs", $page_dvs); 
+        $template->reg($prefix . "page"    , $page);
+        $template->reg($prefix . "page_dvs", $page_dvs);
 
         //!! 공통정보 아닐 때 정보 필드에 입력
         if ($common_flag) goto REGI;
@@ -566,7 +566,7 @@ PAGE:
         $binding_price_util = new BindingPriceUtil($param);
         $binding_price = $binding_price_util->calcBindingPrice();
 
-        $template->reg($prefix . "binding_price", $binding_price); 
+        $template->reg($prefix . "binding_price", $binding_price);
         unset($param);
 
         // 제본가격 판매가격에 합산
@@ -609,22 +609,22 @@ PAGE:
             "grade"            => $grade,
             "price"            => $util->ceilVal($grade_sale + $member_sale)
         );
-                                                 
+
         $grade_sale_html = makeGradeSaleDl($arr);
         unset($arr);
 
-        $template->reg($prefix . "member_sale_rate", $member_sale_rate); 
-        $template->reg($prefix . "grade_sale"     , $grade_sale_html); 
-        $template->reg($prefix . "grade_sale_rate", $grade_sale_rate); 
+        $template->reg($prefix . "member_sale_rate", $member_sale_rate);
+        $template->reg($prefix . "grade_sale"     , $grade_sale_html);
+        $template->reg($prefix . "grade_sale_rate", $grade_sale_rate);
 
         //15 이벤트 할인 정보 생성
         $param["dscr"]  = NO_EVENT;
-        $template->reg($prefix . "event_sale", makeEventSaleDl($param)); 
+        $template->reg($prefix . "event_sale", makeEventSaleDl($param));
         unset($param);
 
         //16 결제금액 계산
         $sale_price = $util->ceilVal($sale_price);
-        $template->reg($prefix . "sale_price", number_format($sale_price)); 
+        $template->reg($prefix . "sale_price", number_format($sale_price));
 
         // 공급가 계산
         //$tax = $sale_price - ceil($sale_price / 1.1);
@@ -670,7 +670,7 @@ REGI:
                                              $param,
                                              $util,
                                              ProductInfoClass::AFTER_ARR
-                                         )); 
+                                         ));
         }
 
         //18 재질미리보기 정보 생성

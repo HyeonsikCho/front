@@ -3,7 +3,7 @@
 function perJoinInfo($param) {
 
     $html = <<<HTML
-    <h4 class="sectionTitle">개인 가입 정보</h4>
+    <h4 class="sectionTitle"><img src="/design_template/images/mypage/bottom_11.png" alt="개인 가입정보" style="margin-top:13px;"></h4>
     <table class="line input">
         <colgroup>
             <col width="120">
@@ -96,11 +96,11 @@ HTML;
     return $html;
 }
 
-//사업자 등록정보
+//사업자 등록정보 $param[description]</h4>
 function comJoinInfo($param) {
 
     $html = <<<HTML
-    <h4 class="sectionTitle">사업자 등록정보 $param[description]</h4>
+    <h4 class="sectionTitle"><img src="/design_template/images/mypage/bottom_12.png" alt="사업자 등록번호" style="margin-top:13px;"></h4>
     <table class="line input">
         <colgroup>
             <col width="120">
@@ -273,7 +273,7 @@ HTML;
 function memberDetail($param) {
 
     $html = <<<HTML
-    <h4 class="sectionTitle">성향정보</h4>
+    <h4 class="sectionTitle"><img src="/design_template/images/mypage/bottom_13.png" alt="성향정보" style="margin-top:13px;"></h4>
     <table class="line input taste">
         <colgroup>
             <col width="120">

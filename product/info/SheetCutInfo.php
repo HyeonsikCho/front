@@ -2,7 +2,7 @@
 /*
  * Copyright (c) 2016 Nexmotion, Inc.
  * All rights reserved.
- * 
+ *
  * REVISION HISTORY (reverse chronological order)
  *============================================================================
  * 2016-11-17 엄준현 수정(계산형 관련 로직 변경)
@@ -107,7 +107,7 @@ class SheetCutInfo extends CommonInfo {
         //-2 제품별 카테고리 정보 생성
         if ($mix_yn === true) {
             $cate_bot = $dao->selectMixCateHtml($conn, $sortcode_b);
-            $template->reg($prefix . "cate_bot", $cate_bot); 
+            $template->reg($prefix . "cate_bot", $cate_bot);
         }
 
         //-1 카테고리 독판여부, 수량단위 검색
@@ -117,9 +117,9 @@ class SheetCutInfo extends CommonInfo {
         $tmpt_dvs   = $cate_info_arr["tmpt_dvs"];
         $flattyp_yn = $cate_info_arr["flattyp_yn"];
         unset($cate_info_arr);
-        $template->reg($prefix . "mono_dvs", makeMonoDvsOption($mono_dvs)); 
-        $template->reg($prefix . "tmpt_dvs", $tmpt_dvs); 
-        $template->reg($prefix . "flattyp_yn", $flattyp_yn); 
+        $template->reg($prefix . "mono_dvs", makeMonoDvsOption($mono_dvs));
+        $template->reg($prefix . "tmpt_dvs", $tmpt_dvs);
+        $template->reg($prefix . "flattyp_yn", $flattyp_yn);
 
         // $mono_dvs : 1->전체, 2->확정, 3->계산
         $mono_dvs = ($mono_dvs === '1' || $mono_dvs === '2') ? 0 : 1;
@@ -134,7 +134,7 @@ class SheetCutInfo extends CommonInfo {
             $paper_sort = $dao->selectCatePaperSortHtml($conn,
                                                         $param,
                                                         $price_info_arr);
-            $template->reg($prefix . "paper_sort", $paper_sort); 
+            $template->reg($prefix . "paper_sort", $paper_sort);
 
             $param["sort"] = $price_info_arr["paper_sort"];
         }
@@ -143,14 +143,14 @@ class SheetCutInfo extends CommonInfo {
             $paper_name = $dao->selectCatePaperNameHtml($conn,
                                                         $param,
                                                         $price_info_arr);
-            $template->reg($prefix . "paper_name", $paper_name); 
+            $template->reg($prefix . "paper_name", $paper_name);
 
             $param["name"] = $price_info_arr["paper_name"];
         }
 
         $param["default"] = $default_sel_arr["paper"];
         $paper = $dao->selectCatePaperHtml($conn, $param, $price_info_arr);
-        $template->reg($prefix . "paper", $paper["info"]); 
+        $template->reg($prefix . "paper", $paper["info"]);
         unset($paper);
 
         //1 종이에 물린 사이즈 검색
@@ -178,10 +178,10 @@ class SheetCutInfo extends CommonInfo {
                                          $pos_yn,
                                          $size_typ_yn);
 
-        $template->reg($prefix . "size", $size); 
-        $template->reg($prefix . "def_stan_mpcode", $price_info_arr["stan_mpcode"]); 
-        $template->reg($prefix . "def_cut_wid"    , $price_info_arr["def_cut_wid"]); 
-        $template->reg($prefix . "def_cut_vert"   , $price_info_arr["def_cut_vert"]); 
+        $template->reg($prefix . "size", $size);
+        $template->reg($prefix . "def_stan_mpcode", $price_info_arr["stan_mpcode"]);
+        $template->reg($prefix . "def_cut_wid"    , $price_info_arr["def_cut_wid"]);
+        $template->reg($prefix . "def_cut_vert"   , $price_info_arr["def_cut_vert"]);
 
         //3 재단, 작업사이즈간 차이 정보 생성
         $size_gap = " _gap%s";
@@ -205,14 +205,14 @@ class SheetCutInfo extends CommonInfo {
                                                     $price_info_arr);
         if ($tmpt_dvs === '0') {
             $tmpt = $print_tmpt["단면"] . $print_tmpt["양면"];
-            $template->reg($prefix . "print_tmpt", $tmpt); 
+            $template->reg($prefix . "print_tmpt", $tmpt);
         } else {
-            $template->reg($prefix . "bef_print_tmpt", $print_tmpt["전면"]); 
-            $template->reg($prefix . "aft_print_tmpt", $print_tmpt["후면"]); 
-            $template->reg($prefix . "bef_add_print_tmpt", $print_tmpt["전면추가"]); 
-            $template->reg($prefix . "aft_add_print_tmpt", $print_tmpt["후면추가"]); 
+            $template->reg($prefix . "bef_print_tmpt", $print_tmpt["전면"]);
+            $template->reg($prefix . "aft_print_tmpt", $print_tmpt["후면"]);
+            $template->reg($prefix . "bef_add_print_tmpt", $print_tmpt["전면추가"]);
+            $template->reg($prefix . "aft_add_print_tmpt", $print_tmpt["후면추가"]);
         }
-        $template->reg($prefix . "print_purp", $print_tmpt["purp_dvs"]); 
+        $template->reg($prefix . "print_purp", $print_tmpt["purp_dvs"]);
 
         unset($print_tmpt);
         unset($param);
@@ -222,10 +222,10 @@ class SheetCutInfo extends CommonInfo {
             $param["cate_sortcode"] = $sortcode_b;
             $param["dvs"]           = $dvs;
             $opt = $dao->selectCateOptHtml($conn, $param);
-            $template->reg($prefix . "opt", $opt["html"]); 
+            $template->reg($prefix . "opt", $opt["html"]);
 
             //6 옵션 가격 레이어 생성
-            $template->reg($prefix . "add_opt", ''); 
+            $template->reg($prefix . "add_opt", '');
             if (empty($opt["info_arr"]) === false) {
                 $add_opt = $opt["info_arr"]["name"];
                 $add_opt = $dao->parameterArrayEscape($conn, $add_opt);
@@ -235,7 +235,7 @@ class SheetCutInfo extends CommonInfo {
                 $param["opt_idx"]  = $opt["info_arr"]["idx"];
                 $add_opt = $dao->selectCateAddOptInfoHtml($conn, $param);
                 unset($param);
-                $template->reg($prefix . "add_opt", $add_opt); 
+                $template->reg($prefix . "add_opt", $add_opt);
             }
         }
 
@@ -244,23 +244,23 @@ class SheetCutInfo extends CommonInfo {
         $param["dvs"]           = $dvs;
 
         $after = $dao->selectCateAfterHtml($conn, $param);
-        $template->reg($prefix . "after", $after["html"]); 
+        $template->reg($prefix . "after", $after["html"]);
         unset($param);
 
         //8 기본 후공정 내역에 표시할 정보 생성
-        $template->reg($prefix . "basic_after", ''); 
+        $template->reg($prefix . "basic_after", '');
         if (empty($after["info_arr"]["basic"]) === false) {
             $basic_after = $after["info_arr"]["basic"];
             $basic_after = $util->arr2delimStr($basic_after, '|');
-            $template->reg($prefix . "basic_after", $basic_after); 
+            $template->reg($prefix . "basic_after", $basic_after);
         }
 
         //9 추가 후공정 가격 레이어 생성
-        $template->reg($prefix . "after", ''); 
-        $template->reg($prefix . "add_after", ''); 
+        $template->reg($prefix . "after", '');
+        $template->reg($prefix . "add_after", '');
         if (empty($after["info_arr"]["add"]) === false) {
             $add_after = $after["info_arr"]["add"];
-            $template->reg($prefix . "after", $after["html"]); 
+            $template->reg($prefix . "after", $after["html"]);
 
             $param["cate_sortcode"] = $sortcode_b;
             $param["dvs"]           = $dvs;
@@ -276,12 +276,12 @@ class SheetCutInfo extends CommonInfo {
                 unset($param["subpaper"]);
             }
             unset($param);
-            $template->reg($prefix . "add_after", $add_after_html); 
+            $template->reg($prefix . "add_after", $add_after_html);
         }
 
         //11 지질느낌 검색
         $paper_sense = $dao->selectPaperDscr($conn, $price_info_arr["paper_mpcode"]);
-        $template->reg($prefix . "paper_sense", $paper_sense); 
+        $template->reg($prefix . "paper_sense", $paper_sense);
 
         //12 수량 정보 생성
         if ($mono_dvs === 0) {
@@ -319,8 +319,8 @@ class SheetCutInfo extends CommonInfo {
             unset($amt_arr);
         }
 
-        $template->reg($prefix . "amt", $amt); 
-        $template->reg($prefix . "amt_unit", $amt_unit); 
+        $template->reg($prefix . "amt", $amt);
+        $template->reg($prefix . "amt_unit", $amt_unit);
 
         if ($mono_dvs === 0) {
             //13 기준가격(정상판매가) 검색, 부가세 계산
@@ -347,14 +347,14 @@ class SheetCutInfo extends CommonInfo {
 
             $page = $price_rs["page"];
             $page_dvs = $price_rs["page_dvs"];
-            
+
             $sell_price = doubleval($price_rs["new_price"]);
             $sell_price = $util->ceilVal($sell_price);
 
             $print_price  = $sell_price;
         } else {
             $class_path = $_SERVER["DOCUMENT_ROOT"] . 
-                          "/com/nexmotion/common/util/CalcPriceUtil.php";
+                          "/common_lib/CalcPriceUtil.php";
 
             include_once($class_path);
 
@@ -419,9 +419,9 @@ class SheetCutInfo extends CommonInfo {
             $output_price = $util->ceilVal($calcUtil->calcSheetOutputPrice());
             $sell_price   = $paper_price + $print_price + $output_price;
 
-            $template->reg($prefix . "paper_price" , $paper_price); 
-            $template->reg($prefix . "print_price" , $print_price); 
-            $template->reg($prefix . "output_price", $output_price); 
+            $template->reg($prefix . "paper_price" , $paper_price);
+            $template->reg($prefix . "print_price" , $print_price);
+            $template->reg($prefix . "output_price", $output_price);
 
             $page = 2;
             $page_dvs = "표지";
@@ -430,26 +430,51 @@ class SheetCutInfo extends CommonInfo {
         unset($param);
         $template->reg($prefix . "sell_price"  , number_format($sell_price));
 
-        $template->reg($prefix . "page"    , $page); 
-        $template->reg($prefix . "page_dvs", $page_dvs); 
+        $template->reg($prefix . "page"    , $page);
+        $template->reg($prefix . "page_dvs", $page_dvs);
 
-        //14 회원등급 할인, 회원 할인 정보 생성
+        //14 할인정보 생성
         if ($is_login) {
+            // 로그인한 상태라면 카테고리 회원 할인과 회원 수량별 할인정보 가져옴
             $param["cate_sortcode"] = $sortcode_b;
             $param["member_seqno"]  = $_SESSION["member_seqno"];
             $member_sale_rate = $dao->selectCateMemberSaleRate($conn, $param);
+
+            $param["paper_mpcode"] = $price_info_arr["paper_mpcode"];
+            $param["aft_print_mpcode"] = '0';
+            $param["bef_add_print_mpcode"] = '0';
+            $param["aft_add_print_mpcode"]  = '0';
+            $param["stan_mpcode"] = $price_info_arr["stan_mpcode"];
+            $param["amt"] = $price_info_arr["amt"];
+
+            if (is_array($print_mpcode)) {
+                $temp["bef_print_name"] = $print_mpcode["전면"]["name"];
+                $temp["aft_print_name"] = $print_mpcode["후면"]["name"];
+                $temp["bef_add_print_name"] = $print_mpcode["전면추가"]["name"];
+                $temp["aft_add_print_name"] = $print_mpcode["후면추가"]["name"];
+            } else {
+                $temp["bef_print_name"] = $print_info_arr["print_name"];
+                $temp["aft_print_name"] = '0';
+                $temp["bef_add_print_name"] = '0';
+                $temp["aft_add_print_name"] = '0';
+            }
+
+            $rs = $dao->selectAmtMemberCateSale($conn, $param);
+            $amt_member_sale_rate       = doubleval($rs["rate"]);
+            $amt_member_sale_aplc_price = doubleval($rs["aplc_price"]);
+
             unset($param);
         } else {
             $dscr = "로그인시 할인받으실 수 있는 금액입니다.";
-            $grade_sale_rate  = 0;
-            $grade_sale       = 0;
-            $member_sale_rate = 0;
-            $member_sale      = 0;
+            $member_sale_rate           = 0;
+            $amt_member_sale_rate       = 0;
+            $amt_member_sale_aplc_price = 0;
 
             $sale_price = $sell_price;
         }
         unset($param);
 
+        // 14-1 등급할인, 카테고리 회원할인 적용
         $grade = empty($_SESSION["grade"]) ? '10' : $_SESSION["grade"];
 
         $param["cate_sortcode"] = $sortcode_b;
@@ -467,23 +492,37 @@ class SheetCutInfo extends CommonInfo {
             "rate"             => $grade_sale_rate,
             "member_sale_rate" => $member_sale_rate,
             "grade"            => $grade,
-            "price"            => $sell_price - $sale_price
+            "price"            => $grade_sale
         );
-                                                 
+
         $grade_sale_html = makeGradeSaleDl($arr);
         unset($arr);
 
-        $template->reg($prefix . "member_sale_rate", $member_sale_rate); 
-        $template->reg($prefix . "grade_sale"     , $grade_sale_html); 
-        $template->reg($prefix . "grade_sale_rate", $grade_sale_rate); 
+        $template->reg($prefix . "member_sale_rate", $member_sale_rate);
+        $template->reg($prefix . "grade_sale_rate", $grade_sale_rate);
+
+        // 14-2 등급할인이 적용된 가격에 추가적으로 수량별 할인 적용
+        if (!empty($amt_member_sale_rate) || !empty($amt_member_sale_aplc_price)) {
+            $amt_member_sale_price  = $util->calcPrice($amt_member_sale_rate,
+                                                       $sale_price);
+            $amt_member_sale_price += $amt_member_sale_aplc_price;
+            $amt_member_sale_price  = $util->ceilVal($amt_member_sale_price);
+            $sale_price += $amt_member_sale_price;
+
+            $arr["price"] = $amt_member_sale_price;
+            $amt_member_sale_html = makeAmtMemberSale($arr);
+        }
+
+        $template->reg($prefix . "grade_sale",
+                       $grade_sale_html . $amt_member_sale_html);
 
         //15 이벤트 할인 정보 생성
         $param["dscr"]  = NO_EVENT;
-        $template->reg($prefix . "event_sale", makeEventSaleDl($param)); 
+        $template->reg($prefix . "event_sale", makeEventSaleDl($param));
         unset($param);
 
         //16 결제금액 계산
-        $template->reg($prefix . "sale_price", number_format($sale_price)); 
+        $template->reg($prefix . "sale_price", number_format($sale_price));
 
         // 공급가 계산
         //$tax = $sale_price - ceil($sale_price / 1.1);
@@ -519,7 +558,7 @@ class SheetCutInfo extends CommonInfo {
                                              $param,
                                              $util,
                                              ProductInfoClass::AFTER_ARR
-                                         )); 
+                                         ));
             unset($param);
         }
 

@@ -80,7 +80,7 @@ class SheetTomsonInfo extends CommonInfo {
         $size_typ_yn = $this->size_typ_yn;
         $is_login    = empty($_SESSION["id"]) ? false : true;
 
-        $default_arr = ProductDefaultSel::DEFAULT_SEL[$sortcode_b];
+        $default_sel_arr = ProductDefaultSel::DEFAULT_SEL[$sortcode_b];
 
         $prefix = '';
         if (empty($dvs) === false) {
@@ -111,6 +111,7 @@ class SheetTomsonInfo extends CommonInfo {
 
         //0 종이 정보 생성(##사이즈의 계열에 따라서 처리)
         $param["cate_sortcode"] = $sortcode_b;
+        $param["default"] = $default_sel_arr["paper"];
         $paper = $dao->selectCatePaperHtml($conn, $param, $price_info_arr);
         $template->reg($prefix . "paper", $paper["info"]); 
 
@@ -297,18 +298,31 @@ class SheetTomsonInfo extends CommonInfo {
             $param["cate_sortcode"] = $sortcode_b;
             $param["member_seqno"]  = $_SESSION["member_seqno"];
             $member_sale_rate = $dao->selectCateMemberSaleRate($conn, $param);
+
+            $param["paper_mpcode"] = $price_info_arr["paper_mpcode"];
+            $param["bef_print_mpcode"] = $price_info_arr["print_mpcode"];
+            $param["aft_print_mpcode"] = '0';
+            $param["bef_add_print_mpcode"] = '0';
+            $param["aft_add_print_mpcode"]  = '0';
+            $param["stan_mpcode"] = $price_info_arr["stan_mpcode"];
+            $param["amt"] = $price_info_arr["amt"];
+
+            $rs = $dao->selectAmtMemberCateSale($conn, $param);
+            $amt_member_sale_rate       = doubleval($rs["rate"]);
+            $amt_member_sale_aplc_price = doubleval($rs["aplc_price"]);
+
             unset($param);
         } else {
             $dscr = "로그인시 할인받으실 수 있는 금액입니다.";
-            $grade_sale_rate  = 0;
-            $grade_sale       = 0;
-            $member_sale_rate = 0;
-            $member_sale      = 0;
+            $member_sale_rate           = 0;
+            $amt_member_sale_rate       = 0;
+            $amt_member_sale_aplc_price = 0;
 
             $sale_price = $sell_price;
         }
         unset($param);
 
+        // 14-1 등급할인, 카테고리 회원할인 적용
         $grade = empty($_SESSION["grade"]) ? '1' : $_SESSION["grade"];
 
         $param["cate_sortcode"] = $sortcode_b;
@@ -332,8 +346,22 @@ class SheetTomsonInfo extends CommonInfo {
         unset($arr);
 
         $template->reg($prefix . "member_sale_rate", $member_sale_rate); 
-        $template->reg($prefix . "grade_sale"     , $grade_sale_html); 
         $template->reg($prefix . "grade_sale_rate", $grade_sale_rate); 
+
+        // 14-2 등급할인이 적용된 가격에 추가적으로 수량별 할인 적용
+        if (!empty($amt_member_sale_rate) || !empty($amt_member_sale_aplc_price)) {
+            $amt_member_sale_price  = $util->calcPrice($amt_member_sale_rate,
+                                                       $sale_price);
+            $amt_member_sale_price += $amt_member_sale_aplc_price;
+            $amt_member_sale_price  = $util->ceilVal($amt_member_sale_price);
+            $sale_price += $amt_member_sale_price;
+
+            $arr["price"] = $amt_member_sale_price;
+            $amt_member_sale_html = makeAmtMemberSale($arr);
+        }
+
+        $template->reg($prefix . "grade_sale",
+                       $grade_sale_html . $amt_member_sale_html); 
 
         //15 이벤트 할인 정보 생성
         $param["dscr"]  = NO_EVENT;

@@ -3,9 +3,11 @@
 .contents.main { width: 100%; margin-bottom: 200px; margin-top: -30px; }
 .contents.main > div  { position: relative; width: 1000px; margin-left: auto; margin-right: auto; }
 
-.contents.main .mainBanner { height: 510px; width: auto; }
+/*.contents.main .mainBanner { height: 510px; width: auto; }*/
+.contents.main .mainBanner { height: 480px; width: auto; }
 .mainBanner .list { position: relative; }
-.mainBanner .list li { position: absolute; height: 510px; top: 0; left: 0; right: 0; background: center top repeat-x; background-size: cover; opacity: 0; }
+/*.mainBanner .list li { position: absolute; height: 510px; top: 0; left: 0; right: 0; background: center top repeat-x; background-size: cover; opacity: 0; }*/
+.mainBanner .list li { position: absolute; height: 480px; top: 0; left: 0; right: 0; background: center top repeat-x; background-size: cover; opacity: 0; }
 //.mainBanner .list li { position: absolute; height: 510px; top: -45px; left: 0; right: 0; background: center top repeat-x; background-size: cover; opacity: 0; }
 .mainBanner .list li.previous { opacity: 1; }
 .mainBanner .list li.on { opacity: 1; transition: opacity .5s; z-index: 1; }

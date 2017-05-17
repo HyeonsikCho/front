@@ -4,7 +4,8 @@
 body { background: url('../images/cscenter/title_bg.png') center 105px repeat-x; }
 
 header.title { margin-left: -220px; margin-bottom: 0; }
-header.title h2 { padding: 0; height: 140px; }
+header.title h2 { padding: 0; height: 120px; }
+/*header.title h2 { padding: 0; height: 140px; }*/
 .contents .title .location { padding-bottom: 14px; }
 
 nav.lnb li.on a { background: #109f97; }
@@ -101,7 +102,7 @@ nav.pageTab li.on + li:before { background-color: #1c7872; }
 .main section.board li.reply.new a { max-width: 310px; }
 
 /* notice */
-.notice .pageTitle:before { background-image: url('../images/cscenter/pagetitle_notice.png'); }
+/*.notice .pageTitle:before { background-image: url('../images/cscenter/pagetitle_notice.png'); }*/
 .notice table.update a { max-width: 450px; }
 .notice .alert { color: #eb3b4b; }
 .notice .important { color: #3d5a95; }

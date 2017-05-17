@@ -139,7 +139,7 @@ class SheetDAO extends OrderCommonDAO {
      *
      * @return 검색결과
      */
-    function selectCpnAdmin($conn, $sell_site) {
+    function selectCpnAdminInfo($conn, $sell_site) {
         if ($this->connectionCheck($conn) === false) {
             return false;
         }

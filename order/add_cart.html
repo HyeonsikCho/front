@@ -2,7 +2,7 @@
 /*
  * Copyright (c) 2015-2016 Nexmotion, Inc.
  * All rights reserved.
- * 
+ *
  * REVISION HISTORY (reverse chronological order)
  *=============================================================================
  * 2016/09/02 엄준현 수정(order/cart.html -> mypage/cart.html)
@@ -17,7 +17,7 @@ include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/ConnectionP
 include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/job/order/CartDAO.php");
 include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/job/common/ProductCommonDAO.php");
 include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/FrontCommonUtil.php");
-include_once($_SERVER["DOCUMENT_ROOT"] .  "/com/nexmotion/common/util/CalcPriceUtil.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common_lib/CalcPriceUtil.php");
 include_once($_SERVER["DOCUMENT_ROOT"] . "/define/common_config.php");
 include_once($_SERVER["DOCUMENT_ROOT"] . "/define/product_info_class.php");
 include_once($_SERVER["DOCUMENT_ROOT"] . "/common_define/prdt_default_info.php");
@@ -699,7 +699,7 @@ ERR:
     $param["order_common_seqno"] = $order_common_seqno;
     $ret = $dao->deleteOrderData($conn, $param);
     $conn->Close();
-    
+
     $err_msg = $err_line . ':' . $err_msg;
     if ($cart_flag === 'A') {
         echo $err_msg;
@@ -899,7 +899,7 @@ function reCalcPrice($conn, $util, $fb, $param) {
         // 상품 판매가격(prdt_price)
         $param["table_name"]    = $price_tb;
         $param["amt"]           = $amt;
-        
+
         $prdt_price = $dao->selectPrdtPlyPrice($conn, $param);
         $prdt_price = $util->ceilVal($prdt_price["new_price"]);
 

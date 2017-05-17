@@ -312,6 +312,7 @@ class ProductDefaultSel {
             "amt"        => 1000
         ),
         "002002010" => array(
+            "paper"      => "아트지 강접 백색 90g",
             "amt"        => 1000
         ),
         // 합판전단

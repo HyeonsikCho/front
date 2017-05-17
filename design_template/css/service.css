@@ -4,7 +4,8 @@
 body { background: url('../images/cscenter/title_bg.png') center 105px repeat-x; }
 
 header.title { margin-left: -220px; margin-bottom: 0; }
-header.title h2 { padding: 0; height: 140px; }
+header.title h2 { padding: 0; height: 121px; }
+/*header.title h2 { padding: 0; height: 140px; }*/
 .contents .title .location { padding-bottom: 14px; }
 
 nav.lnb li.on a { background: #bf5e8e; }
@@ -87,3 +88,12 @@ nav.tab a:last-child { border-right-color: #e1e1e1; }
 .sitemap .list li li li { float: none; margin-top: 8px; }
 .sitemap .list li li li + li { margin-top: 7px; }
 .sitemap .list li li li a { background: none; font-size: 12px; line-height: 18px; height: auto; }
+
+
+/* 17-05-16 타이틀 수정*/
+ul.paging .first:after,
+ul.paging .last:before { content: '···'; margin: 0 6px; }
+.pageTitle {letter-spacing: 0;margin-top: 0;line-height: 0;margin-bottom: 15px;margin-top:20px;}
+nav.lnb li.on li.on a {color:#bf5e8e}
+nav.lnb li.on a, .searchCondition button.search, ul.paging button.on {background:#bf5e8e}
+ul.paging button {border:none;}

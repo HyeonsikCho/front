@@ -3,6 +3,19 @@
 <head>
     [TPH_I/common/head.html]
 </head>
+<style>
+  .pageTitle {letter-spacing:0;margin-top:20px;line-height:0;margin-bottom:15px;}
+  nav.lnb li.on a,
+  nav.pageTab {background:#2d6a86;}
+
+  .contents .title .location span,
+  nav.lnb li a,
+  nav.pageTab li {letter-spacing:-0.5px;font-size:12px;font-family:'굴림'}
+
+    nav.lnb li.on li.on a,
+    nav.pageTab li.on {color:#2d6a86}
+    nav.pageTab li.on {border-color:#2d6a86}
+</style>
 <body>
 <header class="top">
     [TPH_I/common/header.html]
@@ -17,13 +30,23 @@
     <nav class="lnb">
         [TPH_I/cscenter/common/lnb.html]
     </nav>
-    <h3 class="pageTitle">이용안내</h3>
+    <h3 class="pageTitle"><img src="[TPH_Vdesign_dir]/images/cscenter/center_2.png" alt="이용안내"></h3>
     <input type="hidden" name="type" id="type" value="[TPH_Vtype]" />
     <nav class="pageTab">
         <ul>[TPH_VpageTab]</ul>
     </nav>
     <ul class="list" id="list">
-        <li><img src="[TPH_Vdesign_dir]/images/cscenter/use_guide_[TPH_Vtype_en].jpg" style="width:780px;" alt=""></li>
+        <li>
+          <img src="[TPH_Vdesign_dir]/images/cscenter/use_guide_[TPH_Vtype_en].jpg" alt="" width="auto;" height="auto" usemap="#Map"/>
+  <map name="Map">
+    <area shape="rect" coords="84,241,349,269" href="">
+  <area shape="rect" coords="422,240,688,269" href="">
+  <area shape="rect" coords="84,432,350,461" href="">
+  <area shape="rect" coords="422,433,688,460" href="">
+  <area shape="rect" coords="83,631,347,659" href="">
+  <area shape="rect" coords="422,631,685,659" href="">
+</map>
+  </li>
 <!--
        <li><span class="no">10</span>
             <dl>

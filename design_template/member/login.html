@@ -2,6 +2,19 @@
 <html lang="ko">
 <head>
     [TPH_I/common/head.html]
+    <style>
+      .Title_Page {margin-top:55px;text-align:left;border-bottom:2px solid #ddd;}
+      .contents.login .pageTitle {margin-bottom:100px;}
+      .contents.login .form .input input, body,
+      .contents.login .form .login button, .contents.login .function a,
+      .contents.login .function dt, .checkbox label {letter-spacing:-0.5px;font-size:12px;font-family:'굴림';font-weight:500;}
+      .contents.login {min-height:auto}
+      strong button.function {background:#417c12}
+      .contents h3 {display:none;}
+      .contents.login .form {margin:auto;float:inherit}
+      div.function a,
+      div.function a:hover {background:#3d8494;}
+    </style>
 </head>
 <body>
 <header class="top">
@@ -14,9 +27,8 @@
             <li><span>로그인</span></li>
         </ol>
     </header>
-    <h2 class="pageTitle">
-        로그인
-        <span>로그인하시고 디프린팅만의 멤버쉽 혜택을 누려보세요.</span>
+    <h2 class="pageTitle Title_Page">
+      <img src="[TPH_Vdesign_dir]/images/member/login_title.png" alt="로그인 타이틀">
     </h2>
     <h3><img src="[TPH_Vdesign_dir]/images/member/login.png" alt="dprinting login"></h3>
     <section class="form">

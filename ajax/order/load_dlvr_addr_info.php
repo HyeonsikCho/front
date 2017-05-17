@@ -63,7 +63,7 @@ if ($dvs === "memb") {
 } else {
     $sell_site = $session["sell_site"];
 
-    $rs = $dao->selectCpnAdmin($conn, $sell_site);
+    $rs = $dao->selectCpnAdminInfo($conn, $sell_site);
 
     $name = $rs["name"];
     $tel_num = explode('-', $rs["tel_num"]);

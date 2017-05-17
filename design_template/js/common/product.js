@@ -2,7 +2,7 @@
  *
  * Copyright (c) 2016-2017 Nexmotion, Inc.
  * All rights reserved.
- * 
+ *
  * REVISION HISTORY (reverse chronological order)
  *============================================================================
  * 2016-11-08 엄준현 수정(근접한 규격 찾는부분 로직 수정)
@@ -267,9 +267,9 @@ var loadPaperDscr = {
         var callback = function(result) {
             $(loadPaperDscr.obj).html(result);
         };
-    
+
         ajaxCall(url, "text", data, callback);
-    
+
         changeData(dvs);
     }
 };
@@ -308,7 +308,7 @@ var changeTmpt = function(dvs) {
         "val"           : val
     };
     var callback = function(result) {
-        $(prefix + "print_purp").html(result); 
+        $(prefix + "print_purp").html(result);
         changeData(dvs);
     };
 
@@ -346,8 +346,8 @@ var downEstiExcel = function() {
     var url = "/ajax/product/make_esti_excel.php";
     var callback = function(result) {
         var downUrl  = "/common/down_esti_excel.php?"
-            downUrl += "filename=" + result;
-            downUrl += "&dvs=esti";
+        downUrl += "filename=" + result;
+        downUrl += "&dvs=esti";
         $("#file_ifr").attr("src", downUrl);
     };
 
@@ -408,7 +408,7 @@ var getEstiPopHtml = function(data) {
     var callback = function(result) {
         $("#esti_cont").html(result);
     };
-    
+
     ajaxCall(url, "html", data, callback);
 };
 
@@ -638,7 +638,7 @@ var productPreview = function() {
 
     $("#zoom_pic").show();
     $("#zoom_preview").hide();
-} 
+}
 
 //재질보기
 var matPreview = function() {
@@ -898,7 +898,7 @@ var getAftInfoArr = function(dvs) {
             info.name   = aftKoName;
             info.depth1 = depth1;
             ret.push(info);
-            
+
             return true;
         }
         if (aftKoName === "미싱") {
@@ -938,7 +938,7 @@ var getAftInfoArr = function(dvs) {
             info.name   = aftKoName;
             info.depth1 = depth1;
             ret.push(info);
-            
+
             return true;
         }
     });
@@ -973,7 +973,7 @@ var showTemplatePop = function() {
 var showDeliveryPop = function() {
     var url = "/ajax/product/load_delivery_pop.php?";
     url += "cs=" + sortcode;
-    url += "&cn=" + cateName;
+    url += "&cn=" + encodeURI(cateName);
     layerPopup("l_delivery", url);
 };
 
@@ -1002,11 +1002,11 @@ var getPaperRealPrintAmt = function(dvs) {
     for (var i = 0; i < arrLength; i++) {
         var dvs = dvsArr[i];
         var pfx = getPrefix(dvs);
-    
+
         if (!dvsOnOff[dvs]) {
             continue;
         }
-    
+
         var val = parseInt($(pfx + "page").val());
         page += val;
     }
@@ -1024,7 +1024,7 @@ var loadPaperPreview = function(dvs, id) {
     var prefix = getPrefix(dvs);
 
     if (checkBlank(id)) {
-        id = prefix + "paper"; 
+        id = prefix + "paper";
     }
 
     var url = "/json/product/load_paper_preview.php";
@@ -1105,15 +1105,15 @@ var chkMaxMinSize = {
         }
 
         var maxArr = null;
-	if (!checkBlank(chkMaxMinSize[sortcode])) {
+        if (!checkBlank(chkMaxMinSize[sortcode])) {
             maxArr = chkMaxMinSize[sortcode];
         } else if (!checkBlank(chkMaxMinSize[sortcodeM])) {
             maxArr = chkMaxMinSize[sortcodeM];
         }
 
-	var maxWid  = maxArr.wid;
-	var maxVert = maxArr.vert;
-	var str = "최대사이즈는 " + maxWid + "*" +
+        var maxWid  = maxArr.wid;
+        var maxVert = maxArr.vert;
+        var str = "최대사이즈는 " + maxWid + "*" +
                   maxVert + "입니다.";
 
         if (cutWid > maxWid) {
@@ -1125,7 +1125,7 @@ var chkMaxMinSize = {
             $vert.val(maxVert);
         }
 
-        aftRestrict.cutting.common('nc');
+        aftRestrict.cutting.common(dvs);
     },
     "001001001" : {
         "wid" : 520, "vert" : 750
@@ -1169,7 +1169,7 @@ var swapSize = {
     "orgWorkV" : 0,
     "exec" : function(dvs, checked) {
         var prefix = getPrefix(dvs);
-    
+
         var cutW = $(prefix + "cut_wid_size").val();
         var cutV = $(prefix + "cut_vert_size").val();
         //var workW = $(prefix + "work_wid_size").val();
@@ -1211,14 +1211,14 @@ var swapSize = {
             aplyWorkV = this.orgWorkV;
         }
 
-    
+
         $(prefix + "cut_wid_size").val(aplyCutW);
         $(prefix + "cut_vert_size").val(aplyCutV);
         //$(prefix + "work_wid_size").val(workV);
         //$(prefix + "work_vert_size").val(workW);
         $("#work_wid_size").val(aplyWorkW);
         $("#work_vert_size").val(aplyWorkV);
-    
+
         preview.paperSize();
     }
 };

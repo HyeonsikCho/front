@@ -20,6 +20,7 @@ $(document).ready(function() {
     calcManuPosNum.defVert = parseFloat($("#st_size").attr("def_cut_vert"));
 	
 	showUvDescriptor(prdtDvs);
+    setSizeWarning();
 
     if (sortcode === "002002010") {
         $(".esti_print_info").show();
@@ -73,6 +74,12 @@ var getStanName = function() {
     } else if (sortcode === "002002007") {
         stanName = stanName.split('-');
         stanName = "bohum" + '-' + stanName[1];
+    } else if (sortcode === "002002009") {
+        var cuttingSize = $(prefix + "size > option:selected").attr("class")
+                                                              .split(' ')[1];
+        cuttingSize = cuttingSize.replace("_cuttingWH", '').split('-');
+
+        stanName = "jo-" + cuttingSize[0] + cuttingSize[1];
     }
 
     return stanName;
@@ -387,6 +394,14 @@ var changeCount = function() {
 }
 
 /**
+ * @brief 재단스티커 비규격 입력할 때 사이즈에 따라서 문구표시
+ */
+var changeCuttingSize = function(dvs) {
+    chkMaxMinSize.exec(dvs);
+    setSizeWarning();
+};
+
+/**
  * @brief 가격 배열에서 후공정 가격 계산해서 반환
  *
  * @param priceArr = 가격 배열
@@ -576,10 +591,20 @@ var makeEstiPopInfo = {
     }
 };
 
+/**
+ * @brief 스티커 경고문구 표시
+ */
 var setSizeWarning = function() {
+    if (sortcode === "002001005") {
+        $("#st_warning").text("");
+        return false;
+    }
+
     var prefix = getPrefix(prdtDvs);
-    var size = $(prefix + "size > option:selected").text();
-    if(size == "60*40" || size == "70*40") {
+    var cutW = parseInt($(prefix + "cut_wid_size").val());
+    var cutH = parseInt($(prefix + "cut_vert_size").val());
+
+    if(cutW <= 50 || cutH <= 50) {
         $("#st_warning").text("* 5cm이하 제작물은 후지 반칼이 걸리지 않을 수 있으며 가급적 도무송으로 주문하시면 편리합니다.");
     } else {
         $("#st_warning").text("");

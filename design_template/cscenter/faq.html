@@ -2,12 +2,42 @@
 <html lang="ko">
 <head>
     [TPH_I/common/head.html]
+
+    <style>
+      .faq .list li:nth-child(even) {background:#fff;}
+      nav.pageTab, nav.lnb li.on a {background:#2d6a86;}
+      ul.paging button.on {background:#08a2c6}
+      nav.pageTab li.on,
+      .faq .list li.on, .faq .list li.on + li, .faq .list li.on:last-child {border-color:#2d6a86}
+
+      .contents .title .location span,
+      nav.lnb li a,
+      nav.pageTab li, .faq .list li dt, .faq .search input[type=text],
+      ul.paging button.on, .faq .list li p {letter-spacing:-0.5px;font-size:12px;font-family:'굴림'}
+      .faq .list li.on {background:#f3f3f3;}
+      .faq .list li dd {background:none;}
+      .faq .list li p:before {content:initial;}
+      .faq .list li p {border-radius:0;}
+      .faq .list li dd {padding:0;}
+      .faq .list li.on dt, .faq .list li.on .no {color:black}
+      .list li dl dt {text-decoration: none;}
+      .faq .search {background:none;padding:-left:79px;line-height:0;height:auto;margin-bottom:30px;}
+      .search>img {display:none;}
+      .faq .search .wrap {border:2px solid #d9c1a1;}
+      .faq .search button {background:#d9c1a1;}
+      nav.lnb li.on li.on a,
+      nav.pageTab li.on {color:#2d6a86}
+      .pageTitle {letter-spacing:0;margin-top:20px;line-height:0;margin-bottom:15px;}
+      .faq .search .wrap {margin-left:0;}
+      .faq .search {padding-left:0;}
+
+    </style>
 </head>
 <body>
 <header class="top">
     [TPH_I/common/header.html]
 </header>
-<section class="contents lnb faq" style="height:864px;" >
+<section class="contents lnb faq" style="height:auto;" >
     <header class="title">
         <h2><img src="[TPH_Vdesign_dir]/images/cscenter/title.png" alt="고객센터"></h2>
         <ol class="location">
@@ -17,7 +47,7 @@
     <nav class="lnb">
         [TPH_I/cscenter/common/lnb.html]
     </nav>
-    <h3 class="pageTitle">FAQ</h3>
+    <h3 class="pageTitle"><img src="[TPH_Vdesign_dir]/images/cscenter/center_3.png" alt="FAQ"></h3>
     <input type="hidden" name="type" id="type" value="[TPH_Vtype]" />
     <section class="search">
         <img src="[TPH_Vdesign_dir]/images/cscenter/main_faq_search_title.png" alt="FAQ Search">

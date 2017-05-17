@@ -69,8 +69,8 @@ if (intval($session["grade"]) > 1) {
     $param["where"]["grade"] = intVal($session["grade"]) - 1;
 
     $rs = $dao->selectData($conn, $param);
-    $html  = "<strong>%s</strong> 등급 샹향까지<br>";
-    $html .= "\n&#8361;%s 필요합니다.<br>";
+    $html  = "<strong>%s</strong> 등급 샹향까지";
+    $html .= "\n&#8361;%s 필요합니다.";
 
     $start_price = abs(intVal($rs->fields["sales_start_price"]) - intVal($session["cumul_sales_price"]));
 

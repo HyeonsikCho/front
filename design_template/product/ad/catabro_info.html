@@ -6,27 +6,27 @@
                         <dd class="full"><div class="inputWrap"><input type="text" id="title" name="title" maxlength="15" ></div></dd>
                         <dt><label for="productName">상품명</label></dt>
                         <dd>
-                            <select onchange="moveProduct(this.value);" class="_relatedSummary _productName" id="ad_cate_sortcode" name="ad_cate_sortcode">
+                            <select onchange="moveProduct(this.value);" class="_productName" id="ad_cate_sortcode" name="ad_cate_sortcode">
                                 [TPH_Vcate_bot]
                             </select>
                         </dd>
                         <dt><label for="cover_size">사이즈</label></dt>
                         <dd class="_relatedSummary size cover_size">
-                            <select class="withBtn _size" id="ad_size_dvs" name="cover_size_dvs" onchange="changeSizeDvs(this.value);">
+                            <select class="with_Btn _size" id="ad_size_dvs" name="cover_size_dvs" onchange="changeSizeDvs(this.value);">
                                 <option value="stan" class="_preset">규격사이즈</option>
                                 <option value="manu" class="_custom">비규격사이즈</option>
                             </select>
-                            <select class="_preset" id="ad_size" name="ad_size" def_cut_wid="[TPH_Vcover_def_cut_wid]" def_cut_vert="[TPH_Vcover_def_cut_vert]" def_val=[TPH_Vcover_def_stan_mpcode] onchange="changeSize.exec('ad');">
+                            <select class="preset _preset" id="ad_size" name="ad_size" def_cut_wid="[TPH_Vcover_def_cut_wid]" def_cut_vert="[TPH_Vcover_def_cut_vert]" def_val=[TPH_Vcover_def_stan_mpcode] onchange="changeSize.exec('ad');">
                                 [TPH_Vcover_size]
                             </select>
                             <span id="ad_similar_size" divide="1" style="padding-left:10px; color:#f36f23; display:none;"></span>
                             <dl>
-                                <dt>재단사이즈</dt>
+                                <dt class="dt_span">재단사이즈</dt>
                                 <dd class="_cuttingSize">
                                     <label>가로 <input id="ad_cut_wid_size" name="ad_cut_wid_size" type="text" maxlength="3">mm</label>,
                                     <label>세로 <input id="ad_cut_vert_size" name="ad_cut_vert_size" type="text" maxlength="3">mm</label>
                                 </dd>
-                                <dt>작업사이즈</dt>
+                                <dt class="dt_span">작업사이즈</dt>
                                 <dd class="_workingSize[TPH_Vcover_size_gap]" id="ad_size_gap">
                                     <label>가로 <input id="ad_work_wid_size" name="ad_work_wid_size" type="text" readonly>mm</label>,
                                     <label>세로 <input id="ad_work_vert_size" name="ad_work_vert_size" type="text" readonly>mm</label>
@@ -36,14 +36,11 @@
                         <dt class="amount"><label for="amount">수량</label></dt>
                         <dd class="_relatedSummary amount">
                         <!-- 옵션가격 수량따라 변할 경우 changeData -> getOptPrice 구현 필요 -->
-                            <select class="_amount" id="ad_amt" name="ad_amt" onchange="changeAmt();" amt_unit="[TPH_Vcover_amt_unit]">
+                            <select class="_amount wi236" id="ad_amt" name="ad_amt" onchange="changeAmt();" amt_unit="[TPH_Vcover_amt_unit]">
                                 [TPH_Vcover_amt]
                             </select>
                         </dd>
-                        <dt></dt>
-                        <dd style="color:red;width:265px;">홀수 페이지와 짝수 페이지 작업방법이 상이하므로</dd>
-                        <dt></dt>
-                        <dd style="color:red;width:265px;">상세 내용은 작업 가이드와 템플릿을 확인해주세요.</dd>
+                        <dd class="dd_span">홀수 페이지와 짝수 페이지 작업방법이 상이하므로 상세 내용은 작업 가이드와 템플릿을 확인해주세요.</dd>
                     </dl>
                 </section><!-- 최상단 공통영역 -->
 
@@ -82,7 +79,7 @@
                         <dt class="amount"><label for="amount">페이지</label></dt>
                         <dd class="_relatedSummary amount">
                         <!-- 옵션가격 수량따라 변할 경우 changeData -> getOptPrice 구현 필요 -->
-                            <select class="_amount" id="cover_page" name="cover_page" style="width:130px;" amt_unit="p" onchange="changePage('cover', this.value);">
+                            <select class="_amount" id="cover_page" name="cover_page" amt_unit="p" onchange="changePage('cover', this.value);">
                                 [TPH_Vcover_page]
                             </select>
                         </dd>
@@ -163,7 +160,7 @@
                         <dt class="amount"><label for="amount">페이지</label></dt>
                         <dd class="_relatedSummary amount">
                         <!-- 옵션가격 수량따라 변할 경우 changeData -> getOptPrice 구현 필요 -->
-                            <select class="_amount" id="inner1_page" name="inner1_page" style="width:130px;" amt_unit="p" onchange="changePage('inner1', this.value);">
+                            <select class="_amount" id="inner1_page" name="inner1_page" amt_unit="p" onchange="changePage('inner1', this.value);">
                                 [TPH_Vinner1_page]
                             </select>
                         </dd>
@@ -208,7 +205,7 @@
                     </dl>
                 </section><!-- 후공정 -->
                 <!-- 실제 내지1 정보 섹션 끝 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
-                
+
                 <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 실제 내지2 정보 섹션 시작 -->
                 <button type="button" style="padding: 8px; background: #898989; color: #fff; margin-bottom: 5px;" id="" onclick="dvsOnOff.exec('');">
                     내지추가 +

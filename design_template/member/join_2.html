@@ -2,6 +2,19 @@
 <html lang="ko">
 <head>
     [TPH_I/common/head.html]
+    <style>
+      .Title_Page {margin-top:55px;text-align:left;border-bottom:2px solid #ddd;}
+      .contents.join .agreement h4.required:after {content:''}
+      .contents.join .agreement .scroll p,
+      input[type=button], label {letter-spacing:-0.5px;font-size:12px;font-family:'굴림';line-height:23px;}
+      .function.navigation .prev,
+      .function.navigation .next {letter-spacing:-0.5px;font-size:12px;font-family:'굴림';font-weight:500}
+      .contents.join .agreement .scroll {margin-bottom:20px;}
+      .function.navigation .prev {background-color:#6d6d6d;}
+      .function.navigation .next {background-color:#417c12}
+      .function.navigation a, .function.navigation button {width:auto;padding:15px 70px;color:#fff}
+      div.function a {height:auto;}
+    </style>
 </head>
 <body>
 <header class="top">
@@ -15,18 +28,17 @@
             <li><span>회원유형선택</span></li>
         </ol>
     </header>
-    <h2 class="pageTitle">
-        회원가입
-        <span>디프린팅 회원만의 기본 좋은 혜택을 드립니다.</span>
+    <h2 class="pageTitle Title_Page">
+      <img src="[TPH_Vdesign_dir]/images/member/join_title.png" alt="회원가입 타이틀">
     </h2>
-    <ol class="joinSteps">
+    <!-- <ol class="joinSteps">
         <li class="step1">회원유형 선택</li>
         <li class="step2"><h3>약관 동의</h3></li>
         <li class="step3">정보 입력</li>
         <li class="step4">가입 완료</li>
-    </ol>
+    </ol> -->
     <section class="agreement">
-        <h4 class="required">디프린팅 이용약관</h4>
+        <h4 class="required"><img src="[TPH_Vdesign_dir]/images/member/joincenter_1.png" alt="디프린팅 이용약관"></h4>
         <div class="scroll">
             <p>
                 제 1 조 목적 본 약관은 디프린팅(이하 "회사")가 제공하는 서비스를 고객이 회사사이트에 가입하여 이용함에 있어 회사와 이용자의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.<br>
@@ -45,10 +57,10 @@
                 제 3 조 이용약관의 효력 및 변경 1.회사는 약관의 규제에 관한 법률, 전자거래기본법, 전자서명법, 정보통신망 이용촉진 및 정보보호 등에 관한 법률 등 관련법을 위배하지 않는 범위에서 본 약관을 개정할 수 있습니다. 2.회원은 개정된 약관에 대해 거부할 권리가 있습니다. 회원은 개정된 약관에 동의하지 않을 경우 서비스 이용을 중단하고 회원등록을 해지할 수 있습니다. 단, 개정된 약관의 효력 발생일 이후에도 서비스를 계속 이용할 경우에는 약관의 변경사항에 동의한 것으로 간주합니다. 3.변경된 약관에 대한 정보를 알지 못해 발생하는 회원 피해는 회사가 책임지지 않습니다.
                 </p>
         </div>
-        <label><input type="checkbox" id="agree1"> 디프린팅 이용약관에 동의합니다.</label>
+        <label><input type="checkbox" id="agree1" style="margin-left:10px;"> 디프린팅 이용약관에 동의합니다.</label>
     </section>
     <section class="agreement">
-        <h4 class="required">개인정보 취급방침</h4>
+        <h4 class="required"><img src="[TPH_Vdesign_dir]/images/member/joincenter_2.png" alt="개인정보 취급방침"></h4>
         <div class="scroll">
             <p>
                 제 1 조 목적 본 약관은 디프린팅(이하 "회사")가 제공하는 서비스를 고객이 회사사이트에 가입하여 이용함에 있어 회사와 이용자의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.<br>
@@ -67,7 +79,7 @@
                 제 3 조 이용약관의 효력 및 변경 1.회사는 약관의 규제에 관한 법률, 전자거래기본법, 전자서명법, 정보통신망 이용촉진 및 정보보호 등에 관한 법률 등 관련법을 위배하지 않는 범위에서 본 약관을 개정할 수 있습니다. 2.회원은 개정된 약관에 대해 거부할 권리가 있습니다. 회원은 개정된 약관에 동의하지 않을 경우 서비스 이용을 중단하고 회원등록을 해지할 수 있습니다. 단, 개정된 약관의 효력 발생일 이후에도 서비스를 계속 이용할 경우에는 약관의 변경사항에 동의한 것으로 간주합니다. 3.변경된 약관에 대한 정보를 알지 못해 발생하는 회원 피해는 회사가 책임지지 않습니다.
                 </p>
         </div>
-        <label><input type="checkbox" id="agree2"> 개인정보 취급방침에 동의합니다.</label>
+        <label><input type="checkbox" id="agree2" style="margin-left:10px;"> 개인정보 취급방침에 동의합니다.</label>
     </section>
     <div class="function navigation">
         <form name="frm" id="frm">

@@ -488,7 +488,6 @@ var aftRestrict = {
             }
             // <<<
 
-            var prefix = getPrefix(dvs);
             var sortcodeB = $(prefix + "cate_sortcode").val();
             var sortcodeT = sortcodeB.substr(0, 3);
             var sortcodeM = sortcodeB.substr(0, 6);

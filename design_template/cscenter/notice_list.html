@@ -5,8 +5,24 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <style type="text/css">
+    /*공통*/
+    .pageTitle {letter-spacing:0;margin-top:20px;line-height:0;margin-bottom:15px;}
+    .searchCondition .date dt,
+    .searchCondition .title dt {letter-spacing:-0.5px;font-size:12px;font-family:'굴림';font-weight:500;color:#555;}
+    .searchResult {border-top:2px solid #2d6a86}
+    table.list th {border-bottom:1px solid #cacaca;}
         ul.paging .first:after,
         ul.paging .last:before { content: '···'; margin: 0 6px; }
+
+        nav.lnb li.on a,
+        .searchCondition button.search {background:#2d6a86;letter-spacing:-0.5px;font-size:12px;font-family:'굴림'}
+        table.list tr:nth-child(even) th, table.list tr:nth-child(even) td {background:#fff;}
+        .pageTitle {letter-spacing:0;margin-top:20px;line-height:0;margin-bottom:15px;}
+        .searchCondition button.search {font-weight:500}
+        table.list th, table.list td {letter-spacing:-0.5px;font-size:12px;font-family:'굴림'}
+        nav.lnb li a, .contents .title .location span,
+        table.searchResult caption .resultNum, table.searchResult caption select,
+        .searchCondition .date .preset button {letter-spacing:-0.5px;font-size:12px;font-family:'굴림'}
     </style>
 </head>
 <body>
@@ -25,7 +41,7 @@
     <nav class="lnb">
         [TPH_I/cscenter/common/lnb.html]
     </nav>
-    <h3 class="pageTitle">공지사항</h3>
+    <h3 class="pageTitle"><img src="[TPH_Vdesign_dir]/images/cscenter/center_1.png" alt="고객센터"></h3>
     <section class="searchCondition">
         <div class="rowWrap">
             <dl class="date">
@@ -50,11 +66,14 @@
             [TPH_I/common/list_num.html]
         </caption>
         <colgroup>
-            <col style="width=80px">
+            <!-- <col style="width=80px">
             <col>
             <col style="width=80px">
             <col style="width=80px">
-            <col style="width=70px">
+            <col style="width=70px"> -->
+            <col style="width=40px">
+            <col style="width:450px">
+            <col style="width=50px">
         </colgroup>
         <thead>
             <tr>

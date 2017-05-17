@@ -45,6 +45,35 @@ html;
 }
 
 /**
+ * @brief 회원 수량별 할인 dl html 반환
+ *
+ * @param $param = 할인요율, 할인금액
+ *
+ * @return dl html
+ */
+function getAmtMemberSale($param) {
+    $util = new FrontCommonUtil();
+
+    $rate  = $param["rate"];
+    $ap= $param["aplc_price"];
+
+    $price = doubleval($param["price"]);
+
+    $html = <<<html
+        <dl style="height:23px;">
+            <dt>회원특별 할인</dt>
+            <dd>
+                <button type="button"><img src="/design_template/images/product/discount_btn_amt_member.png" alt="특별할인혜택"></button>
+            </dd>
+            <dd class="description">특별할인금액</dd>
+            <dd id="amt_member_sale" class="discountAmount">$price 원</dd>
+        </dl>
+html;
+
+    return $html;
+}
+
+/**
  * @brief 이벤트 할인 dl html 반환
  *
  * @param $param = 이벤트명, 할인 요율/가격 정보 파라미터
@@ -52,6 +81,8 @@ html;
  * @return dl html
  */
 function getEventSaleDl($param) {
+    return '';
+
     $name  = $param["name"];
     $price = $param["price"];
     $dscr  = $param["dscr"];

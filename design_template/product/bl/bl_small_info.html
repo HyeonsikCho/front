@@ -21,7 +21,7 @@
                     </dd>
                     <dt><label for="color">인쇄도수</label></dt>
                     <dd class="colorDetails">
-                        <select class="withBtn _relatedSummary _color" onchange="changeTmpt('bl');" id="bl_print_tmpt" name="bl_bef_tmpt">
+                        <select class="wi236" onchange="changeTmpt('bl');" id="bl_print_tmpt" name="bl_bef_tmpt">
                             [TPH_Vbl_print_tmpt]
                         </select>
                         <!--
@@ -30,21 +30,21 @@
                     </dd>
                     <dt><label for="size">사이즈</label></dt>
                     <dd class="_relatedSummary size">
-                        <select class="withBtn _size" id="size_dvs" name="bl_size_dvs" onchange="changeSizeDvs.exec(this.value);">
+                        <select class="with_Btn _size" id="size_dvs" name="bl_size_dvs" onchange="changeSizeDvs.exec(this.value);">
                             <option value="stan" class="_preset">규격사이즈</option>
                             <option value="manu" class="_custom">비규격사이즈</option>
                         </select>
-                        <select class="_preset" id="bl_size" name="bl_size" onchange="changeSize.exec('bl');">
+                        <select class="preset _preset" id="bl_size" name="bl_size" onchange="changeSize.exec('bl');">
                             [TPH_Vbl_size]
                         </select>
                         <span id="bl_similar_size" divide="1" style="padding-left:10px; color:#f36f23; display:none;"></span>
                         <dl>
-                            <dt>재단사이즈</dt>
+                            <dt class="dt_span">재단사이즈</dt>
                             <dd class="_cuttingSize">
                                 <label>가로 <input id="bl_cut_wid_size" name="bl_cut_wid_size" type="text" maxlength="3" onblur="aftRestrict.cutting.common('bl');">mm</label>,
                                 <label>세로 <input id="bl_cut_vert_size" name="bl_cut_vert_size" type="text" maxlength="3" onblur="aftRestrict.cutting.common('bl');">mm</label>
                             </dd>
-                            <dt>작업사이즈</dt>
+                            <dt class="dt_span">작업사이즈</dt>
                             <dd class="_workingSize[TPH_Vbl_size_gap]" id="size_gap">
                                 <label>가로 <input id="work_wid_size" name="bl_work_wid_size" type="text" readonly>mm</label>,
                                 <label>세로 <input id="work_vert_size" name="bl_work_vert_size" type="text" readonly>mm</label>
@@ -52,7 +52,7 @@
                         </dl>
                     </dd>
                     <dt class="amount"><label for="amount">수량</label></dt>
-                    <dd class="_relatedSummary amount">
+                    <dd class="_relatedSummary amount Amount">
                     <!-- 옵션가격 수량따라 변할 경우 changeData -> getOptPrice 구현 필요 -->
                         <select class="_amount" id="bl_amt" name="bl_amt" onchange="changeAmt();" amt_unit="[TPH_Vbl_amt_unit]">
                             [TPH_Vbl_amt]
@@ -78,7 +78,7 @@
                         </div>
                     </dd>
                 </dl>
-                <div class="option _folding">
+                <div class="option _folding normal_option">
                     <button type="button" class="_closed" title="열기"><img src="[TPH_Vdesign_dir]/images/common/btn_semicircle_right.png" alt="▶"></button>
                     <button type="button" class="_opened" title="닫기"><img src="[TPH_Vdesign_dir]/images/common/btn_semicircle_left.png" alt="◀"></button>
                     <div class="_folder">

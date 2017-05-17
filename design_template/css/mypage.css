@@ -130,7 +130,7 @@ nav.pageTab2 li.on + li:before { background-color: #1c7872; }
 .main .memberInfo.grade5 .membershipNotification:before { border-right-color: #c78800; }
 .main .memberInfo.grade4 .membership .grade,
 .main .memberInfo.grade4 .membershipNotification { background: #f9aa00; }
-.main .memberInfo.grade4 .membershipNotification:before { border-right-color: #c78800; } 
+.main .memberInfo.grade4 .membershipNotification:before { border-right-color: #c78800; }
 .main .memberInfo.grade3 .membership .grade,
 .main .memberInfo.grade3 .membershipNotification { background: #a301ad; }
 .main .memberInfo.grade3 .membershipNotification:before { border-right-color: #82018a; }
@@ -333,7 +333,7 @@ nav.pageTab2 li.on + li:before { background-color: #1c7872; }
 .claimInfo .pageTitle:before { background-image: url('../images/mypage/pagetitle_claim.png'); }
 
 .claimInfo .new td.subject a { max-width: 270px; }
-.claimInfo .function button { min-width: 110px; }
+/*.claimInfo .function button { min-width: 110px; }*/
 .claimInfo table.information.question thead th { background: #3d5a95; }
 .claimInfo table.information.question select { min-width: 120px; }
 .claimInfo table.information.answer thead th { background: #eb3b4b; }
@@ -463,7 +463,7 @@ nav.pageTab2 li.on + li:before { background-color: #1c7872; }
 .memberInfo .function button { min-width: 110px; }
 .memberInfo table caption.function button { min-width: 50px; }
 .memberInfo table input[type=text],
-.memberInfo table input[type=password]{ width: 179px; }
+.memberInfo table input[type=password]{ width: 163px; }
 .memberInfo table .address input[type=text] { width: 300px; }
 .memberInfo table.taste input[type=text] { width: 134px; }
 .memberInfo table.taste select { width: 150px; }
@@ -608,7 +608,7 @@ nav.pageTab2 li.on + li:before { background-color: #1c7872; }
     table.information tbody th,
     table.information thead th { background: #ddd !important; font-weight: 600 !important; color: #444 !important;}
     table.information { border-collapse: collapse !important;}
-    
+
     /*거래명세서 인쇄 160804*/
     .l_dealdetails .layerPopupWrap .layerPopup > article#dealdetails_cont { overflow: visible; top: 0; bottom: 0; padding: 35px;}
     .l_dealdetails .layerPopupWrap .layerPopup > header,
@@ -627,3 +627,16 @@ nav.pageTab2 li.on + li:before { background-color: #1c7872; }
 
 .l_dealdetails table.information thead th { background: white; color: black;}
 table.information tbody th {background:white;color:black;}
+
+ul.paging .first:after,
+ul.paging .last:before { content: '···'; margin: 0 6px; }
+.pageTitle {letter-spacing: 0;margin-top: 0;line-height: 0;margin-bottom: 15px;}
+nav.lnb li.on li.on a {color:#ec8601}
+nav.lnb li.on a, .searchCondition button.search, ul.paging button.on {background:#ec8601}
+ul.paging button {border:none;}
+
+.contents .claim_list_btn {text-align:center;margin-top:30px;}
+.contents .claim_list_btn strong>button {padding:10px 20px;background:#417c12;color:#fff}
+
+.contents .claim_list_btn {text-align:center;margin-top:30px;}
+.contents .claim_list_btn strong>button {padding:10px 20px;background:#417c12;color:#fff}

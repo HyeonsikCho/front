@@ -48,7 +48,7 @@ function getJoinHtml($param) {
                         $param[month_html]
                       </select>
                       <select id="birth_day" name="birth_day" class="sel_highlight">
-                        $param[day_html] 
+                        $param[day_html]
                       </select>
                     </td>
                 </tr>

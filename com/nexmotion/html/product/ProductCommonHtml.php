@@ -830,6 +830,17 @@ function makeGradeSaleDl($param) {
 }
 
 /**
+ * @brief 회원 수량별 할인 dl html 반환
+ *
+ * @param $param = 할인요율, 할인금액
+ *
+ * @return option html
+ */
+function makeAmtMemberSale($param) {
+    return getAmtMemberSale($param);
+}
+
+/**
  * @brief 이벤트 할인 dl html 반환
  *
  * @param $param = 이벤트명, 할인 요율/가격 정보 파라미터

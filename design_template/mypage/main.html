@@ -3,12 +3,17 @@
 <head>
     [TPH_I/common/head.html]
     [TPH_I/mypage/common/mypage_head.html]
+
+    <style>
+      nav.lnb li a, .main .memberInfo .payment dt, .main .col, .sectionTitle
+      {letter-spacing:-0.5px;font-size:12px;font-family:'굴림'}
+    </style>
 </head>
 <body>
 <header class="top">
     <link rel="stylesheet"  href="[TPH_Vdesign_dir]/css/lightslider.css"/>
     [TPH_I/common/header.html]
-    <script src="[TPH_Vdesign_dir]/js/lib/lightslider.js"></script> 
+    <script src="[TPH_Vdesign_dir]/js/lib/lightslider.js"></script>
 </header>
 <section class="contents lnb main">
     <header class="title">
@@ -22,7 +27,14 @@
         [TPH_I/mypage/common/lnb.html]
     </nav>
     <section class="memberInfo grade[TPH_Vgrade]">
-        <h3><strong>[TPH_Vmember_name]</strong>님, [TPH_Vgreeting]</h3>
+      <p>
+      [TPH_Vmember_name]님은
+      현재 <strong>[TPH_Vgrade_name_en]</strong> 등급입니다.
+      [TPH_Vgrade_info]
+      </p>
+
+
+        <!-- <h3><strong>[TPH_Vmember_name]</strong>님, [TPH_Vgreeting]</h3> -->
         <div class="wrap">
             <div class="membership">
                 <div class="grade">
@@ -49,7 +61,7 @@
                 <dd>
                     [TPH_Vmember_name]님은<br>
                     현재 <strong>[TPH_Vgrade_name_en]</strong> 등급입니다.<br>
-                    [TPH_Vgrade_info] 
+                    [TPH_Vgrade_info]
                 </dd>
             </dl>
             <dl class="payment">

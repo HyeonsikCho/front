@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="2212b1a1-69ea-4b58-b45a-51dc7309091f" name="front" url="http://172.16.33.207">
-        <fileTransfer host="172.16.33.207" port="22" rootFolder="/home/dprinting/front" accessType="SFTP" password="dfcddfdadf98df9adf9adf9adf84dfcfdfdedfc9df8bdfeadf89df8e" username="root">
+        <fileTransfer host="172.16.33.207" port="22" rootFolder="/home/dprinting/front" accessType="SFTP" username="dprinting">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" />
           </advancedOptions>

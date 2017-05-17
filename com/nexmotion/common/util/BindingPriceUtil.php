@@ -1,5 +1,5 @@
 <?
-include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/CalcPriceUtil.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common_lib/CalcPriceUtil.php");
 
 class BindingPriceUtil {
     var $cate_sortcode;
@@ -82,7 +82,7 @@ class BindingPriceUtil {
             if ($this->stan_name === "A3") {
                 $weight = 3.15;
             }
-            
+
             $price = $page * $weight * $this->amt;
 
             if ($price < $standard_price) {
@@ -129,7 +129,7 @@ class BindingPriceUtil {
                 20000 => 90000,  22000 => 99000,  24000 => 108000, 26000 => 117000,
                 28000 => 126000, 30000 => 135000, 32000 => 144000, 34000 => 153000,
                 36000 => 162000, 38000 => 171000, 40000 => 180000, 42000 => 189000,
-                44000 => 198000, 46000 => 207000, 48000 => 216000, 50000 => 225000 
+                44000 => 198000, 46000 => 207000, 48000 => 216000, 50000 => 225000
             )
         );
 

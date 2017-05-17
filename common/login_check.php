@@ -57,30 +57,30 @@ HTML;
 HTML;
     }
 
-    $template->reg("header_login_class", "memberInfo"); 
-    $template->reg("header_login", getLoginHtml($session)); 
-    $template->reg("side_menu", getAsideHtml($session, $summary, $order_list, $order_btn)); 
-    $template->reg("side_style", ""); 
-    $template->reg("member_page", ""); 
-    $template->reg("cart_count", $session["cart_count"]); 
+    $template->reg("header_login_class", "memberInfo");
+    $template->reg("header_login", getLoginHtml($session));
+    $template->reg("side_menu", getAsideHtml($session, $summary, $order_list, $order_btn));
+    $template->reg("side_style", "");
+    $template->reg("member_page", "");
+    $template->reg("cart_count", $session["cart_count"]);
 } else {
-    $template->reg("header_login_class", "login"); 
-    $template->reg("header_login", getLogoutHtml($_COOKIE)); 
-    $template->reg("side_menu", ""); 
-    $template->reg("side_style", "display:none;"); 
+    $template->reg("header_login_class", "login");
+    $template->reg("header_login", getLogoutHtml($_COOKIE));
+    $template->reg("side_menu", "");
+    $template->reg("side_style", "display:none;");
 
-           //<li><a href="/member/join_1.html" target="_self" title="회원가입으로 이동"><img src="/design_template/images/common/header_util_icon_join_re.png" alt="회원가입"></a></li>
 
+           //<li><a href="#" onclick="alert('홈페이지 오픈전입니다.');" target="_self" title="회원가입으로 이동"><img src="/design_template/images/common/header_util_icon_join_re.png" alt="회원가입"></a></li>
     $html = <<<HTML
         <ul class="orange">
-           <li><a href="#" onclick="alert('홈페이지 오픈전입니다.');" target="_self" title="회원가입으로 이동"><img src="/design_template/images/common/header_util_icon_join_re.png" alt="회원가입"></a></li>
-           <li><a href="/member/find_id.html" target="_self" title="아이디/패스워드 찾기로 이동"><img src="/design_template/images/common/header_util_icon_find_re.png" alt="아이디/패스워드 찾기"></a></li>
+           <li style="float:left"><a href="/member/join_1.html" target="_self" title="회원가입으로 이동"><img src="/design_template/images/common/header_util_icon_join_re.png" alt="회원가입"></a></li>
+           <li style="float:left"><a href="/member/find_id.html" target="_self" title="아이디/패스워드 찾기로 이동"><img src="/design_template/images/common/header_util_icon_find_re.png" alt="아이디/패스워드 찾기"></a></li>
         </ul>
 
 HTML;
 
-    $template->reg("member_page", $html); 
+    $template->reg("member_page", $html);
 }
 
-$template->reg("is_login", intval($is_login)); 
+$template->reg("is_login", intval($is_login));
 ?>

@@ -341,8 +341,8 @@ class CartDAO extends OrderCommonDAO {
         $temp["col"]["mono_yn"]              = $param["mono_yn"];
         $temp["col"]["stan_name"]            = $param["stan_name"];
         $temp["col"]["amt"]                  = $param["amt"];
-        //$temp["col"]["count"]                = '1';
         $temp["col"]["amt_unit_dvs"]         = $param["amt_unit_dvs"];
+        $temp["col"]["expec_weight"]         = $param["expec_weight"];
         $temp["col"]["after_use_yn"]         = $param["after_use_yn"];
         $temp["col"]["cate_sortcode"]        = $param["cate_sortcode"];
         $temp["col"]["tot_tmpt"]             = $param["tot_tmpt"];

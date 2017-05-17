@@ -699,7 +699,7 @@ class ProductCommonDAO extends CommonDAO {
             $query .= "\n       AND  B.basic_yn = 'N'";
             $query .= "\n       AND  A.after_name = %s";
 
-            $query .= "\n  ORDER BY  B.seq";
+            $query .= "\n  ORDER BY  -B.seq DESC";
             $query .= "\n           ,A.after_name";
             $query .= "\n           ,A.prdt_after_seqno";
 
@@ -1579,10 +1579,12 @@ class ProductCommonDAO extends CommonDAO {
 
         $query .= "\n      FROM  after_foil_press_price AS A";
 
-        $query .= "\n     WHERE  /*A.cate_sortcode = %s";
-        $query .= "\n       AND*/  A.after_name    = %s";
+        $query .= "\n     WHERE  A.cate_sortcode = %s";
+        $query .= "\n       AND  A.after_name    = %s";
         $query .= "\n       AND  A.dvs           = %s";
-        $query .= "\n       AND  %s <= (amt + 0)";
+        $query .= "\n       AND  %s >= (amt + 0)";
+        $query .= "\n  ORDER BY  (amt + 0) DESC";
+        $query .= "\n     LIMIT  1";
 
         $query  = sprintf($query, $param["cate_sortcode"]
                                 , $param["after_name"]
@@ -2043,6 +2045,52 @@ class ProductCommonDAO extends CommonDAO {
         $rs = $conn->Execute($query);
 
         return $rs;
+    }
+
+    /**
+     * @brief 수량 회원별 할인 가격 검색
+     *
+     * @param $conn  = db connection
+     * @param $param = 검색조건 파라미터
+     *
+     * @return 검색결과
+     */
+    function selectAmtMemberCateSale($conn, $param) {
+        if ($this->connectionCheck($conn) === false) {
+            return false;
+        }
+
+        $param = $this->parameterArrayEscape($conn, $param);
+
+        $query  = "\n SELECT  /* ProductCommonDAO.php, 회원특별할인 검색 */";
+        $query .= "\n         rate";
+        $query .= "\n        ,aplc_price";
+        $query .= "\n   FROM  amt_member_cate_sale";
+        $query .= "\n  WHERE  1 = 1";
+
+        $query .= "\n    AND member_seqno = %s";
+        $query .= "\n    AND cate_sortcode = %s";
+        $query .= "\n    AND cate_paper_mpcode = %s";
+        $query .= "\n    AND cate_stan_mpcode = %s";
+        $query .= "\n    AND cate_beforeside_print_mpcode = %s";
+        $query .= "\n    AND cate_beforeside_add_print_mpcode = %s";
+        $query .= "\n    AND cate_aftside_print_mpcode = %s";
+        $query .= "\n    AND cate_aftside_add_print_mpcode = %s";
+        $query .= "\n    AND amt = %s";
+
+        $query  = sprintf($query, $param["member_seqno"]
+                                , $param["cate_sortcode"]
+                                , $param["paper_mpcode"]
+                                , $param["stan_mpcode"]
+                                , $param["bef_print_mpcode"]
+                                , $param["bef_add_print_mpcode"]
+                                , $param["aft_print_mpcode"]
+                                , $param["aft_add_print_mpcode"]
+                                , $param["amt"]);
+
+        $rs = $conn->Execute($query);
+
+        return $rs->fields;
     }
 }
 ?>

@@ -663,7 +663,7 @@ for ($i = 0; $i < $seq_arr_count; $i++) {
             $b_sell_price       = intval($fields["b_sell_price"]);
             $b_after_price      = intval($fields["b_after_price"]);
             $b_sum_price        = $b_sell_price +
-                                  $b_after_price + 
+                                  $b_after_price +
                                   $b_grade_sale_price;
 
             $sum_price = $s_sum_price + $b_sum_price;
@@ -688,7 +688,7 @@ for ($i = 0; $i < $seq_arr_count; $i++) {
                 $param["seqno"]           = $s_detail_seqno;
                 $param["cp_price"]        = $s_calc_cp;
                 $param["pay_price"]       = $s_sum_price -
-                                            $s_calc_point - 
+                                            $s_calc_point -
                                             $s_calc_cp;
 
                 $proc_ret = $dao->updateOrderDetailInfo($conn, $param);
@@ -707,7 +707,7 @@ for ($i = 0; $i < $seq_arr_count; $i++) {
                 $param["seqno"]           = $b_detail_seqno;
                 $param["cp_price"]        = $b_calc_cp;
                 $param["pay_price"]       = $b_sum_price -
-                                            $b_calc_point - 
+                                            $b_calc_point -
                                             $b_calc_cp;
 
                 $proc_ret = $dao->updateOrderDetailInfo($conn, $param);
@@ -741,7 +741,7 @@ for ($i = 0; $i < $seq_arr_count; $i++) {
             $b_sell_price       = intval($fields["b_sell_price"]);
             $b_after_price      = intval($fields["b_after_price"]);
             $b_sum_price        = $b_sell_price +
-                                  $b_after_price + 
+                                  $b_after_price +
                                   $b_grade_sale_price;
 
             $sum_price = $s_sum_price + $b_sum_price;
@@ -1088,7 +1088,7 @@ ERR:
     $conn->RollbackTrans();
     $conn->Close();
     $fb->addSession("own_point", $own_point_org);
-    
+
     echo "ERR_LINE : $err_line\n";
     /*
     unset($_SESSION["proc"]);
@@ -1102,7 +1102,7 @@ MOVE:
         $conn->RollbackTrans();
         $conn->Close();
     }
-    
+
     echo "ERR_LINE : $err_line\n";
     /*
     unset($_SESSION["proc"]);

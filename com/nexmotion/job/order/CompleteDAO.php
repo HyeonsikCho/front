@@ -15,7 +15,7 @@ class CompleteDAO extends OrderCommonDAO {
      */
     function insertMemberPointHistory($conn, $param) {
         if ($this->connectionCheck($conn) === false) {
-            return false; 
+            return false;
         }
 
         $param = $this->parameterArrayEscape($conn, $param);
@@ -60,7 +60,7 @@ class CompleteDAO extends OrderCommonDAO {
      */
     function updateOrderCommon($conn, $param) {
         if ($this->connectionCheck($conn) === false) {
-            return false; 
+            return false;
         }
 
         $except_arr = array("prdt_basic_info" => true,
@@ -131,7 +131,7 @@ class CompleteDAO extends OrderCommonDAO {
      */
     function updateOrderState($conn, $param) {
         if ($this->connectionCheck($conn) === false) {
-            return false; 
+            return false;
         }
 
         $param = $this->parameterArrayEscape($conn, $param);
@@ -155,7 +155,7 @@ class CompleteDAO extends OrderCommonDAO {
      */
     function insertOrderDlvr($conn, $param) {
         if ($this->connectionCheck($conn) === false) {
-            return false; 
+            return false;
         }
 
         $param = $this->parameterArrayEscape($conn, $param);
@@ -177,10 +177,8 @@ class CompleteDAO extends OrderCommonDAO {
         $query .= "\n     ,bun_dlvr_order_num";
         $query .= "\n     ,bun_group";
         $query .= "\n     ,lump_count";
-        $query .= "\n     ,dlvr_req";
         $query .= "\n ) VALUES (";
         $query .= "\n      %s";
-        $query .= "\n     ,%s";
         $query .= "\n     ,%s";
         $query .= "\n     ,%s";
         $query .= "\n     ,%s";
@@ -213,8 +211,7 @@ class CompleteDAO extends OrderCommonDAO {
                                 , $param["order_common_seqno"]
                                 , $param["bun_dlvr_order_num"]
                                 , $param["bun_group"]
-                                , $param["lump_count"]
-                                , $param["dlvr_req"]);
+                                , $param["lump_count"]);
 
         return $conn->Execute($query);
     }
@@ -232,7 +229,7 @@ class CompleteDAO extends OrderCommonDAO {
      */
     function selectOrderData($conn, $param) {
         if ($this->connectionCheck($conn) === false) {
-            return false; 
+            return false;
         }
 
         $table = $param["table"];
@@ -283,7 +280,7 @@ class CompleteDAO extends OrderCommonDAO {
      */
     function selectOrderCommonPriceData($conn, $seqno) {
         if ($this->connectionCheck($conn) === false) {
-            return false; 
+            return false;
         }
 
         $seqno = $this->parameterEscape($conn, $seqno);
@@ -316,7 +313,7 @@ class CompleteDAO extends OrderCommonDAO {
      */
     function selectOrderDetailData($conn, $seqno) {
         if ($this->connectionCheck($conn) === false) {
-            return false; 
+            return false;
         }
 
         $seqno = $this->parameterEscape($conn, $seqno);
@@ -357,7 +354,7 @@ class CompleteDAO extends OrderCommonDAO {
      */
     function selectOrderDetailBrochureData($conn, $seqno) {
         if ($this->connectionCheck($conn) === false) {
-            return false; 
+            return false;
         }
 
         $seqno = $this->parameterEscape($conn, $seqno);
@@ -397,7 +394,7 @@ class CompleteDAO extends OrderCommonDAO {
      */
     function selectOrderOptHistory($conn, $param) {
         if ($this->connectionCheck($conn) === false) {
-            return false; 
+            return false;
         }
         $param = $this->parameterArrayEscape($conn, $param);
 
@@ -426,7 +423,7 @@ class CompleteDAO extends OrderCommonDAO {
      */
     function insertAmtOrderDetailSheet($conn, $param) {
         if ($this->connectionCheck($conn) === false) {
-            return false; 
+            return false;
         }
 
         $temp = array();
@@ -473,7 +470,7 @@ class CompleteDAO extends OrderCommonDAO {
      */
     function insertPageOrderDetailBrochure($conn, $param) {
         if ($this->connectionCheck($conn) === false) {
-            return false; 
+            return false;
         }
 
         $temp = array();
@@ -495,7 +492,7 @@ class CompleteDAO extends OrderCommonDAO {
      */
     function insertAfterOp($conn, $param) {
         if ($this->connectionCheck($conn) === false) {
-            return false; 
+            return false;
         }
 
         $param = $this->parameterArrayEscape($conn, $param);
@@ -572,7 +569,7 @@ class CompleteDAO extends OrderCommonDAO {
      */
     function selectOrderMngData($conn, $param) {
         if ($this->connectionCheck($conn) === false) {
-            return false; 
+            return false;
         }
 
         $except_arr = array("oper_sys" => true);
@@ -616,7 +613,7 @@ class CompleteDAO extends OrderCommonDAO {
      */
     function selectExtnlBrand($conn, $name) {
         if ($this->connectionCheck($conn) === false) {
-            return false; 
+            return false;
         }
 
         $temp = array();
@@ -630,7 +627,7 @@ class CompleteDAO extends OrderCommonDAO {
     }
 
     /**
-     * @brief 주문_파일 정보 검색 
+     * @brief 주문_파일 정보 검색
      *
      * @param $conn = connection identifier
      * @param $seqno = 주문 공통 일련번호
@@ -666,7 +663,7 @@ class CompleteDAO extends OrderCommonDAO {
      */
     function updateOrderDetailInfo($conn, $param) {
         if ($this->connectionCheck($conn) === false) {
-            return false; 
+            return false;
         }
 
         $except_arr = array("basic_info" => true,
@@ -722,7 +719,7 @@ class CompleteDAO extends OrderCommonDAO {
      */
     function updateOrderDetailCountFile($conn, $param) {
         if ($this->connectionCheck($conn) === false) {
-            return false; 
+            return false;
         }
 
         $param = $this->parameterArrayEscape($conn, $param);
@@ -747,7 +744,7 @@ class CompleteDAO extends OrderCommonDAO {
      */
     function insertPublicAdminTemp($conn, $param) {
         if ($this->connectionCheck($conn) === false) {
-            return false; 
+            return false;
         }
 
         $public_dvs = $param["public_dvs"];

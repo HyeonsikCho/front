@@ -90,18 +90,19 @@ var getNumberingCalcSheetPrice = function(aft, dvs) {
  * @breif 도무송 가격 처리함수
  */
 var getThomsonCalcSheetPrice = function(aft, dvs) {
-    var prefix  = getPrefix(dvs);
-    var param   = {
-        "wid"      : $(prefix + aft + "_wid").val(),
-        "vert"     : $(prefix + aft + "_vert").val(),
-        "stanName" : $(prefix + aft + "_val > option:selected").text(),
-        "amt"      : $("#sheet_count_span").text(),
-        "callback" : function(result) {
-            setAfterPrice(dvs, aft, result);
-            calcPrice();
-        }
-    };
-    getFreeTomsonPrice(aft, dvs, param);
+    getAfterPriceCommon(aft, dvs, null);
+    //var prefix  = getPrefix(dvs);
+    //var param   = {
+    //    "wid"      : $(prefix + aft + "_wid").val(),
+    //    "vert"     : $(prefix + aft + "_vert").val(),
+    //    "stanName" : $(prefix + aft + "_val > option:selected").text(),
+    //    "amt"      : $("#sheet_count_span").text(),
+    //    "callback" : function(result) {
+    //        setAfterPrice(dvs, aft, result);
+    //        calcPrice();
+    //    }
+    //};
+    //getFreeTomsonPrice(aft, dvs, param);
 };
 
 /**

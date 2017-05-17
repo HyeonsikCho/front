@@ -4,10 +4,6 @@
     [TPH_I/common/head.html]
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <style type="text/css">
-        ul.paging .first:after,
-        ul.paging .last:before { content: '···'; margin: 0 6px; }
-    </style>
 </head>
 <body>
 <header class="top">
@@ -26,7 +22,7 @@
     <nav class="lnb">
         [TPH_I/mypage/common/lnb.html]
     </nav>
-    <h3 class="pageTitle">클레임 내역</h3>
+    <h3 class="pageTitle"><img src="[TPH_Vdesign_dir]/images/mypage/center_18.png" alt="클레임 내역"></h3>
     <section class="searchCondition">
         <div class="rowWrap">
             <dl class="date">
@@ -100,7 +96,7 @@
     <ul class="paging" id="paging">
         <li><button class="on">1</button></li>
     </ul>
-    <div class="function center">
+    <div class="claim_list_btn">
         <strong><button onclick="claimSelectMove();" class="function">클레임 요청</button></strong>
     </div>
     <input type="hidden" id="member_dvs" value="[TPH_Vmember_dvs]">

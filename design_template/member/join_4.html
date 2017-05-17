@@ -2,6 +2,16 @@
 <html lang="ko">
 <head>
     [TPH_I/common/head.html]
+    <style>
+      .Title_Page {margin-top:55px;text-align:left;border-bottom:2px solid #ddd;}
+      .contents {min-height:auto;}
+      .contents.join .complete .text {padding:0;margin:0;background:none;}
+      .contents.join .complete {margin-top: 67px;}
+      .contents.join .text p.sub {margin-top: 50px;margin-bottom:100px;letter-spacing:-0.5px;font-size:12px;font-family:'굴림'}
+      div.function strong.blue:hover a, div.function strong a {letter-spacing:-0.5px;font-size:12px;font-family:'굴림';font-weight:500}
+      div.function strong.blue:hover a, div.function strong.blue a {background:#417c12}
+      div.function strong a:hover, div.function strong a {background:#4ea253}
+    </style>
 </head>
 <body>
 <header class="top">
@@ -15,23 +25,18 @@
             <li><span>회원유형선택</span></li>
         </ol>
     </header>
-    <h2 class="pageTitle">
-        회원가입
-        <span>디프린팅 회원만의 기본 좋은 혜택을 드립니다.</span>
+    <h2 class="pageTitle Title_Page">
+      <img src="[TPH_Vdesign_dir]/images/member/join_title.png" alt="회원가입 타이틀">
     </h2>
-    <ol class="joinSteps">
+    <!-- <ol class="joinSteps">
         <li class="step1">회원유형 선택</li>
         <li class="step2">약관 동의</li>
         <li class="step3">정보 입력</li>
         <li class="step4"><h3>가입 완료</h3></li>
-    </ol>
+    </ol> -->
     <section class="complete">
         <article class="text">
-            <p><em>디프린팅 회원가입이 완료되었습니다.</em></p>
-            <p>
-                디프린팅의 새로운 가족이 되어주셔서 감사합니다.<br>
-                항상 노력하는 디프린팅이 되겠습니다.
-            </p>
+            <img src="[TPH_Vdesign_dir]/images/member/welcome_2.png" alt="회원가입 환영멘트">
             <p class="sub">
                 로그인 후 <a href="/mypage/member_modify.html" target="_blank">마이페이지 > 회원정보 > 회원정보 변경</a>에서 입력하신 정보를 변경하시거나 추가 가입정보를 입력할 수 있습니다.<br>
                 추가 가입정보를 입력하시면 디프린팅을 더욱 편리하게 이용하실 수 있으며, 디프린팅에서 준비한 맞춤 혜택도 받으실 수 있습니다.
@@ -40,8 +45,8 @@
         <input type="hidden" id="join_id" value="[TPH_Vid]">
         <input type="hidden" id="join_pw" value="[TPH_Vpw]">
         <div class="function center">
-            <strong class="blue"><a style="cursor:pointer;" onclick="goLogin('/index.html');" target="_self">로그인 하기</a></strong>
-            <strong><a style="cursor:pointer;" onclick="goLogin('/mypage/member_modify.html');" target="_self">로그인 후 상세 정보 작성하기</a></strong>
+          <img src="[TPH_Vdesign_dir]/images/member/join_login_btn1.png" alt="로그인하기" onclick="goLogin('/index.html');" target="_self" style="margin-right:120px;">
+          <img src="[TPH_Vdesign_dir]/images/member/join_login_btn2.png" alt="로그인 후 상세 정보 작성하기"  onclick="goLogin('/mypage/member_modify.html');" target="_self">
         </div>
     </section>
 </section>

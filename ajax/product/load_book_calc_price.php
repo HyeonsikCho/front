@@ -2,7 +2,7 @@
 /*
  * Copyright (c) 2016 Nexmotion, Inc.
  * All rights reserved.
- * 
+ *
  * REVISION HISTORY (reverse chronological order)
  *============================================================================
  * 2016-11-28 엄준현 추가
@@ -13,7 +13,7 @@ include_once($_SERVER["DOCUMENT_ROOT"] . "/common/sess_common.php");
 include_once($_SERVER["DOCUMENT_ROOT"] . "/common_define/prdt_default_info.php");
 include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/ConnectionPool.php");
 include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/job/common/ProductCommonDAO.php");
-include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/util/CalcPriceUtil.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "/common_lib/CalcPriceUtil.php");
 include_once($_SERVER["DOCUMENT_ROOT"] . "/com/nexmotion/common/entity/FormBean.php");
 
 $connectionPool = new ConnectionPool();

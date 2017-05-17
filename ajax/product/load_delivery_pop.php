@@ -12,7 +12,7 @@ $fb  = new FormBean();
 $fb = $fb->getForm();
 
 $cate_sortcode = $fb["cs"];
-$cate_name     = $fb["cn"];
+$cate_name     = urldecode($fb["cn"]);
 
 $param = array();
 $param["cate_sortcode"] = $cate_sortcode;
@@ -25,9 +25,13 @@ $tr = '';
 while ($rs && !$rs->EOF) {
     $fields = $rs->fields;
 
+    $date = date_diff(new DateTime($fields["depo_finish_date"]),
+                      new DateTime($fields["release_date"]));
+
     $tr .= sprintf($tr_form, $fields["member_name"]
                            , $fields["depo_finish_date"]
-                           , $fields["release_date"]);
+                           , $fields["release_date"]
+                           , $date->days);
 
     $rs->MoveNext();
 }
@@ -67,4 +71,3 @@ html;
 
 echo $html;
 ?>
-

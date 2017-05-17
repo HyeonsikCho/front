@@ -18,7 +18,7 @@
                     </dd>
                     <dt><label for="color">인쇄도수</label></dt>
                     <dd class="colorDetails">
-                        <select class="withBtn _relatedSummary _color" onchange="changeTmpt('st');" id="st_print_tmpt" name="st_bef_tmpt">
+                        <select class="wi236" onchange="changeTmpt('st');" id="st_print_tmpt" name="st_bef_tmpt">
                             [TPH_Vst_print_tmpt]
                         </select>
                         <!--
@@ -27,21 +27,21 @@
                     </dd>
                     <dt><label for="size">사이즈</label></dt>
                     <dd class="_relatedSummary size">
-                        <select class="_preset" id="st_size" name="st_size" def_cut_wid="[TPH_Vst_def_cut_wid]" def_cut_vert="[TPH_Vst_def_cut_vert]" def_val=[TPH_Vst_def_stan_mpcode] onchange="changeSize(this);">
+                        <select class="_preset wi236" id="st_size" name="st_size" def_cut_wid="[TPH_Vst_def_cut_wid]" def_cut_vert="[TPH_Vst_def_cut_vert]" def_val=[TPH_Vst_def_stan_mpcode] onchange="changeSize(this);">
                             [TPH_Vst_size]
                         </select>
                         <dl>
-                            <dt>재단사이즈</dt>
+                            <dt class="dt_span">재단사이즈</dt>
                             <dd class="_cuttingSize">
                                 <label>가로 <input id="st_cut_wid_size" name="st_cut_wid_size" type="text" maxlength="3" onblur="aftRestrict.cutting.common('st');">mm</label>,
                                 <label>세로 <input id="st_cut_vert_size" name="st_cut_vert_size" type="text" maxlength="3" onblur="aftRestrict.cutting.common('st');">mm</label>
                             </dd>
-                            <dt>작업사이즈</dt>
+                            <dt class="dt_span">작업사이즈</dt>
                             <dd class="_workingSize[TPH_Vst_size_gap]" id="size_gap">
                                 <label>가로 <input id="work_wid_size" name="st_work_wid_size" type="text" readonly>mm</label>,
                                 <label>세로 <input id="work_vert_size" name="st_work_vert_size" type="text" readonly>mm</label>
                             </dd>
-                            <dt>도무송</dt>
+                            <dt class="dt_span">도무송</dt>
                             <dd class="_thomsonSize">
                                 <label>가로 <input id="tomson_wid_size" name="st_tomson_wid_size" type="text" readonly>mm</label>,
                                 <label>세로 <input id="tomson_vert_size" name="st_tomson_vert_size" type="text" readonly>mm</label>
@@ -72,7 +72,7 @@
                     </dd>
                     [TPH_Vcoating_html]
                 </dl>
-                <div class="option _folding">
+                <div class="option _folding sticker2_option">
                     <button type="button" class="_closed" title="열기"><img src="[TPH_Vdesign_dir]/images/common/btn_semicircle_right.png" alt="▶"></button>
                     <button type="button" class="_opened" title="닫기"><img src="[TPH_Vdesign_dir]/images/common/btn_semicircle_left.png" alt="◀"></button>
                     <div class="_folder">

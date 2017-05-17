@@ -11,6 +11,11 @@ $util = new FrontCommonUtil();
 $dao = new ProductCommonDAO();
 $fb = new FormBean();
 
+const FRONT     = 1; // 전면
+const BACK      = 2; // 후면
+const BOTH      = 3; // 양면같음
+const BOTH_DIFF = 4; // 양면다름
+
 $cate_sortcode = $fb->form("cate_sortcode");
 $aft_dvs       = $fb->form("aft");
 $amt           = intval($fb->form("amt"));
@@ -23,11 +28,20 @@ $vert_1        = intval($fb->form("vert_1"));
 $wid_2         = intval($fb->form("wid_2"));
 $vert_2        = intval($fb->form("vert_2"));
 
+$is_bl = false;
+if (substr($cate_sortcode, 0, 3) === "003") {
+    $is_bl = true;
+}
+
+$dvs = chkDvs($aft_1, $dvs_1, $aft_2, $dvs_2);
+
 $param = array();
 $param["cate_sortcode"] = $cate_sortcode;
 $param["amt"]           = $amt;
 
 $json_form = "{\"price\" : \"%s\", \"val_1\" : \"%s\", \"val_2\" : \"%s\"}";
+
+//$conn->debug = 1;
 
 // 박인지 형압인지 구분
 // 박일 때 depth1 값을 기준으로 after_name 찾아야됨
@@ -59,43 +73,40 @@ if ($aft_dvs === "foil") {
 
     $sum = 0;
 
-    if ($dvs_1 === "양면") {
+    if ($dvs === BOTH) {
         // 양면같음
         $param["after_name"] = getFoilAfterName($aft_1);
         $param["dvs"]        = "양면";
 
         $price = $dao->selectAfterFoilPressPrice($conn, $param);
 
-        $wid_1  = calcAreaVal($wid_1, $amt);
-        $vert_1 = calcAreaVal($vert_1, $amt);
+        $wid_1  = calcAreaVal($wid_1, $amt, $is_bl);
+        $vert_1 = calcAreaVal($vert_1, $amt, $is_bl);
 
         $sum = $price + $wid_1 + $vert_1;
-    } else if (!empty($aft_1) && !empty($dvs_1) &&
-            empty($aft_2) && empty($dvs_2)) {
+    } else if ($dvs === FRONT) {
         // 전면만
         $param["after_name"] = getFoilAfterName($aft_1);
         $param["dvs"]        = "단면";
 
         $price = $dao->selectAfterFoilPressPrice($conn, $param);
 
-        $wid_1  = calcAreaVal($wid_1, $amt);
-        $vert_1 = calcAreaVal($vert_1, $amt);
+        $wid_1  = calcAreaVal($wid_1, $amt, $is_bl);
+        $vert_1 = calcAreaVal($vert_1, $amt, $is_bl);
 
         $sum = $price + $wid_1 + $vert_1;
-    } else if (empty($aft_1) && empty($dvs_1) &&
-            !empty($aft_2) && !empty($dvs_2)) {
+    } else if ($dvs === BACK) {
         // 후면만
         $param["after_name"] = getFoilAfterName($aft_2);
         $param["dvs"]        = "단면";
 
         $price = $dao->selectAfterFoilPressPrice($conn, $param);
 
-        $wid_2  = calcAreaVal($wid_2, $amt);
-        $vert_2 = calcAreaVal($vert_2, $amt);
+        $wid_2  = calcAreaVal($wid_2, $amt, $is_bl);
+        $vert_2 = calcAreaVal($vert_2, $amt, $is_bl);
 
         $sum = $price + $wid_2 + $vert_2;
-    } else if (!empty($aft_1) && !empty($dvs_1) &&
-            !empty($aft_2) && !empty($dvs_2)) {
+    } else if ($dvs === BOTH_DIFF) {
         // 양면다름
         $param["after_name"] = getFoilAfterName($aft_1);
         $param["dvs"]        = "단면";
@@ -106,10 +117,10 @@ if ($aft_dvs === "foil") {
 
         $aft_price = $dao->selectAfterFoilPressPrice($conn, $param);
 
-        $wid_1  = calcAreaVal($wid_1, $amt);
-        $vert_1 = calcAreaVal($vert_1, $amt);
-        $wid_2  = calcAreaVal($wid_2, $amt);
-        $vert_2 = calcAreaVal($vert_2, $amt);
+        $wid_1  = calcAreaVal($wid_1, $amt, $is_bl);
+        $vert_1 = calcAreaVal($vert_1, $amt, $is_bl);
+        $wid_2  = calcAreaVal($wid_2, $amt, $is_bl);
+        $vert_2 = calcAreaVal($vert_2, $amt, $is_bl);
 
         $sum = $bef_price + $aft_price + $wid_1 + $vert_1 + $wid_2 + $vert_2;
     } else {
@@ -133,8 +144,8 @@ if ($aft_dvs === "foil") {
 
     $price = $dao->selectAfterFoilPressPrice($conn, $param);
 
-    $wid_1  = calcAreaVal($wid_1, $amt);
-    $vert_1 = calcAreaVal($vert_1, $amt);
+    $wid_1  = calcAreaVal($wid_1, $amt, $is_bl);
+    $vert_1 = calcAreaVal($vert_1, $amt, $is_bl);
 
     $sum = $price + $wid_1 + $vert_1;
 
@@ -167,19 +178,54 @@ function getFoilAfterName($aft) {
     } else if (strpos($aft, "청박") !== false) {
         return "청박";
     } else {
-        return "금박";
+        return $aft;
     }
 }
 
 /**
  * @brief 각 너비 가중값 계산
  *
- * @param $val = 너비/높이값
- * @param $amt = 수량
+ * @param $val   = 너비/높이값
+ * @param $amt   = 수량
+ * @param $is_bl = 전단이면 true / 아니면 false
  *
  * @return 계산값
  */
-function calcAreaVal($val, $amt) {
-    return (($val / 10) - 2) * 10 * $amt;
+function calcAreaVal($val, $amt, $is_bl) {
+    $weight = 10;
+    if ($is_bl) {
+        $weight = 0.7;
+    }
+
+    return (($val / 10) - 2) * $weight * $amt;
+}
+
+/**
+ * @brief 양면/전면/후면/양면다름 판단
+ *
+ * @param $aft1 = 앞부분 박 선택값
+ * @param $dvs1 = 앞부분 구분 선택값
+ * @param $aft2 = 뒷부분 박 선택값
+ * @param $dvs2 = 뒷부분 구분 선택값
+ *
+ * @return 구분값
+ */
+function chkDvs($aft_1, $dvs_1, $aft_2, $dvs_2) {
+    if ($dvs_1 === "양면") {
+        return BOTH;
+    } else if (!empty($aft_1) && !empty($dvs_1) &&
+            empty($aft_2) && empty($dvs_2)) {
+        return FRONT;
+    } else if (empty($aft_1) && empty($dvs_1) &&
+            !empty($aft_2) && !empty($dvs_2)) {
+        return BACK;
+    } else if (!empty($aft_1) && !empty($dvs_1) &&
+            !empty($aft_2) && !empty($dvs_2)) {
+        if ($aft_1 === $aft_2) {
+            return BOTH;
+        }
+
+        return BOTH_DIFF;
+    }
 }
 ?>

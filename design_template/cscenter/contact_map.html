@@ -2,6 +2,17 @@
 <html lang="ko">
 <head>
     [TPH_I/common/head.html]
+
+    <style>
+      .contents .title .location span, nav.lnb li li a,
+      .contact .information > dt,
+      .contact .information dd {letter-spacing:-0.5px;font-size:12px;font-family:'굴림'}
+      nav.pageTab, nav.lnb li.on a {background:#2d6a86;}
+      nav.lnb li.on li.on a {color:#2d6a86}
+      .pageTitle {letter-spacing:0;margin-top:20px;line-height:0;margin-bottom:15px;}
+      .contact .information {border-top:2px solid #2d6a86;border-bottom:1px solid #2d6a86;}
+
+    </style>
 </head>
 <body>
 <header class="top">
@@ -20,7 +31,7 @@
     <nav class="lnb">
         [TPH_I/cscenter/common/lnb.html]
     </nav>
-    <h3 class="pageTitle">오시는 길</h3>
+    <h3 class="pageTitle"><img src="[TPH_Vdesign_dir]/images/cscenter/center_5.png" alt="오시는길"></h3>
     <figure class="map">
         <img src="[TPH_Vdesign_dir]/images/sample/contact_map.png" alt="오시는길">
     </figure>
